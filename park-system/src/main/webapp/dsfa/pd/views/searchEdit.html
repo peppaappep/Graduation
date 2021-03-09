@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>查询条件配置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" /> -->
+    <style>
+        body {
+            height: auto;
+        }
+        
+        .error {
+            border: 1px solid red;
+        }
+        
+        .form-control {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 30px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        
+        table>tbody td {
+            padding: 5px !important;
+        }
+    </style>
+</head>
+
+<body ng-controller="dataGridColumnEdit">
+    <div style="width:100%;position:fixed;top:0px;background-color:#fff;z-index:10">
+        <div class="layui-row">
+            <div class="layui-col-xs12" style="padding:10px;text-align: right">
+                <a class="ds_button" ng-click="addNew()"><i class="iconfont icon-zidingyi layui-icon"></i>增加</a>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:58px;padding:10px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="layui-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;width:80px;">序号</th>
+                            <th style="text-align: center;width:80px;">元数据代码</th>
+                            <th style="text-align: center;width:80px;">类型</th>
+                            <th style="text-align: center;width:80px;">操作符</th>
+                            <th style="text-align: center">值</th>
+                            <th style="text-align: center">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in args.value track by $index">
+                            <td style="width:60px;text-align:center">{{$index+1}}</td>
+                            <td style="width:80px">
+                                <input name="text_{{$index}}" class="form-control" type="text" ng-model="item.code">
+                            </td>
+                            <td style="width:120px">
+                                <select name="style_{{$index}}" class="form-control" ng-model="item.type" ng-change="typeChange(item)">
+                                    <option value="0">检索框</option>
+                                    <option value="1">附加条件</option>
+                                </select>
+                            </td>
+                            <td style="width:120px">
+                                <select name="operation_{{$index}}" class="form-control" ng-model="item.operation">
+                                        <option value="like">模糊匹配</option>
+                                        <option value="slike">开头匹配</option>
+                                        <option value="elike">结尾匹配</option>
+                                        <option value="eq">等于</option>
+                                        <option value="noteq">不等于</option>
+                                        <option value="lt">小于</option>
+                                        <option value="gt">大于</option>
+                                        <option value="lteq">小于等于</option>
+                                        <option value="gteq">大于等于</option>
+                                    </select>
+                            </td>
+                            <td>
+                                <input name="value_{{$index}}" ng-disabled="item.type==0" class="form-control" type="text" ng-model="item.valueExpress">
+                            </td>
+                            <td style="width:120px;vertical-align: middle;text-align: center">
+                                <a ng-click="deleteItem(item)">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {};
+        app.controller('dataGridColumnEdit', function($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.addNew = function() {
+                $scope.args.value.push({
+                    code: "",
+                    type: "0",
+                    operation: "like",
+                    valueExpress: ""
+                })
+            }
+
+            $scope.deleteItem = function(item) {
+                var index = $scope.args.value.indexOf(item);
+                if (index >= 0) {
+                    $scope.args.value.splice(index, 1);
+                }
+            }
+            window.dialogInit = function(args) {
+                $scope.args = $.extend(true, {}, args);
+                $scope.$apply();
+            }
+
+            $scope.typeChange = function(item) {
+                if (item.type == "0") {
+                    item.valueExpress = "";
+                    item.operation = "like"
+                }
+            }
+
+            window.getDialogResult = function() {
+                return $scope.args.value;
+            }
+        });
+    </script>
+</body>
+
+</html>

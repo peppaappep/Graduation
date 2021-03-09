@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>流程绘制 </title>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
+    <meta http-equiv="description" content="this is my page" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<link href="../res/css/systemskins/dsfa/themes/gray/DSSkin.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/easyui1.4.1/themes/gray/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/easyui1.4.1/icon.css" rel="stylesheet" type="text/css" />
+    <script src="../../../res/libs/jquery-1.12.4.min.js" type="text/javascript"></script>
+    <script src="../script/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../script/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <link href="../../../res/libs/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <script src="../script/common.js" type="text/javascript"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js" type="text/javascript"></script>
+    <script src="../../../app.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_config.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_common.js" type="text/javascript"></script>
+    <script src="../script/property_dialog_hzfw.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var dialogArgs = (window.frameElement && window.frameElement.dialogArgs) ? window.frameElement.dialogArgs : [];
+        var row = dialogArgs.rowData;
+        var element = dialogArgs.el;
+        var workFlow = dialogArgs.workFlow;
+        var nodeObj = dialogArgs.nodeObj;
+        var appInfo = dialogArgs.appInfo;
+        var flow = dialogArgs.flowPlugin;
+
+        function getReturnValue() {
+            return getReturnXml();
+        }
+    </script>
+</head>
+
+<body class="easyui-layout">
+    <div data-options="region:'center',title:'',border:false" id="center" fit="true" style="padding:5px">
+        汇总比例
+        <input id="Proportion" value="0" name="Proportion" style="width:154px">
+        <table id="GatherRange"></table>
+    </div>
+</body>
+
+</html>

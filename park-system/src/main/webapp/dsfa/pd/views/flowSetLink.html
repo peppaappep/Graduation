@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html class="flowinfo-dialog flowInfoCtrl" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<title>环节设置——流程信息属性</title>
+		<link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<style type="text/css">
+			.canNot {
+				padding: 20px;
+				text-align: center;
+				color: #999;
+				font-size: 16px;
+			}
+
+			table th:first-child,
+			table td:first-child {
+				max-width: 200px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		</style>
+	</head>
+
+	<body ng-controller='myCtrl'>
+
+		<div class="content">
+			<div class="ds_tree_box fl-box">
+				<div class="ds_tree_search">
+					<input type="text" class="layui-input" placeholder="搜索环节名称" id='search_input'>
+					<i class="search iconfont layui-icon icon-Magnifier" id='search'></i>
+				</div>
+				<div class="ds_tree">
+					<ul id="tree" class="ztree"></ul>
+				</div>
+			</div>
+			<div class="fr-box">
+				<div class="top">
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">表单名称：</label>
+							<div class="layui-input-inline" title='{{config.curNode.pageTitle}}' ng-bind="config.curNode.pageTitle || '暂无'"></div>
+						</div>
+					</div>
+					<button type="button" class="layui-btn layui-btn-sm chooseForm" ng-click='chooseForm()'>选择表单</button>
+					<button type="button" class="layui-btn layui-btn-sm applyTo" ng-click='applyTo()'>应用于</button>
+				</div>
+				<div class="layui-tab layui-tab-card">
+					<ul class="layui-tab-title">
+						<li ng-click='config.tabN=0' ng-class="{'layui-this':config.tabN==0}">元素控制</li>
+						<li ng-click='config.tabN=1' ng-class="{'layui-this':config.tabN==1}">操作控制</li>
+					</ul>
+					<div class="canNot" ng-show='config.curNode.NodeType==6'>此节点不能设置</div>
+					<div class="layui-tab-content layui-form" ng-show='config.curNode.NodeType!=6'>
+						<div class="layui-tab-item" ng-class="{'layui-show':config.tabN==0}">
+							<table class="layui-table">
+								<thead>
+									<tr>
+										<!-- {{config.curNode.rdAll}} -->
+										<th>控件名称</th>
+										<th>只读<input type="checkbox" name="readOnly_All" lay-skin="primary" ng-model="config.curNode.readOnly_All"></th>
+										<th>隐藏<input type="checkbox" name="hidden_All" lay-skin="primary" ng-model="config.curNode.hidden_All"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat='ctrl in config.curNode.ctrls track by $index'>
+										<td title='{{ctrl.label}}({{ctrl.caption}})'>{{ctrl.label}}({{ctrl.caption}})</td>
+										<td>
+											<input index='{{$index}}' type="checkbox" name="readOnly" lay-skin="primary" ng-model='ctrl.readOnly'>
+										</td>
+										<td>
+											<input index='{{$index}}' type="checkbox" name="hidden" lay-skin="primary" ng-model='ctrl.hidden'>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="layui-tab-item" ng-class="{'layui-show':config.tabN==1}">
+							<table class="layui-table">
+								<thead>
+									<tr>
+										<th>按钮名称</th>
+										<th>可用<input type="checkbox" name="supportFlow_All" lay-skin="primary" ng-model="config.curNode.supportFlow_All"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat='btn in config.curNode.btns track by $index'>
+										<td ng-bind="btn.text" title='{{btn.text}}'></td>
+										<td>
+											<input index='{{$index}}' type="checkbox" name="supportFlow" lay-skin="primary" ng-model='btn.supportFlow'>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../../res/libs/layui/layui.all.js"></script>
+		<script src="../../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../../app.js"></script>
+		<script src="../../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../../res/dsf_res/dsf_common.js"></script>
+		<script src="../res/ds_prop.js"></script>
+		<script src="../../../dsfa/bhc/hc/bhc.js"></script>
+		<script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+		<script src="../res/libs/angular/angular.min.js"></script>
+		<script>
+			var tree = null,
+				nodeList = [],
+				page = null,
+				dialogArgs = null,
+				sID = 'd731ee71e38442ffba10a012d094bb4e',
+				loadIndex = dsf.layer.loadding(),
+				param = {},
+				treeApplyTo = null,
+				treeNodes = null,
+				treeChooseForm = null,
+				WFName = null;
+
+			$('#search').on('click', function(e) {
+				search();
+			});
+			$('#search_input').on('keyup', function(e) {
+				if ((window.event ? e.keyCode : e.which) == 13)
+					search();
+			});
+			angular.module('myApp', []).controller('myCtrl', function($scope, $rootScope) {
+				$scope.config = {
+					curNode: {},
+					tabN: 0,
+					ctrls: [],
+					btns: []
+				}
+
+				window.dialogInit = function(args) {
+					dialogArgs = args;
+					page = args.owner._root;
+					sID = args.owner.chooseFlow.dsfa_rm_id;
+
+					// 当前页面控件
+					page.ControlsForEach(function(ctrl) {
+						if (ctrl.$metadata && ctrl.ctrl_type !== "FlowInfo" && ctrl.ctrl_type !== "TreeInfo" && ctrl.ctrl_type !==
+							"AuditInfo") {
+							$scope.config.ctrls.push({
+								id: ctrl.id,
+								label: ctrl.label,
+								caption: ctrl.caption,
+								readOnly: false,
+								hidden: false
+							});
+						}
+					})
+					// 当前页面按钮
+					var buttonBars = page._element.find("[ctrl_type='ButtonBar']");
+					_.forEach(buttonBars, function(buttonBar) {
+						var buttons = page.getControl($(buttonBar).attr('caption')).$buttonBar.buttons;
+						_.forEach(buttons, function(button) {
+							button.supportFlow = false;
+							delete button.actionArgsHelper;
+							$scope.config.btns.push(button);
+						})
+					})
+
+					// 左侧环节树
+					initTree();
+					$scope.$apply();
+				}
+
+				function initTree() {
+					tree = $.fn.zTree.init($("#tree"), {
+						data: {
+							key: {
+								name: "NodeName"
+							}
+						},
+						view: {
+							selectedMulti: false,
+							fontCss: getFontCss
+						},
+						callback: {
+							onClick: zTreeOnClick
+						}
+					});
+					dsf.http.request(dsf.url.getWebPath("wfk/getWFNodeList"), {
+							sID: sID
+						}, "get")
+						.done(function(response) {
+							if (response.success) {
+								param = response.data;
+								treeNodes = response.data.NodeList;
+								fn(treeNodes);
+								tree.addNodes(null, {
+									id: '',
+									pid: '',
+									NodeName: param.WFName,
+									children: treeNodes
+								});
+								tree.expandAll(true);
+
+								var node0 = tree.getNodes()[0].children[0];
+								$scope.config.curNode = node0;
+								zTreeOnClick("", "", node0);
+								tree.selectNode(node0, false, false);
+							}
+						})
+						.error(function(response) {})
+						.exec();
+				}
+
+				function zTreeOnClick(event, treeId, treeNode) {
+					if (!treeNode.NodeID) {
+						var node0 = tree.getNodes()[0].children[0];
+						zTreeOnClick("", "", node0);
+						tree.selectNode(node0, false, false);
+						dsf.layer.close(loadIndex);
+						return
+					}
+					$scope.config.tabN = 0;
+					var nodeCtrls = JSON.parse(JSON.stringify($scope.config.ctrls));
+					var nodeBtns = JSON.parse(JSON.stringify($scope.config.btns));
+					if (!treeNode.isloaded) {
+						treeNode.isloaded = true;
+
+						if (!treeNode.namespace && dialogArgs.value && dialogArgs.value.NodeList) {
+							var node = dialogArgs.value.NodeList.filter(function(value, index) {
+								return value['NodeID'] == treeNode.NodeID;
+							});
+							if (node.length > 0) {
+								node = node[0];
+								if (node.namespace && (node.namespace != page.nameSpace || node.pageName != page.$name)) {
+									getJson(dsf.url.getWebPath(node.namespace.split('.').join('/') + '/hc/' + node.pageName + '.layout.js'));
+									var ctrls = JSON.parse(JSON.stringify(window._formCtrls || []));
+									nodeCtrls = [];
+									_.forEach(ctrls, function(ctrl) {
+										nodeCtrls.push({
+											id: ctrl.id,
+											label: ctrl.$label,
+											caption: ctrl.$caption,
+											readOnly: false,
+											hidden: false
+										});
+									})
+									nodeBtns = JSON.parse(JSON.stringify(window._buttonBars || []));
+									treeNode.namespace = node.namespace;
+									treeNode.pageTitle = node.pageTitle;
+									treeNode.pageName = node.pageName;
+									window._formCtrls = null;
+									window._buttonBars = null;
+								}
+
+								if (node.ctrls) {
+									treeNode.ctrls = nodeCtrls;
+									treeNode.readOnly_Ltn = 0;
+									treeNode.hidden_Ltn = 0;
+									treeNode.readOnly_All = false;
+									treeNode.hidden_All = false;
+									treeNode.ctLtn = treeNode.ctrls.length;
+									_.forEach(treeNode.ctrls, function(ctrl, ctrlIndex) {
+										var _ctrl = node.ctrls.filter(function(value) {
+											return ctrl['caption'] == value.caption;
+										});
+										if (_ctrl.length > 0) {
+											treeNode.ctrls[ctrlIndex].readOnly = _ctrl[0].readOnly;
+											treeNode.ctrls[ctrlIndex].hidden = _ctrl[0].hidden;
+										}
+										if (ctrl.readOnly) {
+											treeNode.readOnly_Ltn++;
+										}
+										if (ctrl.hidden) {
+											treeNode.hidden_Ltn++;
+										}
+									});
+									if (treeNode.readOnly_Ltn == treeNode.ctLtn && treeNode.ctLtn != 0) {
+										treeNode.readOnly_All = true;
+									}
+									if (treeNode.hidden_Ltn == treeNode.ctLtn && treeNode.ctLtn != 0) {
+										treeNode.hidden_All = true;
+									}
+								}
+								if (node.btns) {
+									treeNode.btns = nodeBtns;
+									treeNode.btnsLtn = treeNode.btns.length;
+									treeNode.supportFlow_Ltn = 0;
+									treeNode.supportFlow_All = false;
+									_.forEach(treeNode.btns, function(btn, btnIndex) {
+										var _btn = node.btns.filter(function(value) {
+											return btn['text'] == value.text;
+										});
+										if (_btn.length > 0) {
+											treeNode.btns[btnIndex].supportFlow = _btn[0].supportFlow;
+										}
+										if (btn.supportFlow) {
+											treeNode.supportFlow_Ltn++;
+										}
+										if (treeNode.supportFlow_Ltn == treeNode.btnsLtn && treeNode.btnsLtn != 0) {
+											treeNode.supportFlow_All = true;
+										}
+									})
+								}
+							}
+						} else if (treeNode.namespace) {
+							if (!(treeNode.namespace == page.nameSpace && treeNode.pageName == page.$name)) {
+								nodeCtrls = treeNode.ctrls;
+								nodeBtns = treeNode.btns;
+							}
+							treeNode.ctrls = null;
+							treeNode.btns = null;
+						}
+
+						if (!treeNode.namespace) {
+							treeNode.namespace = page.nameSpace;
+						}
+						if (!treeNode.pageTitle) {
+							treeNode.pageTitle = page.$title;
+						}
+						if (!treeNode.pageName) {
+							treeNode.pageName = page.$name;
+						}
+						// 控件
+						if (!treeNode.ctrls) {
+							treeNode.ctrls = nodeCtrls;
+							treeNode.readOnly_Ltn = 0;
+							treeNode.hidden_Ltn = 0;
+							treeNode.ctLtn = treeNode.ctrls.length;
+							treeNode.readOnly_All = false;
+							treeNode.hidden_All = false;
+						}
+
+						// 按钮
+						if (!treeNode.btns) {
+							treeNode.btns = nodeBtns;
+							treeNode.btnsLtn = treeNode.btns.length;
+							treeNode.supportFlow_Ltn = 0;
+							treeNode.supportFlow_All = false;
+						}
+					}
+					treeNode.pageId = treeNode.namespace + "." + treeNode.pageName;
+					$scope.config.curNode = treeNode;
+					$scope.$apply();
+					layui.form.render();
+					dsf.layer.close(loadIndex);
+				}
+
+				layui.form.on('checkbox', function(data) {
+					var name = data.elem.name;
+					var state = data.elem.checked;
+					var ltn = name.indexOf("sup") > -1 ? $scope.config.curNode.btnsLtn : $scope.config.curNode.ctLtn;
+					var type = name.indexOf("sup") > -1 ? "btns" : "ctrls";
+					if (name.indexOf("_All") == -1) {
+						if (state) {
+							$scope.config.curNode[name + '_Ltn']++;
+							if ($scope.config.curNode[name + '_Ltn'] == ltn) {
+								$scope.config.curNode[name + '_All'] = true;
+							}
+						} else {
+							$scope.config.curNode[name + '_Ltn']--;
+							$scope.config.curNode[name + '_All'] = false;
+						}
+						$scope.config.curNode[type][$(data.elem).attr("index")][name] = state;
+					} else {
+						name = name.slice(0, name.indexOf("_All"));
+						if (state) {
+							$scope.config.curNode[name + '_Ltn'] = ltn;
+						} else {
+							$scope.config.curNode[name + '_Ltn'] = 0;
+						}
+						$scope.config.curNode[name + '_All'] = state;
+						_.forEach($scope.config.curNode[type], function(ctrl, ctrlI) {
+							$scope.config.curNode[type][ctrlI][name] = state;
+						})
+					}
+					$scope.$apply();
+
+					layui.form.render('checkbox');
+				});
+
+				$scope.applyTo = function() {
+					layui.layer.open({
+						type: 1,
+						title: false,
+						closeBtn: 0,
+						area: ['400px', '100%'],
+						btn: ['关闭'],
+						btnAlign: 'c',
+						content: '<div class="ds_tree_box"><div class="ds_tree_search"><input type="text" class="layui-input" placeholder="搜索需应用的环节名称" id="search_input2"><i class="search iconfont layui-icon icon-Magnifier" id="search2"></i></div><div class="ds_tree"><ul id="applyTo" class="ztree"></ul></div></div>',
+						btn: ['确定', '取消'],
+						success: function(layero, index) {
+							layero.find('.layui-layer-content').css({
+								"padding": 0,
+								"height": "443px"
+							});
+							initTreeApplyTo();
+							$('#search2').on('click', function(e) {
+								search(2);
+							});
+							$('#search_input2').on('keyup', function(e) {
+								if ((window.event ? e.keyCode : e.which) == 13)
+									search(2);
+							});
+						},
+						yes: function(index, layero) {
+							var applyData = treeApplyTo.getCheckedNodes();
+							_.forEach(applyData, function(d, i) {
+								if (d.NodeID) {
+									var n = tree.getNodeByTId("tree_" + d.tId.slice(8));
+									var old = JSON.parse(JSON.stringify($scope.config.curNode))
+									n.isloaded = true;
+
+									n.namespace = old.namespace;
+									n.pageTitle = old.pageTitle;
+									n.pageName = old.pageName;
+
+									n.ctrls = old.ctrls;
+									n.readOnly_Ltn = old.readOnly_Ltn;
+									n.hidden_Ltn = old.hidden_Ltn;
+									n.readOnly_All = old.readOnly_All;
+									n.hidden_All = old.hidden_All;
+									n.ctLtn = old.ctLtn;
+
+									n.btns = old.btns;
+									n.btnsLtn = old.btnsLtn;
+									n.supportFlow_Ltn = old.supportFlow_Ltn;
+									n.supportFlow_All = old.supportFlow_All;
+								}
+							})
+							layui.layer.close(index);
+						}
+					});
+				}
+
+				function initTreeApplyTo() {
+					treeApplyTo = $.fn.zTree.init($("#applyTo"), {
+						data: {
+							key: {
+								name: "NodeName"
+							}
+						},
+						check: {
+							"enable": true
+						},
+						view: {
+							selectedMulti: false,
+							fontCss: getFontCss
+						},
+						callback: {
+							onClick: applyToTreeOnClick
+						}
+					}, {
+						id: '',
+						pid: '',
+						NodeName: param.WFName,
+						children: treeNodes
+					});
+					treeApplyTo.expandAll(true);
+				}
+
+				function applyToTreeOnClick(event, treeId, treeNode) {
+					treeApplyTo.checkNode(treeNode, !treeNode.checked);
+				}
+				window.getDialogResult = function() {
+					var result = false;
+					param.NodeList = tree.getNodes()[0].children;
+					// saveWFNodeConfig
+					dsf.http.request_sync(dsf.url.getWebPath("wfk/saveExWF"), {
+							sData: JSON.stringify(param)
+						}, "POST")
+						.done(function(response) {
+							if (response.state == 20000) {
+								result = param;
+							} else {
+								dsf.layer.message(response.message || '环节设置异常', false);
+							}
+						})
+						.error(function(response) {
+							dsf.layer.message('环节设置异常', false);
+						})
+						.exec();
+					return result;
+				}
+
+				$scope.chooseForm = function() {
+					// 选择表单
+					layui.layer.open({
+						type: 1,
+						title: false,
+						closeBtn: 0,
+						area: ['400px', '100%'],
+						btn: ['关闭'],
+						btnAlign: 'c',
+						content: '<div class="ds_tree_box"><div class="ds_tree_search"><input type="text" class="layui-input" placeholder="搜索表单名称" id="search_input3"><i class="search iconfont layui-icon icon-Magnifier" id="search3"></i></div><div class="ds_tree"><ul id="chooseForm" class="ztree"></ul></div></div>',
+						btn: ['确定', '取消'],
+						success: function(layero, index) {
+							layero.find('.layui-layer-content').css({
+								"padding": 0,
+								"height": "443px"
+							});
+							initTreeChooseForm();
+							$('#search3').on('click', function(e) {
+								search(3);
+							});
+							$('#search_input3').on('keyup', function(e) {
+								if ((window.event ? e.keyCode : e.which) == 13)
+									search(3);
+							});
+						},
+						yes: function(index, layero) {
+							var d = treeChooseForm.getSelectedNodes();
+							if (d.length > 0) {
+								var p = d[0].path;
+								var i = 0;
+								if (p.slice(0, 1) == '/') {
+									i = 1;
+								}
+								p = p.slice(i, p.lastIndexOf('/views/')).split('/').join('.');
+								if (p != $scope.config.curNode.namespace || d[0].code != $scope.config.curNode.pageName) {
+									loadIndex = dsf.layer.loadding();
+									$scope.config.curNode.namespace = p;
+									$scope.config.curNode.pageTitle = d[0].name;
+									$scope.config.curNode.pageName = d[0].code;
+									var url = dsf.url.getWebPath(p.split('.').join('/') + '/hc/' + d[0].code + '.layout.js');
+									getJson(url);
+									var ctrls = window._formCtrls || [];
+									$scope.config.curNode.ctrls = [];
+									_.forEach(ctrls, function(ctrl) {
+										$scope.config.curNode.ctrls.push({
+											id: ctrl.id,
+											label: ctrl.$label,
+											caption: ctrl.$caption,
+											readOnly: false,
+											hidden: false
+										});
+									})
+									$scope.config.curNode.btns = window._buttonBars || [];
+									$scope.config.curNode.isloaded = false;
+									window._formCtrls = null;
+									window._buttonBars = null;
+									zTreeOnClick("", "", $scope.config.curNode);
+								}
+							}
+							layui.layer.close(index);
+							$scope.$apply();
+						}
+					});
+				}
+
+				function getJson(url) {
+					$.ajax({
+						url: url,
+						dataType: "script",
+						async: false,
+						success: function(response) {
+							eval(response);
+						},
+						error: function(err) {
+							dsf.layer.message('未查找到layout.js', false)
+						}
+					});
+				}
+
+				function initTreeChooseForm() {
+					var loading = dsf.layer.loadding();
+					dsf.http.request(dsf.url.getWebPath("oua/getPage"), {}, "get")
+						.done(function(response) {
+							if (response.success) {
+								treeChooseForm = $.fn.zTree.init($("#chooseForm"), {
+									data: {
+										key: {
+											name: "_name",
+											url: ""
+										},
+										simpleData: {
+											enable: true,
+											idKey: "_id",
+											pIdKey: "treeinfo_pid",
+											rootPId: ""
+										}
+									},
+									view: {
+										selectedMulti: false,
+										fontCss: getFontCss
+									}
+								}, response.data);
+								treeChooseForm.expandAll(true);
+							} else {
+								dsf.layer.message('获取表单异常', false);
+							}
+						})
+						.error(function(response) {
+							dsf.layer.message('获取表单异常', false)
+						})
+						.always(function() {
+							dsf.layer.close(loading);
+						})
+						.exec();
+				}
+			});
+
+			function search(type) {
+				var id = type || '';
+				var treeObj = type == 2 ? treeApplyTo : type == 3 ? treeChooseForm : tree;
+				updateNodes(false, treeObj);
+				var v = $('#search_input' + id).val();
+				if (v == '' || !v) return;
+				if (type == 3) {
+					nodeList = treeObj.getNodesByParamFuzzy('name', v);
+				} else {
+					nodeList = treeObj.getNodesByParamFuzzy('NodeName', v);
+				}
+				if (nodeList.length > 0 && type) {
+					treeObj.selectNode(nodeList[0], false, false);
+				}
+				updateNodes(true, treeObj);
+			}
+
+			function updateNodes(highlight, treeObj) {
+				for (var i = 0, l = nodeList.length; i < l; i++) {
+					nodeList[i].highlight = highlight;
+					treeObj.updateNode(nodeList[i]);
+				}
+			}
+
+			function fn(treeNodes, isfresh) {
+				for (var i = 0; i < treeNodes.length; i++) {
+					var node = treeNodes[i];
+					if (isfresh) {
+						node.isloaded = false;
+					}
+					if (node.NodeType == "6") {
+						node.isHidden = true;
+					}
+					if (node.children) {
+						fn(node.children)
+					}
+				}
+			}
+
+			function getFontCss(treeId, treeNode) {
+				return (!!treeNode.highlight) ? {
+					color: "#A60000",
+					"font-weight": "bold"
+				} : {
+					color: "#333",
+					"font-weight": "normal"
+				};
+			}
+		</script>
+	</body>
+</html>

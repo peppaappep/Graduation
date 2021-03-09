@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>排座设计器</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/bhc.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/jquery-ui/jquery-ui.min.css" />
+</head>
+
+<body>
+  <div id="view"></div>
+</body>
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../res/libs/lodash/lodash.min.js"></script>
+<script src="../../../app.js"></script>
+<script src="../../../res/dsf_res/dsf_config.js"></script>
+<script src="../../../res/dsf_res/dsf_common.js"></script>
+<script src="../../../res/dsf_res/dsf_seat_layout.js"></script>
+<script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+<script src="../../../res/libs/zTree/js/jquery.ztree.exhide.min.js"></script>
+
+<script src="../../../dsfa/bhc/hc/bhc.js"></script>
+<script src="../../../dsfa/pd/hc/pd.js"></script>
+<script>
+  $(document).ready(function() {
+    var m = dsf.url.queryString("m") || "e";
+    var opt = dsf.url.queryString("opt") || "";
+    
+    //url里面m=e进入排座设计页面
+    if (m == "e") {
+      //加载排座设计器的配置
+      //var defaultOptions = dsf.seatOptions['default'] || {};
+      var options = dsf.seatOptions[opt] || {};
+      //加载排座设计器的配置
+      options = $.extend(true, {}, options);
+      //这个s就是导出的seatDesign.js
+      var s = new dsf.PD.seatDesign('seatdesign');
+      s.options = options;
+      s.render(document.getElementById('view'));
+    }
+    // url里面m=s|r进入排座运行页面
+    else if (m == "s" || m == "r") {
+      //加载排座设计器的配置
+      var defaultOptions = dsf.seatOptions['default'] || {};
+      var options = dsf.seatOptions[opt] || {};
+      options = $.extend(true, defaultOptions, options);
+      //这个s就是导出的seat.js
+      var s = new dsf.PD.seat('seat');
+      s.options = options;
+      //m为r排座运行页面只读
+      m == 'r' && (s.readOnly = true);
+      s.render(document.getElementById('view'));
+    }
+  })
+  // dsf.vdom.scan(document.getElementById("www"), {
+  //     data:{
+  //         abc:"abc",
+  //         setwww:function(){
+  //             this.abc="weng1"
+  //         }
+  //     },
+  //     insert:function(){
+  //         this.data.setwww();
+  //         this.render()
+  //         alert("d");
+  //     }
+  // })
+</script>
+
+</html>

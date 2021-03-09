@@ -1,0 +1,63 @@
+[
+   {
+      "name": "基础属性",
+      "attributes": [{
+         "text": "组件标识",
+         "bindControlAttr": "caption",
+         "showType": "text"
+      },
+         {
+            "text": "默认显示条数",
+            "bindControlAttr": "$showNumber",
+            "showType": "text"
+         },
+         {
+            "text": "接口地址",
+            "bindControlAttr": "sourceUrl",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "更多链接",
+            "bindControlAttr": "moreSrc",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         }
+      ]
+   },
+   {
+      "name": "颜色设置",
+      "attributes": [
+         {
+            "text": "标题栏左侧图标",
+            "bindControlAttr": "conTitleBarColor",
+            "showType": "text",
+            "changeExecFunction": "changeConTitleBarColor"
+         },
+         {
+            "text": "标题栏右侧图标",
+            "bindControlAttr": "wrapColor",
+            "showType": "text",
+            "changeExecFunction": "changeWrapColor"
+         },
+         {
+            "text": "列表“必修”",
+            "bindControlAttr": "itemBxColor",
+            "showType": "text",
+            "changeExecFunction": "changeItemBxColor"
+         },
+         {
+            "text": "列表“距离班级结束n天”",
+            "bindControlAttr": "endTimeColor",
+            "showType": "text",
+            "changeExecFunction": "changeEndTimeColor"
+         },
+         {
+            "text": "列表“开始学习”",
+            "bindControlAttr": "studyBtnColor",
+            "showType": "text",
+            "changeExecFunction": "changeStudyBtnColor"
+         }
+      ]
+   }
+]

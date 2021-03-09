@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!-- status log4j2内部日志级别 -->
+<configuration status="INFO">
+    <!-- 全局参数 -->
+    <Properties>
+        <Property name="pattern">%m%n</Property>
+        <Property name="displayName">web</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout>
+                <pattern>${pattern}</pattern>
+            </PatternLayout>
+        </Console>
+        <JDBC name="databaseAppender" tableName="dsfa_syslog_operate">
+            <!--过滤 只有带有“_DsfDbLog” marker的日志才能输出到数据库-->
+            <MarkerFilter marker="_DsfDbLog" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ConnectionFactory class="com.dsf.core.log.log4j2.LogDataSource" method="getConnection" />
+            <Column name="dsfa_syslog_operate_id" pattern="%uuid"/>
+            <Column name="msg" pattern="%msg" />
+            <Column name="ds_create_time" isEventTimestamp="true" />
+            <Column name="ds_update_time" isEventTimestamp="true" />
+            <Column name="tmethod" pattern="%method" />
+            <Column name="tclass" pattern="%class" />
+            <Column name="logtype" pattern="%p" />
+
+            <Column name="ds_update_user_id" pattern="%X{user_id}" />
+            <Column name="ds_create_user_name" pattern="%X{user_name}" />
+            <Column name="ds_create_user_id" pattern="%X{user_id}" />
+            <Column name="ds_update_user_name" pattern="%X{user_name}" />
+            <Column name="ds_unit_id" pattern="%X{unit_id}" />
+            <Column name="ip" pattern="%X{ip}" />
+            <Column name="module" pattern="%X{module}" />
+            <Column name="moduleid" pattern="%X{moduleId}" />
+            <Column name="relid" pattern="%X{relId}" />
+        </JDBC>
+
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework" level="ERROR" />
+        <Logger name="DSFLog" level="DEBUG"/>
+        <!--name: 只输出logger名字为_DsfDbLog的日志 -->
+        <!--level: log输出等级 -->
+        <!--includeLocation：是否可以获取class  method 等路径地址-->
+        <!--additivity: 是否继承root节点 默认true-->
+        <AsyncLogger name="_DsfDbLog" level="DEBUG" includeLocation="false"  additivity="false" >
+            <AppenderRef ref="databaseAppender"/>
+            <AppenderRef ref="console"/>
+        </AsyncLogger>
+        <Root level="ERROR">
+            <AppenderRef ref="console"></AppenderRef>
+        </Root>
+    </Loggers>
+</configuration>

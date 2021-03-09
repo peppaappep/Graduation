@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+<title>CodeMirror: merge view demo</title>
+<meta charset="utf-8" />
+<link rel=stylesheet href="doc/docs.css">
+
+<link rel=stylesheet href="lib/codemirror.css">
+<link rel=stylesheet href="addon/merge/merge.css">
+<link rel=stylesheet href="theme/darcula.css">
+<link rel=stylesheet href="../layui/css/layui.css">
+<script src="lib/codemirror.js"></script>
+<script src="mode/python/python.js"></script>
+<script src="lib/diff_match_patch.js"></script>
+<script src="addon/merge/merge.js"></script>
+<script src="../jquery-1.7.1.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script src="../common.js"></script>
+<style>
+.CodeMirror {
+	line-height: 1.2;
+}
+
+@media screen and (min-width: 1300px) {
+	article {
+		max-width: 1000px;
+	}
+	#nav {
+		border-right: 499px solid transparent;
+	}
+}
+body {
+}
+.main {
+	width: 100%;
+	height: 100%;
+	/* display: table-row; */
+}
+
+body .main > div {
+	/* display: table-cell; */
+	float:left;
+}
+
+#view {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.blue:hover {
+	background: #0092DC!important;
+	color: white;
+}
+.blue {
+	color: white;
+	background: #0092DC;
+}
+.CodeMirror-merge, .CodeMirror-merge .CodeMirror {
+    height: 100%;
+    overflow-y: initial;
+}
+.main .layui-table, .layui-table-view{
+	margin:0
+}
+</style>
+</head>
+<body>
+	<div class='main'>
+		<div id='files'>
+			<table class="layui-hide" id="file"></table>
+		</div>
+		<div id='view'></div>
+	</div>
+</body>
+</html>
+<script>
+	var value, orig, dv, panes = 2, highlight = true, connect = "align", collapse = false;
+	function initUI() {
+		if (value == null)
+			return;
+		var target = document.getElementById("view");
+		target.innerHTML = "";
+		dv = CodeMirror.MergeView(target, {
+			value : value,
+			orig : orig,
+			theme : 'darcula',
+			lineNumbers : true,
+			mode : "python",
+			highlightDifferences : highlight,
+			connect : connect,
+			collapseIdentical : collapse
+		});
+	}
+
+	function toggleDifferences() {
+		dv.setShowDifferences(highlight = !highlight);
+	}
+	
+	function merge(path, l, callback) {
+		var index = layer.load(1, {
+			shade: [.5, '#fff']
+		});
+		$.post('/NBS/module/getFileText.dream', {
+			path: path
+		}, function(data) {
+			if(data.data.status) {
+				if (l == 0) {
+					value = data.data.data
+					orig = '';
+				} else if (l == 1)
+					orig = data.data.data
+				initUI();
+				let	d = document.createElement("div");
+				d.style.cssText = "width: 50px; margin: 7px; height: 14px";
+				dv.editor().addLineWidget(57, d);
+				dv.wrap.style.width = window.innerWidth - 310 + 'px'
+			} else
+				$.messager.alert("提示", data.data.message, "info");
+			callback && callback();
+			layer.close(index);
+		})
+	}
+	
+	layui.use('table', function(){
+		  var table = layui.table;
+		  var $table = table.render({
+			    elem: '#file',
+			    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+			    cols: [[
+					//{checkbox: true},
+			      	{field:'path', hide: true},
+			      	{field:'actor', width:120, title: '修改人'},
+			      	{field:'time', width:160, title: '修改时间'}
+			    ]],
+			    data: [],
+			  });
+			table.on('row()', function(obj) {
+				var l = obj.tr.prevObject.find('.blue').length;
+				if (l < 3) {
+					if (!obj.tr.hasClass('blue') && l < 2)
+						merge(obj.data.path, l)
+					obj.tr[l < 2 ? 'toggleClass': 'removeClass']('blue');
+				}
+				
+			});
+
+			$.post('/NBS/summary/computer/getFormulas.dream', {
+				ID:/*  '311522B432F3414E953E646D3DC920EB', // */ window.frameElement ? window.frameElement.dialogArgs.ID : localStorage.ID,
+				PATH:/*  '/rhdc_client/summary/formula', // */ window.frameElement ? window.frameElement.dialogArgs.PATH : localStorage.PATH,
+			}, function(data) {
+				if (!data.success)
+					layer.msg(data.message);
+				else {
+					data.data.sort(function(a, b){
+				        return b[1] - a[1];
+					});
+					$table.reload({data:data.data.map(function(v) {
+						var n = v[0].match(/(?<=_)(\w+)(?=_\d+\.py)/ig);
+						return {
+							path: v[0],
+							actor: (n && n[0]) || 'mcadmin',
+							time: new Date(v[1]).format('yyyy-MM-dd hh-mm-ss')
+						}
+					})})
+						$('#files .layui-table-body tr:lt(2)').addClass('blue');
+					merge(data.data[0][0], 0, function () {
+						merge(data.data[1][0], 1, function() {
+						})
+					})
+				}
+			});
+		});
+	
+
+	function mergeViewHeight(mergeView) {
+		function editorHeight(editor) {
+			if (!editor)
+				return 0;
+			return editor.getScrollInfo().height;
+		}
+		return Math.max(editorHeight(mergeView.leftOriginal()),
+				editorHeight(mergeView.editor()), editorHeight(mergeView
+						.rightOriginal()));
+	}
+
+	function resize(mergeView) {
+		var height = mergeViewHeight(mergeView);
+		for (;;) {
+			if (mergeView.leftOriginal())
+				mergeView.leftOriginal().setSize(null, height);
+			mergeView.editor().setSize(null, height);
+			if (mergeView.rightOriginal())
+				mergeView.rightOriginal().setSize(null, height);
+
+			var newHeight = mergeViewHeight(mergeView);
+			if (newHeight >= height)
+				break;
+			else
+				height = newHeight;
+		}
+		mergeView.wrap.style.height = height + "px";
+	}
+</script>

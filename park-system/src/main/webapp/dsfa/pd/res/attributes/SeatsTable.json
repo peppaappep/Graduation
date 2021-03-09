@@ -1,0 +1,77 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly",
+                "changeExecFunction":"renderContext"
+            },
+			{
+				"text": "是否应用于小程序",
+				"showType": "boolean",
+				"bindControlAttr": "isminiapp",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "左侧列表名称",
+				"showType": "text",
+				"bindControlAttr": "leftListTile",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "左侧列表数据接口",
+				"showType": "text",
+				"bindControlAttr": "queryPersonAction",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "保存教室信息接口",
+				"showType": "text",
+				"bindControlAttr": "saveSeatsAction",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "保存学生信息接口",
+				"showType": "text",
+				"bindControlAttr": "saveStudentInfoAction",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "请求座位表数据接口",
+				"showType": "text",
+				"bindControlAttr": "querytabelDataAction",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "删除人员信息",
+				"showType": "text",
+				"bindControlAttr": "deleteAction",
+				"changeExecFunction":"renderContext"
+            },
+            {
+                "text": "是否显示排座按钮",
+				"showType": "boolean",
+				"bindControlAttr": "isShowBtn",
+				"changeExecFunction":"renderContext"
+            } ,
+            {
+                "text": "人员是否分组",
+				"showType": "boolean",
+				"bindControlAttr": "isGrouped",
+				"changeExecFunction":"renderContext"
+            }
+        ]
+    }
+]    

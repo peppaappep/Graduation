@@ -1,0 +1,1 @@
+{"accessRole":[],"isForm":false,"pageState":"other","xssConfig":{"allow":false},"init":{"privilege":[]},"query":{},"browseScope":{"scope":"0","unit":[]},"metadata":{},"isMobile":false,"designData":"{}"}

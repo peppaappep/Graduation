@@ -1,0 +1,43 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text",
+                "isShow":"@[$pageType]=='Page'"
+            },
+            {
+                "text": "水平对齐",
+                "bindControlAttr": "$align",
+                "showType": "select",
+                "changeExecFunction": "renderContext",
+                "dictionary": [{
+                        "text": "居左",
+                        "value": "left"
+                    }, {
+                        "text": "居中",
+                        "value": "center"
+                    },{
+                        "text": "居右",
+                        "value": "right"
+                    }
+                ]
+            },
+            {
+                "text": "按钮设置",
+                "showType": "dialog",
+                "bindControlAttr": "$buttonBar",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "title": "数据列设置",
+                    "url": "/dsfa/pd/views/buttonsEdit.html",
+                    "width": "1400px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            }
+        ]
+    }
+]

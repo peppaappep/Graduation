@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>多选题设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/bhc.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+
+    <style>
+      body {
+        background: #fff;
+      }
+
+      .ds_page .ds_question {
+        border: none;
+        padding: 20px;
+      }
+
+      form {
+        background: #fafafa;
+        padding: 20px;
+        position: relative;
+        border-top: 1px solid #EAEDEE;
+      }
+
+      form::before {
+        content: "";
+        border: 12px solid transparent;
+        display: inline-block;
+        border-bottom-color: #fafafa;
+        position: absolute;
+        top: -22px;
+        left: 30px;
+        z-index: 2;
+      }
+
+      form::after {
+        content: "";
+        border: 11px solid transparent;
+        display: inline-block;
+        border-bottom-color: #EAEDEE;
+        position: absolute;
+        top: -23px;
+        left: 31px;
+        z-index: 1;
+      }
+
+      .layui-textarea {
+        min-height: auto;
+      }
+
+      .layui-form-item {
+        margin: 15px 0;
+      }
+
+      .layui-form-label {
+        width: auto;
+        line-height: 14px;
+        padding-right: 1px !important;
+      }
+
+      .ts.layui-form-label {
+        padding-right: 8px !important;
+      }
+
+      .layui-form-item .layui-inline:first-child .layui-form-label {
+        padding-left: 0 !important;
+      }
+
+      .layui-form-item .layui-inline:last-child {
+        float: right;
+        margin-right: 0 !important;
+      }
+
+      .layui-form-item .layui-inline:last-child .layui-input-inline {
+        width: auto;
+        margin-right: 0;
+      }
+
+      .layui-unselect.layui-form-radio:last-child {
+        padding-right: 0;
+        margin-right: 0;
+      }
+
+      .layui-form-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .required::before {
+        content: '*';
+        display: inline-block;
+        color: red;
+        vertical-align: sub;
+      }
+
+      input[type=number] {
+        width: 80px;
+      }
+
+      .layui-form-item .layui-input-inline {
+        width: auto
+      }
+
+      .layui-input {
+        height: 32px;
+      }
+
+      .layui-form-radio {
+        margin-top: 2px;
+      }
+
+      .layui-form-item .layui-inline {
+        margin-bottom: 0;
+      }
+
+      .ds_button_sm {
+        height: 26px;
+        line-height: 26px;
+        margin-top: 2px;
+      }
+
+      td img {
+        width: 22px;
+        margin-right: 8px;
+        cursor: pointer;
+      }
+
+      .layui-form-item.one>div:first-child .layui-select-title input {
+        width: 100px;
+      }
+      .layui-form-selectup dl {
+        top: 42px;
+        bottom: unset;
+      }
+
+      .pld {
+        padding-top: 9px;
+        padding-left: 12px;
+        background: rgba(242, 242, 242);
+        border: 1px dashed #ccc;
+        margin-top: 50px;
+      }
+
+      .pld>span {
+        margin-bottom: 9px;
+        margin-right: 14px;
+        display: inline-block;
+      }
+
+      .pld>span:not(.pld-title) {
+        border-bottom: 1px solid;
+        cursor: pointer;
+      }
+
+      .pld>.pld-title {
+        font-weight: 600;
+        margin-right: 16px;
+      }
+    </style>
+  </head>
+
+  <body ng-controller='myCtrl' class="layui-form" lay-filter="_checkbox">
+    <div id="box">
+      <!-- 控件 -->
+      <div class="ds_page">
+        <div class="ds_question">
+          <div class="ds_qschackbox">
+            <div class="ds_question_select">
+              <div class="required question_index">
+                <span ng-bind='questionIndex'>编号</span>.
+                <span ng-bind='data.questionBody || "请输入题干"'>题目</span>
+                <span ng-show="data.mustCheckNum" class='maxCheckNum' ng-bind='"[限选"+data.mustCheckNum+"项]"'></span>
+                <span ng-show='!data.mustCheckNum&&data.maxCheckNum' class='maxCheckNum' ng-bind='"[最多选择"+data.maxCheckNum+"项]"'></span>
+                <span ng-show='!data.mustCheckNum&&data.minCheckNum' class='maxCheckNum' ng-bind='"[最少选择"+data.minCheckNum+"项]"'></span>
+              </div>
+              <div class="ds_item_box" style="min-height:28px">
+                <div id="content" class="q_content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 设置 -->
+      <form class="layui-form" action="" lay-filter="example">
+        <div class="layui-form-item">
+          <input type="text" required placeholder="请输入题干" ng-model='data.questionBody' autocomplete="off"
+            class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">是否含有'其他'选项：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="isOther" value="true" title="是" ng-checked="data.isOther==true"
+                ng-model="data.isOther" key="isOther">
+              <input type="radio" name="isOther" value="false" title="否" ng-checked='data.isOther==false'
+                ng-model="data.isOther" key="isOther">
+            </div>
+          </div>
+
+          <div class="layui-inline">
+            <label class="layui-form-label">本题不允许填写：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="readOnly" value="true" title="是" ng-checked="data.readOnly==true"
+                ng-model="data.readOnly" key="readOnly">
+              <input type="radio" name="readOnly" value="false" title="否" ng-checked='data.readOnly==false'
+                ng-model="data.readOnly" key="readOnly">
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">本题是否显示：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="visible" ng-value="true" title="是" ng-model="data.visible" key="visible">
+              <input type="radio" name="visible" ng-value="false" title="否" ng-model="data.visible" key="visible">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <label class="layui-form-label">必填标识：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="required" value="true" title="是" ng-checked="data.required==true"
+                ng-model="data.required" key="required">
+              <input type="radio" name="required" value="false" title="否" ng-checked='data.required==false'
+                ng-model="data.required" key="required">
+            </div>
+          </div>
+        </div>
+
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">限制选择数量：</label>
+            <div class="layui-input-inline">
+              <select name="mustCheckNum" lay-filter="mustCheckNum">
+                <option value='0'>不限制</option>
+                <option ng-repeat='tr in data.staticItem.code track by $index' value='{{$index+1}}'>限选{{$index+1}}项
+                </option>
+                <option ng-if='data.isOther' value="{{data.staticItem.code.length+1}}">
+                  限选{{data.staticItem.code.length+1}}项</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="layui-inline">
+            <label class="layui-form-label">最多选择数量：</label>
+            <div class="layui-input-inline">
+              <select name="maxCheckNum" lay-filter="maxCheckNum">
+                <option value='0'>不限制</option>
+                <option ng-repeat='tr in data.staticItem.code track by $index' value='{{$index+1}}'>最多选{{$index+1}}项
+                </option>
+                <option ng-if='data.isOther' value="{{data.staticItem.code.length+1}}">
+                  最多选{{data.staticItem.code.length+1}}项</option>
+              </select>
+            </div>
+          </div>
+
+          <!--          <div class="layui-inline">-->
+<!--            <label class="layui-form-label">最少选择数量：</label>-->
+<!--            <div class="layui-input-inline">-->
+<!--              <select name="minCheckNum" lay-filter="minCheckNum">-->
+<!--                <option value='0'>不限制</option>-->
+<!--                <option ng-repeat='tr in data.staticItem.code track by $index' value='{{$index+1}}'>最少选{{$index+1}}项-->
+<!--                </option>-->
+<!--                <option ng-if='data.isOther' value="{{data.staticItem.code.length+1}}">-->
+<!--                  最少选{{data.staticItem.code.length+1}}项</option>-->
+<!--              </select>-->
+<!--            </div>-->
+<!--          </div>-->
+
+        </div>
+        <div class="layui-form-item one">
+          <div class="layui-inline">
+            <label class="layui-form-label">归类：</label>
+            <div class="layui-input-inline">
+              <input type="text" placeholder="请输入归类" ng-model='data.group' autocomplete="off"
+                class="layui-input">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <label class="layui-form-label ts">排列样式：</label>
+            <div class="layui-input-inline">
+              <select name="layout" lay-filter="layout">
+                <option value='0'>自适应</option>
+                <option value='1'>竖向排列</option>
+                <optgroup label="横向排列">
+                  <option value='2'>每行2列</option>
+                  <option value='3'>每行3列</option>
+                  <option value='4'>每行4列</option>
+                  <option value='5'>每行5列</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+        
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <a class="ds_button ds_button_sm" ng-click='add()'>
+              <i class="iconfont layui-icon icon-liebiaozhankaitianjia"></i>
+              添加选项</a>
+            <a class="ds_button ds_button_sm" ng-click='addMore()'>
+              <i class="iconfont layui-icon icon-piliangtianjia"></i>
+              批量添加
+            </a>
+          </div>
+        </div>
+
+        <table class="layui-table" lay-skin="line">
+          <thead>
+            <tr>
+              <th width="60" style='text-align: center'>序号</th>
+              <th>选项</th>
+              <th width="140" style='text-align: center'>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat='tr in data.staticItem.code track by $index' ng-if='tr.value!="else"'>
+              <td width="60" style='text-align: center' ng-bind='$index+1'></td>
+              <td>
+                <input type="text" placeholder="请输入选项" ng-model='tr.text' autocomplete="off" class="layui-input"
+                  ng-blur='render()'>
+              </td>
+              <td width="140" style='text-align: center'>
+                <img src="/dsfa/res/dsf_styles/themes/question/jia.png" alt="添加" title='添加'
+                  ng-click='orderlyAdd($index+1)'>
+                <img src="/dsfa/res/dsf_styles/themes/question/jian.png" alt="删除" title='删除'
+                  ng-click='deleteItem($index)'>
+                <img src="/dsfa/res/dsf_styles/themes/question/shangyi.png" alt="上移" title='上移'
+                  ng-click='sort(tr,"up",$index)'>
+                <img src="/dsfa/res/dsf_styles/themes/question/xiayi.png" alt="下移" title='下移'
+                  ng-click='sort(tr,"down",$index)'>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- 逻辑设置模块 -->
+        <div class="pld">
+            <span class="pld-title">逻辑设置：</span>
+            <span ng-click='goQuRe()'>题目关联</span>
+          </div>
+      </form>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var ctrl = null;
+      var app = angular.module('myApp', []);
+      var logic_rela = {};
+      app.controller('myCtrl', function ($scope) {
+        $scope.data = {};
+        window.dialogInit = function (args) {
+          ctrl = args.owner;
+          $scope.data.staticItem = {
+            code: ctrl.items,
+            type: 'static'
+          }
+          $scope.data.questionBody = ctrl.$questionBody || "";
+          $scope.data.isOther = ctrl.isOther || false;
+          $scope.data.maxCheckNum = ctrl.maxCheckNum || 0;
+          // $scope.data.minCheckNum = ctrl.minCheckNum || 0;
+          $scope.data.mustCheckNum = ctrl.mustCheckNum || 0;
+          $scope.data.colNum = ctrl.colNum || 0;
+          $scope.data.readOnly = ctrl.$readOnly;
+          $scope.data.visible = ctrl.$visible;
+          $scope.data.required = ctrl.$required;
+          $scope.data.group = ctrl.group || '';
+          $scope.questionIndex = ctrl.questionIndex;
+          logic_rela = ctrl.$logic_rela || {};
+          layui.form.val('example', {
+            "layout": $scope.data.colNum,
+            "mustCheckNum": $scope.data.mustCheckNum,
+            "maxCheckNum": $scope.data.maxCheckNum,
+            // "minCheckNum": $scope.data.minCheckNum
+          })
+          var index = _.findIndex($scope.data.staticItem.code, { "value": "else" });
+          if (index >= 0) {
+            $scope.data.staticItem.code.splice(index, 1);
+          }
+          render();
+          $scope.$apply();
+        };
+
+        layui.form.on('radio', function (data) {
+          var key = data.elem.getAttribute('key');
+          if (key) {
+            $scope.data[key] = eval(data.value);
+            $scope.$apply();
+            if (key != 'visible') {
+              render();
+            }
+          }
+        });
+        layui.form.on('select(layout)', function (data) {
+          $scope.data.colNum = eval(data.value);
+          renderCheckbox();
+        });
+        layui.form.on('select(mustCheckNum)', function (data) {
+          $scope.data.mustCheckNum = eval(data.value);
+          $scope.$apply();
+          renderCheckbox();
+        });
+        layui.form.on('select(maxCheckNum)', function (data) {
+          $scope.data.maxCheckNum = eval(data.value);
+          $scope.$apply();
+          renderCheckbox();
+        });
+        // layui.form.on('select(minCheckNum)', function (data) {
+        //   if($scope.data.maxCheckNum>0&&data.value>$scope.data.maxCheckNum){
+        //     dsf.layer.message("最少选择数量不能大于最多选择数量", false);
+        //     return
+        //   }
+        //   $scope.data.minCheckNum = eval(data.value);
+        //   $scope.$apply();
+        //   renderCheckbox();
+        // });
+
+
+        var chooseNum = 0;
+        function render() {
+          if ($('#content')) {
+            $('#content').html("");
+          }
+          chooseNum = 0;
+          //判断items中是否已经存在其他如果没有则追加一个
+          if ($scope.data.staticItem.code.length <= 0) {
+            for (var i = 0; i < 2; i++) {
+              $('#content').append("<input type='checkbox' lay-skin='primary' " + ($scope.data.readOnly ? "disabled" : "") + " name='选项' value='" + i + "' title='选项" + (i + 1) + "'/>");
+            }
+          } else {
+            for (var i = 0; i < $scope.data.staticItem.code.length; i++) {
+              var item = $scope.data.staticItem.code[i];
+              if (item.attach_text == undefined) {
+                item.attach_text = ""
+              }
+              $('#content').append($("<input type='checkbox' lay-skin='primary' " + ($scope.data.readOnly ? "disabled" : "") + " title='" + item.text + "' value='" + i + "' name='选项'/>"));
+            }
+          }
+          setOtherCheckbox();
+          renderCheckbox();
+        }
+
+        function setOtherCheckbox() {
+          if ($scope.data.isOther) {
+            $('#content').append($("<input class='qt' type='checkbox' lay-skin='primary' " + ($scope.data.readOnly ? "disabled" : "") + " title='其他' value='else' name='选项'/>"));
+            $('#content').append('<div  class=" qt q_other"><input type="text"></div>');
+          } else {
+            $('.qt').remove();
+          }
+        }
+
+        function renderCheckbox() {
+          dsf.UI.render("checkbox", true, function () {
+            var all = $('#content').find(".layui-form-checkbox");
+            $(all).css("width", (100 / + $scope.data.colNum).toFixed(2) + "%");
+            if ($scope.data.isOther) {
+              $(all).last().css("width", "auto");
+            }
+            layui.form.val('example', {
+              "mustCheckNum": $scope.data.mustCheckNum,
+              "maxCheckNum": $scope.data.maxCheckNum,
+              // "minCheckNum": $scope.data.minCheckNum
+            })
+          },'_checkbox');
+        }
+        $scope.add = function () {
+          $scope.data.staticItem.code.push({
+            text: '',
+            value: ''
+          })
+        }
+        $scope.render = function () {
+          render();
+        }
+        $scope.orderlyAdd = function (index) {
+          $scope.data.staticItem.code.splice(index, 0, {
+            text: '',
+            value: ''
+          })
+        }
+        $scope.deleteItem = function (index) {
+          $scope.data.staticItem.code.splice(index, 1);
+          render();
+        }
+        layui.form.on('checkbox', function (data) {
+          if (data.elem.checked) {
+            chooseNum++;
+            if ($scope.data.maxCheckNum && chooseNum > $scope.data.maxCheckNum) {
+              data.elem.checked = false;
+              chooseNum--;
+              data.othis.removeClass('layui-form-checked');
+              dsf.layer.message("最多只能选择" + $scope.data.maxCheckNum + "项", false);
+            }
+          } else {
+            chooseNum--;
+          }
+        });
+        $scope.sort = function (item, type, index) {
+          if (index >= 0) {
+            if (type == "up") {
+              if (index > 0) {
+                var prev = $scope.data.staticItem.code[index - 1];
+                $scope.data.staticItem.code[index - 1] = item;
+                $scope.data.staticItem.code[index] = prev;
+
+                render();
+              }
+            } else {
+              if (index < $scope.data.staticItem.code.length - 1) {
+                var next = $scope.data.staticItem.code[index + 1];
+                $scope.data.staticItem.code[index + 1] = item;
+                $scope.data.staticItem.code[index] = next;
+
+                render();
+              }
+            }
+          }
+        }
+
+        $scope.addMore = function () {
+          window.parent.dsf.layer.openDialog({
+            title: "批量添加选项",
+            content: dsf.url.getWebPath("dsfa/pd/views/QSCheckBox3.html"),
+            area: ['400px', '530px'],
+            btn: [{
+              text: "确定",
+              handler: function (index, layero) {
+                var frame = layero.find("iframe");
+                let win = frame.get(0).contentWindow;
+                let result = win.getDialogResult();
+                $scope.data.staticItem.code = $scope.data.staticItem.code.concat(result);
+                $scope.$apply();
+                render();
+              }
+            }, {
+              text: "取消",
+              handler: function (index, layero) {
+
+              }
+            }]
+          });
+        }
+
+        window.getDialogResult = function () {
+          $scope.data.staticItem.code.forEach(function (o, i) {
+            $scope.data.staticItem.code[i].value = o['value'] || o['text'] || undefined;
+          });
+          if ($scope.data.isOther) {
+            $scope.data.staticItem.code.push({
+              "text": "其他",
+              "value": "else",
+              "attach_text": ""
+            })
+          }
+
+          $scope.data.logic_rela = logic_rela;
+          return $scope.data;
+        }
+
+        // 逻辑设置
+        $scope.goQuRe = function () {
+          openDialog('题目关联', 'questionRelation.html', (index, layero, res) => {
+            logic_rela = res;
+          })
+        }
+
+        function openDialog(title, page, okFun, cancelFun) {
+          dsf.layer.openDialog({
+            title: title || '标题',
+            content: dsf.url.getWebPath("dsfa/pd/views/" + page),
+            area: ['600px', '400px'],
+            args: {
+              owner: ctrl,
+              logic_rela: logic_rela
+            },
+            btn: [{
+              text: "确定",
+              handler: function (index, layero) {
+                if (okFun) {
+                  var frame = layero.find("iframe");
+                  let win = frame.get(0).contentWindow;
+                  let result = win.getDialogResult();
+                  okFun(index, layero, result);
+                }
+              }
+            }, {
+              text: "取消",
+              handler: function (index, layero) {
+                if (cancelFun) {
+                  cancelFun(index, layero);
+                }
+              }
+            }]
+          });
+        }
+      })
+    </script>
+  </body>
+
+</html>

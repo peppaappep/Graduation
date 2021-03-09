@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" class="ds_workflow_dialog">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>发送范围</title>
+		<link rel="stylesheet" type="text/css" href="../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/font/iconfont.css" />
+		<style>
+			.ds_workflow_dialog .layui-form:not(.layui-table-view){
+				height: 100%;
+			}
+			.ds_workflow_dialog .layui-tab{
+				height: 60%;
+				box-sizing: border-box;
+			}
+			.ds_workflow_dialog .layui-tab-title{
+				height: 30px;
+			}
+			.ds_workflow_dialog .layui-tab-title li{
+				line-height: 30px;
+			}
+			.ds_workflow_dialog .layui-tab-title .layui-this:after{
+				height: 30px;
+			}
+			.ds_workflow_dialog .layui-tab-content{
+				padding-top: 0;
+			}
+			.ds_workflow_dialog .bottom{
+				overflow: hidden;
+				height: 40%;
+				box-sizing: border-box;
+				position: relative;
+				padding-top: 40px;
+			}
+			.ds_workflow_dialog .bottom .btnBox{
+				text-align: center;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+			}
+			.ds_workflow_dialog .bottom table,
+			.ds_workflow_dialog .layui-table-view{
+				margin: 0;
+			}
+			.ds_workflow_dialog .bottom .table-box{
+				height: 100%;
+				
+				overflow-y: scroll;
+			}
+			.ds_workflow_dialog .layui-inline{
+				width: 50%;
+				box-sizing: border-box;
+			}
+			.ds_workflow_dialog .layui-inline-checkbox{
+				width: 40%;
+				float: right;
+				text-align: right;
+				margin: 0;
+				padding: 0;
+			}
+			.ds_workflow_dialog .layui-input-inline{
+				width: 100% !important;
+			}
+			.ds_workflow_dialog th,
+			.ds_workflow_dialog td,
+			.ds_workflow_dialog .choosedTable input.layui-unselect{
+				box-sizing: border-box;
+				text-align: center;
+				padding-left: 30px;
+			}
+			.ds_workflow_dialog .choosedTable td,
+			.ds_workflow_dialog .choosedTable th{
+				border-width: 1px;
+			}
+			.ds_workflow_dialog .layui-tab th:first-child,
+			.ds_workflow_dialog .layui-tab td:first-child{
+				text-align: center;
+				width: 60px;
+			}
+			.ds_workflow_dialog .layui-form-checkbox[lay-skin=primary]{
+				margin-top: 10px;
+			}
+			.ds_workflow_dialog table .layui-form-checkbox[lay-skin=primary]{
+				margin-top: 0;
+			}
+			.ds_workflow_dialog table .layui-form-checkbox[lay-skin=primary] i{
+				left: 0;
+			}
+			.ds_workflow_dialog .content-box{
+				height: 202px;
+				overflow: auto;
+				margin-top: 5px;
+			}
+			.ds_workflow_dialog .content-box.assign{
+				border: 1px solid #e6e6e6;
+			}
+			.ds_workflow_dialog .content-box table{
+				margin: 0;
+			}
+			.ds_workflow_dialog td .delete{
+				cursor: pointer;
+			}
+			.ds_workflow_dialog .layui-table-header{
+				border: 0;
+			}
+			.ds_workflow_dialog table.choosedTable .IsDeep{
+				width: 120px;
+			}
+			.ds_workflow_dialog table.choosedTable .IsSelected{
+				width: 180px;
+			}
+			.ds_workflow_dialog table.choosedTable .fun{
+				width:100px;
+				vertical-align: middle;
+			}
+			.ds_workflow_dialog [lay-id="table1"] .layui-form-checkbox[lay-skin=primary] i{
+				left: 0;
+			}
+			/* .ds_workflow_dialog [lay-id="table1"] tbody tr:first-child{
+				background-color: rgb(91, 192, 222);
+				color: rgb(255, 255, 255);
+			} */
+			.top>.layui-inline:first-child{
+				width: 70%;
+			}
+			.top>.layui-inline:nth-child(2){
+				width: 30%;
+				float: right;
+				text-align: right;
+			}
+			.dept{
+				position: relative;
+			}
+			.dept_left{
+				width: 70%;
+			}
+			.dept_right{
+				position: absolute;
+				left: 71%;
+				right: 0;
+				bottom: 0;
+				top: 10px;
+				border: 1px solid #e6e6e6;
+				overflow: auto;
+			}
+			.dept_left .layui-table-box,
+			.dept_left .layui-table-body{
+				overflow: visible;
+			}
+			.dept_left td[data-field="level"]>.layui-table-cell{
+				overflow: visible;
+			}
+			.dept_left .layui-select-title input{
+				height: 28px;
+				position: relative;
+				top: 3px;
+			}
+			.dept_left 	.layui-form-selected dl{
+				margin-top:-15px;
+			}
+			[lay-id="table2"] table{
+				width:529px !important;
+			}
+			.ds_workflow_dialog form:not(.show){
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body ng-controller='myCtrl'>
+		<form class="layui-form" action="" lay-filter="example" ng-class="{'show':config.showPage}">
+			<div class="layui-tab layui-tab-card" lay-filter="tabs">
+				<ul class="layui-tab-title">
+					<li ng-class="{'layui-this':config.selectTab==0}">部门+角色</li>
+					<li ng-class="{'layui-this':config.selectTab==1}">直接选人</li>
+					<li ng-class="{'layui-this':config.selectTab==2}">行政岗位</li>
+					<li ng-class="{'layui-this':config.selectTab==3}">人+关系</li>
+				</ul>
+				<div class="layui-tab-content">
+					<!-- 部门+角色 -->
+					<div class="layui-tab-item dept" ng-class="{'layui-show':config.selectTab==0}">
+						<div class="dept_left">
+							<div class="top">
+								<div class="layui-inline">
+									<div class="layui-input-inline">
+										<input type="radio" name="model0" key="model" value="assign" title="指定部门" ng-model="config.model">
+										<input type="radio" name="model0" key="model" value="extend" title="继承节点部门" ng-model="config.model">
+										<input type="radio" name="model0" key="model" value="super" title="高级模式" ng-model="config.model">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<div class="layui-input-inline">
+										<input type='checkbox' lay-filter="toPeople" lay-skin='primary' name="toPeople" key="toPeople" ng-model="config.toPeople"
+										 title="发送选择到人">
+									</div>
+								</div>
+							</div>
+							<div class="content-box" ng-class="{'assign':config.model=='assign'}">
+								<ul class="ztree" id="orgUL" ng-show="config.model=='assign'"></ul>
+								<div ng-show="config.model=='extend'">
+									<table id='table2Extend' lay-size="sm" class="layui-table" lay-skin="row" lay-filter="table2Extend"></table>
+								</div>
+								<iframe ng-show="config.model=='super'" ng-src="./iframe_gjSelect.html" frameborder="0"></iframe>
+							</div>
+						</div>
+						<div class="dept_right">
+							<ul class="ztree" id='flowPositionUL'></ul>
+						</div>
+					</div>
+					<!-- 直接选人 -->
+					<div class="layui-tab-item" ng-class="{'layui-show':config.selectTab==1}">
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+								<input type="radio" name="model1" key="model" value="assign" title="指定人员" ng-model="config.model">
+								<input type="radio" name="model1" key="model" value="extend" title="继承节点经办人" ng-model="config.model">
+								<input type="radio" name="model1" key="model" value="super" title="高级模式" ng-model="config.model">
+							</div>
+						</div>
+						<div class="content-box" ng-class="{'assign':config.model=='assign'}">
+							<ul class="ztree" id="peopleUL" ng-show="config.model=='assign'"></ul>
+							<div ng-show="config.model=='extend'">
+								<table id='tableExtend' lay-size="sm" class="layui-table" lay-skin="row" lay-filter="tableExtend"></table>
+							</div>
+							<iframe ng-show="config.model=='super'" src="./iframe_gjSelect.html" frameborder="0"></iframe>
+						</div>
+					</div>
+					<!-- 行政岗位 -->
+					<div class="layui-tab-item" ng-class="{'layui-show':config.selectTab==2}">
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+								<input type="radio" name="model2" key="model" value="assign" title="指定岗位" ng-model="config.model">
+								<input type="radio" name="model2" key="model" value="super" title="高级模式" ng-model="config.model">
+							</div>
+						</div>
+						<div class="layui-inline layui-inline-checkbox">
+							<div class="layui-input-inline">
+								<input type='checkbox' lay-filter="toPeople" lay-skin='primary' name="toPeople" ng-model="config.toPeople" key="toPeople"
+								 title="发送选择到人">
+							</div>
+						</div>
+						<div class="content-box">
+							<table lay-size="sm" ng-show="config.model=='assign'" class="layui-table" lay-skin="row">
+								<thead>
+									<tr>
+										<th>
+											<input type='checkbox' lay-skin='primary' value="true">
+										</th>
+										<th>岗位名称</th>
+										<th>备注</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<input type='checkbox' lay-skin='primary' value="true" name="toPeople">
+										</td>
+										<td>
+											<div>1</div>
+										</td>
+										<td>
+											<div>2</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<iframe ng-show="config.model=='super'" ng-src="./iframe_gjSelect.html" frameborder="0"></iframe>
+						</div>
+					</div>
+					<!-- 人+关系 -->
+					<div class="layui-tab-item dept" ng-class="{'layui-show':config.selectTab==3}">
+						<div class="dept_left">
+							<div class="top">
+								<div class="layui-inline">
+									<div class="layui-input-inline">
+										<input type="radio" name="model3" key="model" value="extend" title="继承节点经办人" ng-model="config.model">
+										<input type="radio" name="model3" key="model" value="super" title="高级模式" ng-model="config.model">
+									</div>
+								</div>
+								<div class="layui-inline">
+									<div class="layui-input-inline">
+										<input type='checkbox' lay-filter="toPeople" lay-skin='primary' name="toPeople" key="toPeople" ng-model="config.toPeople"
+										 title="发送选择到人">
+									</div>
+								</div>
+							</div>
+							<div class="content-box">
+								<div ng-show="config.model=='extend'">
+									<table id='table3Extend' lay-size="sm" class="layui-table" lay-skin="row" lay-filter="table3Extend"></table>
+								</div>
+								<iframe ng-show="config.model=='super'" ng-src="./iframe_gjSelect.html" frameborder="0"></iframe>
+							</div>
+						</div>
+						<div class="dept_right">
+							<ul class="ztree" id='flowPositionUL2'></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="bottom">
+				<div class="btnBox">
+					<a class="ds_button ds_button_md ds_button_auxiliary" ng-click="chooseFun()">
+						<i class="iconfont layui-icon icon-xia"></i>
+						选择
+					</a>
+					<a class="ds_button ds_button_md ds_button_auxiliary" ng-click='config.tableResult = [];config.chooseDataObj = {}'>
+						<i class="iconfont layui-icon icon-delete"></i>
+						清空
+					</a>
+				</div>
+				<div class="table-box">
+					<table class="layui-table choosedTable" lay-size="sm" class="layui-table" lay-skin="row">
+						<thead>
+							<tr>
+								<th class="name">范围</th>
+								<th class="IsDeep" ng-show="config.selectTab==0 || config.model=='super'">是否深度遍历</th>
+								<th class="IsSelected">状态</th>
+								<th class="fun">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in config.tableResult track by $index">
+								<td class="name">
+									<div>{{row.name}}</div>
+								</td>
+								<td class="IsDeep" ng-show="config.selectTab==0 || config.model=='super'">
+									<select index="{{$index}}" lay-filter="IsDeep" class="form-control" ng-model='row.IsDeep'>
+										<option value="0">否</option>
+										<option value="1">是</option>
+									</select>
+								</td>
+								<td class="IsSelected">
+									<select index="{{$index}}" lay-filter="IsSelected" class="form-control" ng-model='row.IsSelected'>
+										<option value="0">人工选择</option>
+										<option value="1">默认选中</option>
+										<option value="2">必选</option>
+									</select>
+								</td>
+								<td class="fun">
+									<a class='delete' ng-click="deleteItem(row)">删除</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</form>
+		<script src="../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../res/libs/layui/layui.all.js"></script>
+		<script src="../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+		<script src="../../app.js"></script>
+		<script src="../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../res/dsf_res/dsf_common.js"></script>
+		<script src="../../dsfa/pd/res/ds_prop.js"></script>
+		<script src="../../dsfa/pd/res/libs/angular/angular.min.js"></script>
+		<script src="../scripts/common.js"></script>
+
+		<script>
+
+			var isMyTest = false;
+			var loaddingIndex = loadding();
+			var rangeType = 31,
+				treeSet = {
+					view: {
+						selectedMulti: false
+					},
+					data: {
+						key: {
+							children: "children",
+							name: "_name",
+							url: ""
+						},
+						simpleData: {
+							enable: true,
+							idKey: "_id",
+							pIdKey: "treeinfo_pid",
+							rootPId: ""
+						}
+					}
+				},
+				_isNewFlow = parent.document.URL.indexOf("flow_index.html") > 0 ? true : false;
+
+			var row, element, workFlow, nodeObj, appInfo, flow,dialogArgs,rangeRule;
+
+			var peopleUL = $("#peopleUL"),
+				peopleULTree = null,
+				peopleULLoaded = false,
+				table1Loaded = false;
+
+			var orgUL = $("#orgUL"),
+				orgULTree = null,
+				orgULLoaded = false,
+				flowPositionUL = $("#flowPositionUL"),
+				flowPositionULTree = null,
+				table2Loaded = false,
+				flowPositionUL2 = $("#flowPositionUL2"),
+				flowPositionULTree2 = null,
+				flowPositionULLoaded = false;
+				
+			
+			angular.module('myApp', []).controller('myCtrl', function($scope) {
+				$scope.config = {
+					model: "assign",					
+					selectTab: 0,
+					toPeople: false,
+					tableResult: [],
+					chooseDataObj: {},
+					table2DataObj: {},
+					showPage:false
+				}
+				window.dialogInit = function(data) {
+					
+					dialogArgs = data;
+					row = data.rowData;
+					element = data.el;
+					workFlow = data.workFlow;
+					nodeObj = data.nodeObj;
+					appInfo = data.appInfo;
+					flow = data.flowPlugin;
+					
+					rangeRule = data.data || null;
+					loadding_close(loaddingIndex);
+					if(!rangeRule){
+					    rangeRule = getOpenNodeValue(row, nodeObj);
+					}
+					if (rangeRule){
+						$scope.config.toPeople = (rangeRule.IsUser == "1");
+						var type = rangeRule.Type;
+						rangeType = type;
+						var rows = [];
+						if (!rangeRule.RuleList) {
+						    return;
+						}
+						if (rangeRule.RuleList.Rule) {
+						    if (!$.isArray(rangeRule.RuleList.Rule)) {
+						        rangeRule.RuleList.Rule = [rangeRule.RuleList.Rule];
+						    }
+						} else {
+						    rangeRule.RuleList.Rule = [];
+						}
+						for (var i = 0; i < rangeRule.RuleList.Rule.length; i++) {
+						    var rule = rangeRule.RuleList.Rule[i];
+						    var obj = {};
+							if (type == "31") {
+								$scope.config.selectTab = 0;
+							    $scope.config.model = "assign";
+							    changeOrgModule();
+							    obj.deptId = rule.DeptID;
+							    obj.deptName = rule.DeptName;
+							    obj.ruleId = rule.RoleID;
+							    obj.ruleName = rule.RoleName;
+							    obj.IsDeep = rule.IsDeep;
+							    obj.IsSelected = rule.IsSelected;
+							    obj.id = rule.DeptID;
+							    obj.name = rule.DeptName + "-" + rule.RoleName;
+							} else if (type == "32") {
+								$scope.config.selectTab = 0;
+								$scope.config.model = "extend";
+							    changeOrgModule();
+								getRoleTree();
+							    obj.nodeId = rule.NodeID;
+							    obj.nodeName = rule.NodeName;
+							    obj.ruleId = rule.RoleID;
+							    obj.ruleName = rule.RoleName;
+							    obj.IsDeep = rule.IsDeep;
+							    obj.IsSelected = rule.IsSelected;
+							    obj.id = rule.NodeID;
+							    obj.level = rule.Level;
+							    obj.name = rule.NodeName + "-" + getDeptLevel(rule.Level) + "-" + rule.RoleName;
+							} else if (type == "33") {
+								$scope.config.selectTab = 0;
+								$scope.config.model = "super";
+							    changeOrgModule();
+							    obj = rule;
+							}else if (type == "21") {
+						        $scope.config.selectTab = 1;
+								$scope.config.model = "assign";
+						        changePeopleModule();
+						        obj.id = rule.UserID;
+						        obj.name = rule.UserName;
+						        obj.deptId = rule.DeptID;
+						        obj.deptName = rule.DeptName;
+						        obj.IsSelected = rule.IsSelected;
+						    } else if (type == "22") {
+						        $scope.config.selectTab = 1;
+						        $scope.config.model = "extend";
+						        changePeopleModule();
+						        obj.id = rule.NodeID;
+						        obj.name = rule.NodeName;
+						        obj.IsSelected = rule.IsSelected;
+						    } else if (type == "23" || type == "12"){
+								$scope.config.model = "super";
+								if (type == "12") {
+								    $scope.config.selectTab = 2;
+								    changePositionModule();
+								} else {
+								    $scope.config.selectTab = 1;
+								    changePeopleModule();
+								}
+								obj = rule;
+							}else if(type == "11") {
+						        $scope.config.selectTab = 2;
+								$scope.config.model = "assgin";
+						        // changePositionModule();
+						        // obj.id = rule.JobID;
+						        // obj.name = rule.JobName;
+						        // obj.IsSelected = rule.IsSelected;
+						    } else if (type == "41") {
+								$scope.config.selectTab = 3;
+								$scope.config.model = "extend";
+								changePeopleModule();
+								getRoleTree();
+						        obj.nodeId = rule.NodeID;
+						        obj.nodeName = rule.NodeName;
+						        obj.RelationID = rule.RelationID;
+						        obj.RelationName = rule.RelationName;
+						        obj.IsSelected = rule.IsSelected;
+						        obj.id = rule.NodeID;
+						        obj.name = rule.NodeName + "-" + rule.RelationName;
+						    } else if (type == "42") {
+								$scope.config.selectTab = 3;
+								$scope.config.model = "super";
+								getRoleTree();
+						        obj = rule;
+						    } else {
+						        layer_message("范围描述类型超出",true);
+						    }
+						    rows.push(obj);
+						}
+						$scope.config.tableResult = rows;
+					}else{
+						changeOrgModule();
+					}
+					$scope.config.showPage = true;
+					$scope.$apply();
+					layuiRender();
+					
+					if($scope.config.model == "super"){
+						$(".layui-tab-item.layui-show").find("iframe")[0].contentWindow.initScriptConfig(rows[0].exp);
+					}
+					_.forEach($scope.config.tableResult,function(obj,index){
+						if(type==31 || type==32 || type==41){
+							$scope.config.chooseDataObj[obj.id+"-"+(obj.ruleId || obj.RelationID)] = obj;
+						}else{
+							$scope.config.chooseDataObj[obj.id] = obj;
+						}
+					})
+				};
+				
+				layui.element.on('tab(tabs)', function(data) {
+					var index = data.index;
+					$scope.config.selectTab = index;
+					if (index == 0) {
+						// 部门+角色
+						rangeType = 31;
+						$scope.config.model = "assign";
+						initAssignDataForOrg();
+					} else if (index == 1) {
+						// 直接选人
+						rangeType = 21;
+						$scope.config.model = "assign";
+						initAssignDataForPeople();
+					} else if (index == 2) {
+						// 行政岗位
+						rangeType = 11;
+						$scope.config.model = "assign";
+					} else if (index == 3) {
+						// 人+关系
+						rangeType = 41;
+						$scope.config.model = "extend";
+						initExtendDataForPeople();
+						getRoleTree();
+					}
+					$scope.clearData();
+					$scope.$apply();
+					layuiRender();
+				});
+				layui.form.on('radio', function(data) {
+					var key = data.elem.getAttribute('key');
+					var changeModel = false;
+					if (key) {
+						if(key=='model' && $scope.config.model!=data.value){
+							changeModel = true;
+							$scope.clearData();
+						}
+						$scope.config[key] = data.value;
+						$scope.$apply();
+					}
+					if (changeModel) {
+						if ($scope.config.selectTab == '0') {
+							changeOrgModule();
+						} else if ($scope.config.selectTab == '1') {
+							changePeopleModule();
+						} else if($scope.config.selectTab == '2'){
+							changePositionModule();
+						} else if($scope.config.model=='extend'){
+							initExtendDataForPeople();	
+						}
+					}
+				});
+				layui.form.on('checkbox(toPeople)', function(data) {
+					$scope.config['toPeople'] = data.elem.checked;
+					layui.form.val("example",{
+					  "toPeople": data.elem.checked
+					});
+				});
+				// ----- 行政岗位 ----- start
+					function changePositionModule() {
+						var model = $scope.config.model;
+						if (model == "super") {
+							rangeType = 12;
+						} else {
+							rangeType = 11;
+						}
+					}
+				// ----- 行政岗位 ----- end
+				
+				//----- 直接选人-----start
+					function changePeopleModule() {
+						var model = $scope.config.model;
+						if (model == "super") {
+							return
+							//高级模式
+							initSuperDataForPeople();
+							rangeType = 23;
+						} else if (model == "extend") {
+							//继承节点经办人
+							initExtendDataForPeople();
+							rangeType = 22;
+						} else {
+							initAssignDataForPeople();
+							rangeType = 21;
+						}
+					}
+					// 初始化指定人员接口
+					function initAssignDataForPeople() {
+						if (!peopleULLoaded) {
+							var loadIndex = loadding();
+							// 接口需在登陆的状态下使用
+							var url = getWebPath(isMyTest?"oua/getUserByOrg":"oua/getUserByCurUnit");
+							dsf.http.request(url, {}, "GET")
+								.done(function(response) {
+									if (response.success) {
+										peopleULTree = $.fn.zTree.init(peopleUL, treeSet, [response.data]);
+										peopleULTree.expandAll(true);
+										peopleULLoaded = true;
+									} else {
+										layer_message("获取指定人员接口异常", false)
+									}
+								})
+								.error(function() {
+									layer_message("获取指定人员接口异常", false)
+								})
+								.always(function() {
+									loadding_close(loadIndex);
+								})
+								.exec();
+						}
+					}
+					// 初始化继承节点经办人
+					function initExtendDataForPeople() {
+						if (!table1Loaded) {
+							var els = _isNewFlow ? getAllElement_type("node") : getAllElement("Rect");
+							var rows = [];
+							rows.push({
+								id: 'DS_CUR_SEND_NODE',
+								name: '当前发送节点',
+								desc: ''
+							})
+							for (var i = 0; i < els.length; i++) {
+								if (!_isNewFlow) {
+									var attr = els[i].data("attributes");
+									var nodeInfo = getNodeInfo(attr.eid);
+									rows.push({
+										id: attr.cid,
+										name: nodeInfo.Name,
+										desc: nodeInfo.Desc
+									});
+								} else {
+
+									rows.push({
+										id: els[i].id,
+										name: els[i].name,
+										desc: els[i].attributes.Desc
+									});
+								}
+							}
+							//执行渲染
+							layui.table.render({
+								elem: '#tableExtend',
+								id: "table1",
+								size:"sm",
+								cols: [
+									[{
+											type: "numbers"
+										},
+										{
+											checkbox: true
+										},
+										{
+											field: 'name',
+											title: '岗位名称'
+										},
+										{
+											field: 'desc',
+											title: '备注'
+										},
+									]
+								],
+								data: rows
+							});
+							//执行渲染
+							layui.table.render({
+								elem: '#table3Extend',
+								id: "table3",
+								size:"sm",
+								cols: [
+									[{
+											type: "numbers"
+										},
+										{
+											checkbox: true
+										},
+										{
+											field: 'name',
+											title: '岗位名称'
+										},
+										{
+											field: 'desc',
+											title: '备注'
+										},
+									]
+								],
+								data: rows
+							});
+							table1Loaded = true;
+						}
+					}
+				//----- 直接选人-----end
+
+				//----- 部门+人员----start
+					function changeOrgModule() {
+						var model = $scope.config.model;
+						if (model == "super") {
+							getRoleTree();
+							rangeType = 33;
+						} else if (model == "extend") {
+							initExtendDataForOrg();
+							rangeType = 32;
+						} else {
+							initAssignDataForOrg();
+							rangeType = 31;
+						}
+					}
+					// 初始化指定部门接口
+					function initAssignDataForOrg() {
+						if (!orgULLoaded) {
+							var loadIndex = loadding();
+							dsf.http.request(getWebPath(isMyTest?"oua/getUserByOrg":"oua/getDeptByCurUnit"), null, "GET")
+								.done(function(response) {
+									if (response.success) {
+										orgULTree = $.fn.zTree.init(orgUL, treeSet, [response.data]);
+										orgULTree.expandAll(true);
+										orgULLoaded = true;
+									} else {
+										layer_message("获取指定部门接口异常", false)
+									}
+								}).error(function() {
+									layer_message("获取指定部门接口异常", false)
+								})
+								.always(function() {
+									loadding_close(loadIndex);
+								}).exec();
+
+							getRoleTree();
+						}
+					}
+					function getRoleTree(){
+						if(!flowPositionULLoaded){
+							getFlowPosition(function(data) {
+								flowPositionULTree = $.fn.zTree.init(flowPositionUL, treeSet, data);
+								flowPositionULTree.expandAll(true);
+								
+								flowPositionULTree2 = $.fn.zTree.init(flowPositionUL2, treeSet, data);
+								flowPositionULTree2.expandAll(true);
+							});
+							flowPositionULLoaded = true;
+						}
+						
+					}
+					// 获取角色树
+					function getFlowPosition(callback) {
+						dsf.http.request(getWebPath("oua/getRole"), null, "GET")
+							.done(function(response) {
+								if (response.success) {
+									function fn(data) {
+										data._name = data.NAME;
+										data._id = data.id;
+										data._type = data.TYPE
+										data.attributes = {
+											"NAME": data.NAME,
+											"id": data.id,
+											"FID": data.pid,
+											"type": data.TYPE
+										};
+										delete data.NAME;
+										delete data.Atts;
+										delete data.TYPE;
+										delete data.FID;
+										if (data.children) {
+											for (var i = 0; i < data.children.length; i++) {
+												fn(data.children[i])
+											}
+										}
+									}
+									fn(response.data[0])
+									callback(response.data)
+								} else {
+									layer_message("获取角色接口异常", false);
+								}
+							}).error(function() {
+								layer_message("获取角色接口异常", false);
+							}).exec();
+					}
+
+					// 初始化继承部门节点
+					function initExtendDataForOrg() {
+						if (!table2Loaded) {
+							var els = _isNewFlow ? getAllElement_type("node") : getAllElement("Rect");
+							var rows = [];
+							
+							rows.push({
+								id: 'DS_CUR_SEND_NODE',
+								name: '当前发送节点',
+								level: 1,
+								desc: ''
+							})
+							for (var i = 0; i < els.length; i++) {
+								if (!_isNewFlow) {
+									var attr = els[i].data("attributes");
+									var nodeInfo = getNodeInfo(attr.eid);
+									rows.push({
+										id: attr.cid,
+										name: nodeInfo.Name,
+										level: 1,
+										desc: nodeInfo.Desc
+									});
+								} else {
+									rows.push({
+										id: els[i].id,
+										name: els[i].name,
+										level: "1",
+										desc: els[i].attributes.Desc
+									});
+								}
+							}
+							//执行渲染
+							layui.table.render({
+								elem: '#table2Extend',
+								id: "table2",
+								width:530,
+								size:"sm",
+								cols: [
+									[{
+											type: "numbers"
+										},
+										{
+											checkbox: true,
+											width: 50,
+										},
+										{
+											field: 'name',
+											title: '范围',
+											width: 170,
+											unresize:true
+										},
+										{
+											field: 'level',
+											title: '级别',
+											width: 140,
+											templet: '#selectLevel',
+											unresize: true
+										},
+										{
+											field: 'desc',
+											title: '备注',
+											width: 120,
+										},
+									]
+								],
+								data: rows
+							});
+							table2Loaded = true;
+							$scope.config.table2DataObj = {};
+							updateCacheOrForm('table2Extend','table2',"form")
+							setTimeout(function(){
+								layui.form.render('select')
+							})
+						}
+					}
+					// 渲染级别的值
+					function updateCacheOrForm(tableId, tableCacheId, op){
+						op = op || "form";
+						var divForm = $("#" + tableId).next();
+						var tableCache = layui.table.cache[tableCacheId]; 
+						var trJqs = divForm.find(".layui-table-body tr");
+						trJqs.each(function(){
+							var trJq = $(this);
+							var dataIndex = trJq.attr("data-index");
+							trJq.find("td").each(function(){
+								var tdJq = $(this);
+								var fieldName = tdJq.attr("data-field");
+								var selectJq = tdJq.find("select");
+								if(selectJq.length == 1){
+									if(op == "cache"){
+										tableCache[dataIndex][fieldName] = selectJq.eq(0).val();
+									}else if(op == "form"){
+										selectJq.eq(0).val(tableCache[dataIndex][fieldName])
+									}
+								}
+							});
+						});
+						return tableCache;
+					}
+					layui.form.on('select(level)', function(data){
+						// 继承节点部门的级别
+						$scope.config.table2DataObj[data.elem.name] = data.value+"";
+					});
+				//----- 部门+人员----end
+				
+				//----- 底部选择 -----start
+					layui.form.on('select(IsDeep)', function(data){
+						$scope.config.tableResult[data.elem.getAttribute("index")]["IsDeep"] = data.value+"";
+					});
+					layui.form.on('select(IsSelected)', function(data){
+						$scope.config.tableResult[data.elem.getAttribute("index")]["IsSelected"] = data.value+"";
+					});
+				
+					// 点击选择
+					$scope.chooseFun = function() {
+						if ($scope.config.selectTab == 0) { //部门+角色
+							if ($scope.config.model == "assign") {
+								rangeType = 31;
+								var node1 = orgULTree.getSelectedNodes();
+								var node2 = flowPositionULTree.getSelectedNodes();
+								if (node1.length == 0 && node2.length == 0) {
+									// 还没选择
+									return
+								} else if (node1.length == 0){
+									layer_message("请选择左侧指定部门节点", false);
+									return
+								} else if ( node2.length == 0) {
+									layer_message("请选择右侧角色节点", false);
+									return
+								} else if (node2.length > 0 && node2[0]._type != "2") {
+									layer_message("请选择正确的角色节点", false);
+									return
+								}
+											
+								var obj = {
+									id: node1[0]._id,
+									name: node1[0]._name + "-" + node2[0]._name,
+									IsDeep: '1',
+									IsSelected: '0',
+									deptId: node1[0]._id,
+									ruleId: node2[0]._id,
+									deptName: node1[0]._name,
+									ruleName: node2[0]._name
+								};
+								if (!$scope.config.chooseDataObj[obj.deptId+"-"+obj.ruleId]) {
+									$scope.config.chooseDataObj[obj.deptId+"-"+obj.ruleId] = obj;
+									$scope.config.tableResult.push(obj);
+								}
+							} else if ($scope.config.model == "extend") {
+								rangeType = 32;
+								var rows = layui.table.checkStatus('table2').data;
+								var node = flowPositionULTree.getSelectedNodes();
+								if(node.length==0 && rows.length==0){
+									layer_message("请选择继承的节点部门+角色", false);
+									return;
+								}
+								if(node && node.length>0 && rows.length==0){
+									layer_message("请选择继承的节点部门", false);
+									return;
+								}
+								if (node && node.length>0) {
+									for (var i = 0; i < rows.length; i++) {
+										var rowName = rows[i].name;
+										rows[i].name = rowName + "-" + getDeptLevel($scope.config.table2DataObj[rows[i].id] || rows[i].level) + "-" + node[0]._name;
+										rows[i].nodeId = rows[i].id;
+										rows[i].nodeName = rowName;
+										rows[i].level = $scope.config.table2DataObj[rows[i].id] || '1';
+										rows[i].ruleId = node[0].attributes.id;
+										rows[i].ruleName = node[0]._name;
+										rows[i].IsDeep = '1';
+										rows[i].IsSelected = '0';
+										if (!$scope.config.chooseDataObj[rows[i].id+"-"+node[0].attributes.id]) {
+											$scope.config.chooseDataObj[rows[i].id+"-"+node[0].attributes.id] = rows[i];
+											$scope.config.tableResult.push(rows[i]);
+										}
+									}
+								}else{
+									layer_message("请选择角色", false);
+									return;
+								}
+							} else {
+								rangeType = 33;
+								var scriptConfig = $(".layui-tab-item.layui-show").find("iframe")[0].contentWindow.getSriptConfig();
+								var node = flowPositionULTree.getSelectedNodes();
+								if (node) {
+									scriptConfig.RoleID = node[0].attributes.id;
+									scriptConfig.RoleName = node[0]._name;
+									scriptConfig.IsSelected = '0';
+									scriptConfig.IsDeep = '1';
+									$scope.config.tableResult = [scriptConfig];
+								}else{
+									layer_message("请选择角色", false);
+									return;
+								}
+							}
+						} else if ($scope.config.selectTab == 1) { //直接选人
+							if ($scope.config.model == "assign") {
+								//指定人员
+								rangeType = 21;
+								var node = peopleULTree.getSelectedNodes();
+								if (node && node[0] && node[0]._type == 1) {
+									var parent = node[0].getParentNode();
+									var obj = {
+										id: node[0]._id,
+										name: node[0]._name,
+										deptId: parent._id,
+										deptName: parent._name || "",
+										IsSelected: '0'
+									};
+									if (!$scope.config.chooseDataObj[obj.id]) {
+										$scope.config.chooseDataObj[obj.id] = obj;
+										$scope.config.tableResult.push(obj);
+									}
+								}
+							} else if ($scope.config.model == "extend") {
+								// 继承节点经办人
+								rangeType = 22;
+								var rows = layui.table.checkStatus('table1').data;
+								for (var i = 0; i < rows.length; i++) {
+									rows[i].IsSelected = '0';
+									if (!$scope.config.chooseDataObj[rows[i].id]) {
+										$scope.config.chooseDataObj[rows[i].id] = rows[i];
+										$scope.config.tableResult.push(rows[i]);
+									}
+								}
+							} else {
+								// 高级模式
+								rangeType = 23;
+								var scriptConfig = $(".layui-tab-item.layui-show").find("iframe")[0].contentWindow.getSriptConfig()
+								scriptConfig.IsSelected = '0';
+								scriptConfig.IsDeep = '1';
+								$scope.config.tableResult = [scriptConfig];
+							}
+						} else if ($scope.config.selectTab == 2) { //行政岗位
+							if ($scope.config.model == "assign") {
+								rangeType = 11;
+								return;
+								var rows = table0.datagrid("getSelections");
+								for (var i = 0; i < rows.length; i++) {
+									rows[i].IsSelected = 0;
+								}
+								tableResult.datagrid("loadData", rows);
+							} else {
+								rangeType = 12;
+								var scriptConfig = $(".layui-tab-item.layui-show").find("iframe")[0].contentWindow.getSriptConfig()
+								scriptConfig.IsSelected = '0';
+								scriptConfig.IsDeep = '1';
+								$scope.config.tableResult = [scriptConfig];
+							}
+						} else  if ($scope.config.selectTab == 3) { //人员+关系
+							if ($scope.config.model == "extend") {
+								rangeType = 41;
+								var rows = layui.table.checkStatus('table3').data;
+								var node = flowPositionULTree2.getSelectedNodes();
+								if(node.length==0 && rows.length==0){
+									layer_message("请选择继承的节点部门+角色", false);
+									return;
+								}
+								if(node && node.length>0 && rows.length==0){
+									layer_message("请选择继承的节点部门", false);
+									return;
+								}
+								if (node && node.length>0) {
+									for (var i = 0; i < rows.length; i++) {
+										var rowName = rows[i].name;
+										rows[i].name = rowName + "-" + node[0]._name;
+										rows[i].nodeId = rows[i].id;
+										rows[i].nodeName = rowName;
+										rows[i].RelationID = node[0].attributes.id;
+										rows[i].RelationName = node[0]._name;
+										rows[i].IsSelected = '0';
+										if (!$scope.config.chooseDataObj[rows[i].id+"-"+node[0].attributes.id]) {
+											$scope.config.chooseDataObj[rows[i].id+"-"+node[0].attributes.id] = rows[i];
+											$scope.config.tableResult.push(rows[i]);
+										}
+									}
+								}else{
+									layer_message("请选择角色", false);
+									return;
+								}
+							} else {
+								rangeType = 42;
+								var scriptConfig = $(".layui-tab-item.layui-show").find("iframe")[0].contentWindow.getSriptConfig();
+								var node = flowPositionULTree2.getSelectedNodes();
+								if (node) {
+									scriptConfig.RelationID = node[0].attributes.id;
+									scriptConfig.RelationName = node[0]._name;
+									scriptConfig.IsSelected = '0';
+									scriptConfig.IsDeep = '1';
+									$scope.config.tableResult = [scriptConfig];
+								}else{
+									layer_message("请选择角色", false);
+									return;
+								}
+								
+							}
+						}
+					
+						layuiRender();
+					}
+				
+					// 行删除
+					$scope.deleteItem = function(item) {
+						var index = $scope.config.tableResult.indexOf(item);
+						if (index >= 0) {
+							$scope.config.tableResult.splice(index, 1);
+						}
+						if(rangeType==31 || rangeType==32 || rangeType==41){
+							delete $scope.config.chooseDataObj[item.id+"-"+(item.ruleId || item.RelationID)];
+						}else{
+							delete $scope.config.chooseDataObj[item.id];
+						}
+					}
+				//----- 底部选择 -----end
+				
+				$scope.clearData = function(){
+					clearGjSelectData();
+					$scope.config.tableResult = [];
+					$scope.config.chooseDataObj = {};
+					$scope.config.table2DataObj = {};
+				}
+				
+				// 保存
+				window.getDialogResult = function() {
+					var obj = {
+						Type: rangeType,
+						IsUser: $scope.config.toPeople ? 1 : 0,
+						RuleList: {
+							Rule: []
+						}
+					};
+					var data = $scope.config.tableResult;
+					var selectTab = $scope.config.selectTab;
+					var module = $scope.config.model;
+					for (var i = 0; i < data.length; i++) {
+						var row = data[i];
+						var Rule = {};
+						if (selectTab == 0) {
+							if (module == "assign") {
+								Rule = {
+									DeptID: row.deptId,
+									DeptName: row.deptName,
+									RoleID: row.ruleId,
+									RoleName: row.ruleName,
+									IsDeep: row.IsDeep,
+									IsSelected: row.IsSelected
+								}
+							} else if (module == "extend") {
+								Rule = {
+									NodeID: row.nodeId,
+									NodeName: row.nodeName,
+									Level: row.level,
+									RoleID: row.ruleId,
+									RoleName: row.ruleName,
+									IsDeep: row.IsDeep,
+									IsSelected: row.IsSelected,
+									Level: row.level
+								}
+							} else {
+								Rule = row;
+							}
+						} else if (selectTab == 1) {
+							if (module == "assign") {
+								Rule = {
+									UserID: row.id,
+									UserName: row.name,
+									DeptID: row.deptId,
+									DeptName: row.deptName,
+									IsSelected: row.IsSelected
+								}
+							} else if (module == "extend") {
+								Rule = {
+									NodeID: row.id,
+									NodeName: row.name,
+									IsSelected: row.IsSelected
+								}
+							} else {
+								Rule = row;
+							}
+						} else if (selectTab == 2) {
+							if (module == "assign") {
+								Rule = {
+									JobID: row.id,
+									JobName: row.name,
+									IsSelected: row.IsSelected
+								}
+							} else {
+								Rule = row;
+							}
+						} else if (selectTab == 3) {
+							if (module == "extend") {
+								Rule = {
+									NodeID: row.nodeId,
+									NodeName: row.nodeName,
+									RelationID: row.RelationID,
+									RelationName: row.RelationName,
+									IsDeep: row.IsDeep,
+									IsSelected: row.IsSelected
+								}
+							} else {
+								Rule = row;
+							}
+						}
+						obj.RuleList.Rule.push(Rule);
+					}
+					console.log(obj)
+					return obj;
+				}
+			})
+			
+			function layuiRender() {
+				setTimeout(function() {
+					layui.form.render();
+				})
+			}
+			
+			function clearGjSelectData(){
+				if($(".layui-tab-item.layui-show").find("iframe").length>0){
+					$(".layui-tab-item.layui-show").find("iframe")[0].contentWindow.initScriptConfig('');
+				}
+			}
+			function getAllElement(xmlType) {
+				var els = [];
+				element.paper.forEach(function(el) {
+					if (el.data("attributes").xmlType == xmlType) {
+						els.push(el);
+					}
+				});
+				return els;
+			}
+			
+			function getAllElement_type(type) {
+				var els = [];
+				if (type == "node") {
+					els = flow.getPanelInfo()["nodes"];
+				}
+				if (type == "line") {
+					els = flow.getPanelInfo()["lines"];
+				}
+				return els;
+			}
+			
+			function getOpenNodeValue(row, nodeObj) {
+				var result = null;
+				if (row.nodeLevel == 1) {
+					result = nodeObj[row.nodeName];
+				}
+				else if (row.nodeLevel == 2) {
+					if (!nodeObj[row.nodeName1]) exAction = nodeObj[row.nodeName1];
+					result = nodeObj[row.nodeName1][row.nodeName2];
+				}
+				else if (row.nodeLevel == 3) {
+					result = nodeObj[row.nodeName1][row.nodeName2][row.nodeName3];
+				}
+				return result;
+			}
+			
+			function getDeptLevel(index) {
+			    var deptArray = ["子机构", "一级部门", "二级部门", "三级部门", "四级部门"];
+			    if (index == -1) {
+			        return "当前部门";
+			    } else {
+			        return deptArray[index];
+			    }
+			}
+		</script>
+
+		<script type="text/html" id="selectLevel">
+			<select lay-filter="level" name="{{d.id}}">
+				<option value="-1" >当前部门</option>
+				<option value="0">子机构</option>
+				<option value="1">一级部门</option>
+				<option value="2">二级部门</option>
+				<option value="3">三级部门</option>
+			</select>
+		</script>
+	</body>
+
+</html>

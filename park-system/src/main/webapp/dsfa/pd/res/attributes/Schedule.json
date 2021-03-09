@@ -1,0 +1,32 @@
+[
+
+   {
+      "name": "基础属性",
+      "attributes": [{
+            "text": "组件标识",
+            "bindControlAttr": "caption",
+            "showType": "text"
+         },
+         {
+            "text": "接口地址",
+            "showType": "text",
+            "bindControlAttr": "sourceUrl"
+         },
+         {
+            "text": "核工业更多链接",
+            "showType": "text",
+            "bindControlAttr": "hgyMoreSrc"
+         },
+         {
+            "text": "更多链接",
+            "showType": "text",
+            "bindControlAttr": "moreSrc"
+         },
+         {
+            "text": "接口数据显示条数",
+            "showType": "text",
+            "bindControlAttr": "pageSize"
+         }
+      ]
+   }
+]

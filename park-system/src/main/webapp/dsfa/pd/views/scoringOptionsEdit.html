@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>评分选项自定义</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/libs/layui/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/dsf_style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/bhc.css"
+    />
+  </head>
+  <body>
+    <div style="padding:10px 10px 0 10px">
+      <textarea
+        id="items"
+        name="desc"
+        rows="13"
+        class="layui-textarea"
+        placeholder="支持格式：'文本|值','文本|值|图片名称'两种格式，多个选项用回车符换行"
+      ></textarea>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+
+    <script>
+      var textarea = $('#items')
+      window.dialogInit = function(args) {
+        if (args.owner.scoringOptions && args.owner.scoringOptions.length > 0) {
+          var str = []
+          args.owner.scoringOptions.forEach(function(o, i) {
+            var v =
+              o.text == o.value ? o.text : o.text + '|' + o.value + '|' + o.icon
+            str.push(v)
+          })
+          textarea.val(str.join('\n'))
+        }
+      }
+      window.getDialogResult = function() {
+        var temp = textarea.val().split('\n')
+        var val = []
+        temp.forEach(function(o, i) {
+          if ($.trim(o)) {
+            var v = o.split('|')
+            val.push({
+              text: v[0],
+              value: v[1] || v[0],
+              icon: v[2] !== undefined ? v[2] : '',
+            })
+          }
+        })
+        return val
+      }
+    </script>
+  </body>
+</html>

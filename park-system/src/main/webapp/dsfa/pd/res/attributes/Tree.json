@@ -1,0 +1,67 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "是否显示节点图标",
+                "showType": "boolean",
+                "bindControlAttr": "setting.view.showIcon",
+                "changeExecFunction": "initTree"
+            },
+            {
+                "text": "是否显示节点间的连线",
+                "showType": "boolean",
+                "bindControlAttr": "setting.view.showLine",
+                "changeExecFunction": "initTree"
+            },
+            {
+                "text": "是否显示选择框",
+                "showType":"boolean",
+                "bindControlAttr":"setting.check.enable",
+                "changeExecFunction": "initTree"
+            },
+            {
+                "text": "是否启用异步加载",
+                "showType": "boolean",
+                "bindControlAttr": "setting.async.enable",
+                "hiddenKeyClass":"async"
+            },
+            {
+                "text": "默认展开级数",
+                "bindControlAttr": "defaultOpenSeries",
+                "showType": "text",
+                "hidden":"setting.async.enable",
+                "class":"async",
+                "type":"number"
+            },
+            {
+                "text": "配置跳转iframe的NAME标识",
+                "bindControlAttr": "targetIframe.name",
+                "showType": "text"
+            },
+            {
+                "text": "配置跳转iframe地址",
+                "bindControlAttr": "targetIframe.src",
+                "showType": "text"
+            },
+            {
+                "text": "样式选择",
+                "bindControlAttr": "ztreeClass",
+                "showType": "select",
+                "changeExecFunction": "changeStyle",
+                "dictionary": [{
+                        "text": "原始风格",
+                        "value": ""
+                    }, {
+                        "text": "箭头风格",
+                        "value": "arrowsTree"
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>五角星分值和文字</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/libs/layui/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/dsf_style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/bhc.css"
+    />
+    <style>
+      #rate-options {
+        background-color: #fff;
+        height: 100vh;
+      }
+      #rate-options .rate-content {
+        padding: 20px 20px 0 20px;
+      }
+      #rate-options .layui-form-label {
+        width: 120px;
+      }
+      #rate-options .title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rate-options">
+      <div class="rate-content">
+        <form class="layui-form" action="" lay-filter="example">
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">默认星星数量</label>
+              <div class="layui-input-inline">
+                <input
+                  id="input-length"
+                  type="text"
+                  name="length"
+                  autocomplete="off"
+                  placeholder="请输入个数"
+                  class="layui-input"
+                  maxlength="2"
+                />
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">是否只读</label>
+              <div class="layui-input-inline">
+                <input
+                  type="checkbox"
+                  name="readonly"
+                  lay-skin="switch"
+                  lay-filter="readonly"
+                  lay-text="是|否"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">显示评分对应星级</label>
+              <div class="layui-input-inline">
+                <input
+                  type="checkbox"
+                  name="text"
+                  lay-skin="switch"
+                  lay-filter="text"
+                  lay-text="是|否"
+                />
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">是否可以选择半星</label>
+              <div class="layui-input-inline">
+                <input
+                  type="checkbox"
+                  name="half"
+                  lay-skin="switch"
+                  lay-filter="half"
+                  lay-text="是|否"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">默认文字和分值</label>
+            <div class="layui-input-inline" style="width: 70%;">
+              <textarea
+                id="rate"
+                rows="5"
+                class="layui-textarea"
+                placeholder="支持格式：文本|值，多个选项用回车符换行"
+              ></textarea>
+            </div>
+          </div>
+        </form>
+        <p class="title">基础效果</p>
+        <div id="items"></div>
+      </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+
+    <script>
+      var textarea = $('#rate'),
+        rateOptions = '',
+        newArr = {},
+        textArray = []
+
+      window.dialogInit = function(args) {
+        dsf.log('args', args)
+        var data = args.owner ? args.owner.rateOptions : ''
+        if (data) {
+          rateOptions = args.owner.rateOptions
+          textArray = data.textArray
+          _.map(textArray, function(item, idx) {
+            var v = item.split('|')
+            Object.assign(newArr, { [++idx]: v[0] })
+            return newArr
+          })
+          // 默认
+          textarea.val(textArray.join('\n'))
+          render()
+        }
+      }
+
+      $('#input-length').bind('input propertychange', function() {
+        rateOptions.length = $(this).val()
+        render()
+      })
+      layui.form.on('switch(readonly)', function(data) {
+        rateOptions.readonly = data.elem.checked
+        render()
+      })
+      layui.form.on('switch(text)', function(data) {
+        rateOptions.text = data.elem.checked
+        render()
+      })
+      layui.form.on('switch(half)', function(data) {
+        rateOptions.half = data.elem.checked
+        render()
+      })
+      textarea.on('blur', function(data) {
+        newArr = {}
+        textArray = textarea.val().split('\n')
+        _.map(textArray, function(item, idx) {
+          var v = item.split('|')
+          Object.assign(newArr, { [++idx]: v[0] })
+          return newArr
+        })
+        render()
+      })
+      // 渲染
+      function render() {
+        layui.form.val('example', {
+          length: rateOptions.length,
+          value: rateOptions.value,
+          readonly: rateOptions.readonly,
+          text: rateOptions.text,
+          half: rateOptions.half,
+        })
+
+        layui.rate.render({
+          elem: '#items',
+          length: rateOptions.length,
+          value: parseFloat(rateOptions.value || 0),
+          text: rateOptions.text,
+          half: rateOptions.half,
+          readonly: rateOptions.readonly,
+          setText: function(value) {
+            if (this.text) {
+              this.span.text(newArr[value] || value + '星')
+            }
+          },
+          choose: function(value) {
+            rateOptions.value = value
+          },
+        })
+        // layui.form.render()
+      }
+      window.getDialogResult = function() {
+        return Object.assign(rateOptions, { textArray: textArray })
+      }
+    </script>
+  </body>
+</html>

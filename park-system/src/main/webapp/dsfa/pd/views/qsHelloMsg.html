@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- 加载编辑器的容器 -->
+  <script id="container" name="content" type="text/plain">
+        这里写你的初始化内容
+</script>
+
+  <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+  <script src="../../../res/libs/lodash/lodash.min.js"></script>
+  
+  <script src="../../../app.js"></script>
+  <script src="../../../res/dsf_res/dsf_config.js"></script>
+  <script src="../../../res/dsf_res/dsf_common.js"></script>
+  <script src="../res/ds_prop.js"></script>
+
+  <!-- 配置文件 -->
+  <script type="text/javascript" src="../../../res/libs/uEditor/js/ueditor.config.js"></script>
+  <!-- 编辑器源码文件 -->
+  <script type="text/javascript" src="../../../res/libs/uEditor/js/ueditor.all.min.js"></script>
+  <script>
+    (function () {
+      var value = '';
+      var html = "";
+      var editor = null;
+      window.ue = null;
+      window.ue = editor = UE.getEditor('container', {
+        toolbars: [
+          ['fullscreen', 'undo', 'redo', '|',
+            'bold', 'italic', 'underline', 'removeformat', 'formatmatch', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+            'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+            'indent', '|',
+            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+            'simpleupload', 'insertimage', '|',
+            'inserttable'
+          ]
+        ]
+
+      });
+      UE.registerUI('autostyle', function (editor, uiName) {
+        //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+        editor.registerCommand(uiName, {
+          execCommand: function () {
+            editor.setContent(value.replace(/<p><br\/><\/p>/g, ""), false);
+            // 全选
+            editor.execCommand('selectall');
+            // 清除格式
+            editor.execCommand('removeformat');
+            // 文字大小
+            editor.execCommand('fontsize', '18px');
+            // 字体样式
+            editor.execCommand('fontfamily', '宋体');
+            // 段落格式
+            editor.execCommand('Paragraph', 'p');
+            // p标签缩进
+            editor.execCommand('indent');
+          }
+        });
+        //创建一个button
+        var btn = new UE.ui.Button({
+          //按钮的名字
+          name: uiName,
+          //提示
+          title: '自动排版',
+          //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+          cssRules: 'background-position:-640px -40px;',
+          //点击时执行的命令
+          onclick: function () {
+            editor.execCommand(uiName);
+          }
+        });
+        return btn;
+
+      });
+      editor.ready(function() {
+          var id = editor.ui.id;
+          var style = document.createElement('style');
+          style.innerHTML = '#{id}_imagescale,#{id}_imagescale_cover{display:none !important;}'.replace(/{id}/g, id);
+          document.head.appendChild(style);
+
+          editor.addListener('contentChange', function(e) {
+              html = editor.getContent();
+              if (html == '') {
+                value = html
+              }
+          })
+          editor.addListener('afterGetContent', function() {
+              value = html;
+          })
+      })
+      var $scope = "";
+
+      window.dialogInit = function (args) {
+        $scope = args.owner.$questionBody || "";
+        ue.ready(function () {
+          ue.setContent($scope);
+        });
+      };
+
+      window.getDialogResult = function () {
+        $scope = ue.getContent();
+        return $scope;
+      }
+    })()
+  </script>
+</body>
+
+</html>

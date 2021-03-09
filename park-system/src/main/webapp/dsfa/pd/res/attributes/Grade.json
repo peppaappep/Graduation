@@ -1,0 +1,182 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "表名",
+        "bindControlAttr": "tableName",
+        "showType": "text"
+      },
+      {
+        "text": "是否只读",
+        "showType": "boolean",
+        "bindControlAttr": "readOnly"
+      },
+      {
+        "text": "评分模式",
+        "bindControlAttr": "styleType",
+        "showType": "select",
+        "dictionary": [
+          {
+            "text": "混合模式",
+            "value": "1"
+          },
+          {
+            "text": "滑块模式",
+            "value": "2"
+          },
+          {
+            "text": "文本模式",
+            "value": "3"
+          },
+          {
+            "text": "选项模式",
+            "value": "4"
+          },
+          {
+            "text": "下拉模式",
+            "value": "5"
+          },
+          {
+            "text": "五角星模式",
+            "value": "6"
+          }
+        ],
+        "showKeyClass": "chooseType,4;selectMaxV,5;scoringOptions,9;rateOptions,6",
+        "hiddenKeyClass": "chooseTypeInput,!3"
+      },
+      {
+        "text": "文本分制",
+        "bindControlAttr": "chooseTypeInput",
+        "showType": "select",
+        "class": "chooseTypeInput",
+        "hidden": "styleType!=3",
+        "dictionary": [
+          {
+            "text": "5分制",
+            "value": "5"
+          },
+          {
+            "text": "10分制",
+            "value": "10"
+          },
+          {
+            "text": "30分制",
+            "value": "30"
+          }
+        ]
+      },
+      {
+        "text": "选项模式",
+        "bindControlAttr": "chooseType",
+        "showType": "select",
+        "class": "chooseType",
+        "hidden": "styleType!=4",
+        "dictionary": [
+          {
+            "text": "5分制",
+            "value": "1"
+          },
+          {
+            "text": "10分制",
+            "value": "2"
+          },
+          {
+            "text": "等级制1",
+            "value": "3"
+          },
+          {
+            "text": "等级制2",
+            "value": "4"
+          },
+          {
+            "text": "等级制3",
+            "value": "5"
+          },
+          {
+            "text": "等级制4",
+            "value": "6"
+          },
+          {
+            "text": "等级制5",
+            "value": "7"
+          },
+          {
+            "text": "等级制6",
+            "value": "8"
+          },
+          {
+            "text": "自定义",
+            "value": "9"
+          }
+        ],
+        "showKeyClass": "scoringOptions,9"
+      },
+      {
+        "text": "下拉分制(分)",
+        "bindControlAttr": "selectMaxV",
+        "showType": "text",
+        "class": "selectMaxV",
+        "hidden": "styleType!=5"
+      },
+      {
+        "text": "五角星文字和分值",
+        "showType": "dialog",
+        "bindControlAttr": "rateOptions",
+        "class": "rateOptions",
+        "hidden": "styleType!=6",
+        "config": {
+          "title": "五角星配置",
+          "url": "/dsfa/pd/views/rateOptionsEdit.html",
+          "width": "800px",
+          "height": "560px",
+          "buttonText": "设置"
+        },
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "自定义分制",
+        "showType": "dialog",
+        "bindControlAttr": "scoringOptions",
+        "class": "scoringOptions",
+        "hidden": "chooseType,!=9",
+        "config": {
+          "title": "自定义分制",
+          "url": "/dsfa/pd/views/scoringOptionsEdit.html",
+          "width": "600px",
+          "height": "400px",
+          "buttonText": "设置"
+        },
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "评分项",
+        "showType": "dialog",
+        "bindControlAttr": "rowSet",
+        "config": {
+          "title": "评分项设置",
+          "url": "/dsfa/pd/views/setRankItem.html",
+          "width": "900px",
+          "height": "600px",
+          "buttonText": "设置"
+        },
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "权重总和默认值",
+        "bindControlAttr": "totalWeight",
+        "showType": "text"
+      },
+      {
+        "text": "是否必评",
+        "bindControlAttr": "$required",
+        "showType": "boolean"
+      }
+    ]
+  }
+]

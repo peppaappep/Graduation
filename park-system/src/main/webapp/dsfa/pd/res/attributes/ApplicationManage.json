@@ -1,0 +1,45 @@
+[{
+	"name": "控件属性",
+	"attributes": [
+      {
+			"text": "组件高度",
+			"bindControlAttr": "$appHei",
+			"showType": "text",
+			"type": "number",
+			"changeExecFunction": "renderContext"
+      },
+      {
+         "text": "接口地址",
+         "showType": "text",
+         "bindControlAttr": "sourcesUrl"
+      },
+      {
+			"text": "标题图标",
+			"bindControlAttr": "$titleIcon",
+			"showType": "text",
+			"type": "text",
+			"changeExecFunction": "renderContext"
+		},
+      {
+			"text": "选择菜单数量",
+			"bindControlAttr": "$showNavNum",
+			"showType": "text",
+			"type": "number",
+			"changeExecFunction": "renderContext"
+		},
+		{
+			"text": "显示菜单数量",
+			"bindControlAttr": "$liShowNum",
+			"showType": "text",
+			"type": "number",
+			"changeExecFunction": "renderContext"
+      },
+      {
+			"text": "显示菜单列数",
+			"bindControlAttr": "$column",
+			"showType": "text",
+			"type": "number",
+			"changeExecFunction": "renderContext"
+      }
+	]
+}]

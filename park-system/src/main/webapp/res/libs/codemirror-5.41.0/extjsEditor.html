@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>计算公式</title>
+    <link type='text/css' rel='stylesheet' href='lib/codemirror.css' />
+    <!--themes-->
+    <link type='text/css' rel='stylesheet' href='addon/hint/show-hint.css' />
+    <link type='text/css' rel='stylesheet' href='addon/fold/foldgutter.css'>
+    <link type='text/css' rel='stylesheet' href='addon/display/fullscreen.css'>
+    <link type='text/css' rel="stylesheet" href="addon/search/matchesonscrollbar.css">
+    <link type='text/css' rel='stylesheet' href='lib/github-markdown.css' />
+    <link type="text/css" rel="stylesheet" href="theme/self.css" />
+
+    <script src='lib/codemirror.js'></script>
+    <script src='lib/showdown.min.js'></script>
+    <!--代码提示-->
+    <script src='addon/hint/show-hint.js'></script>
+    <script src='addon/hint/javascript-hint.js'></script>
+    <script src='addon/hint/sql-hint.js'></script>
+    <script src='addon/hint/html-hint.js'></script>
+    <script src='addon/hint/css-hint.js'></script>
+    <!--自动加载代码类型-->
+    <script src='addon/mode/simple.js'></script>
+    <script src='addon/mode/loadmode.js'></script>
+    <script src='mode/meta.js'></script>
+    <!--自定添加关闭标签-->
+    <script src='addon/edit/closetag.js'></script>
+
+    <!--收缩块-->
+    <script src='addon/fold/foldcode.js'></script>
+    <script src='addon/fold/foldgutter.js'></script>
+    <script src='addon/fold/indent-fold.js'></script>
+    <!--F11 全屏-->
+    <script src='addon/display/fullscreen.js'></script>
+
+    <script src='addon/scroll/annotatescrollbar.js'></script>
+    <script src='addon/dialog/dialog.js'></script>
+    <script src='addon/search/searchcursor.js'></script>
+    <script src='addon/search/search.js'></script>
+    <script src='addon/search/matchesonscrollbar.js'></script>
+    <script src='addon/search/jump-to-line.js'></script>
+    <script src='addon/search/match-highlighter.js'></script>
+    <script src='addon/edit/trailingspace.js'></script>
+    <script src='addon/edit/matchbrackets.js'></script>
+    <script src='editorInit.js'></script>
+    <style>
+        body {
+            display: table;
+        }
+        
+        .main {
+            height: 100%;
+            display: table-row;
+        }
+        
+        .main>div {
+            height: 100%;
+        }
+        
+        .main .main_code {
+            width: 80%;
+            display: table-cell;
+        }
+        
+        .main .main_objects {
+            width: 20%;
+            border: 1px solid green;
+            display: table-cell;
+        }
+        
+        .main .main_object {
+            max-width: 300px;
+        }
+    </style>
+    <script type="text/javascript">
+    </script>
+</head>
+
+<body>
+</body>
+<script>
+    var variable = {};
+    var variables = {};
+    var editor = null;
+
+    function initEditor() {
+        var variable = window.frameElement ? window.frameElement.args.variable || {} : {};
+        // var value = `'''
+        //     F1：函数说明(API)
+        //     F11：全屏
+        //     Ctrl-S：保存
+        //     Ctrl-A：全选
+        //     Ctrl-D：删除行
+        //     Ctrl-Y：恢复上一步
+        //     Ctrl-Z：撤销上一步
+        //     Ctrl-F： 查找
+        //     Ctrl-H：替换
+        //     Ctrl-Home：跳转到首行
+        //     Ctrl-End：跳转到尾行
+        //     Ctrl-+：字体放大
+        //     Ctrl--：字体缩小
+        //     Ctrl-鼠标左键：跨行多选词
+        //     Alt-鼠标左键：跨行扩选
+        //     Alt-/：打开提示
+        //     已注入对象：${Object.keys(variable).join(', ') || '空'}
+        //     '''
+        //     `;
+        var value=""
+        //注入对象
+        variables = {};
+        Object.keys(variable).forEach(function(n, i) {
+            variables[variable[n].name] = variable[n].values;
+        });
+        editor = editorInit({
+            language: 'javascript',
+            include: [],
+            value: (window.frameElement ? window.frameElement.args.value : value) || localStorage.code || value,
+            readOnly: window.frameElement ? window.frameElement.args.readOnly : false,
+            api: 'calc.API.md',
+            variable: variables,
+            keywords: 'if else while for break continue return null undefined typeof var length switch case ',
+            saveFn: function(cm) {
+                // localStorage.code = cm.getValue();
+                // localStorage.cursor = JSON.stringify(cm.getCursor());
+                // localStorage.scrollTop = editor.getDoc().scrollTop;
+                
+                // window.frameElement.closeWindow()
+            },
+            otherWords: {
+                javascript: {
+                    dsf:"dsf框架对象",
+                    url:"获取url处理对象",
+                    queryString:"获取url查询字符串",
+                    page:"页面对象",
+                    getControl:'获取控件,参数控件的caption属性',
+                    PageEvent:'页面事件',
+                    LOADED:"页面加载完毕",
+                    FormControlEvent:'表单组件事件',
+                    VALUECHANGE:'值变化',
+                    event:"组件事件",
+                    on:"组件事件监听,参数1：事件名称\r\n,参数2：callback回调函数",
+                    $:"jquery对象",
+                    addRule:"添加审核规则"
+                },
+                theme: ['default', '3024-day', '3024-night', 'abcdef', 'ambiance',
+                    'base16-dark', 'base16-light', 'bespin', 'blackboard', 'cobalt',
+                    'colorforth', 'darcula', 'dracula', 'duotone-dark', 'duotone-light',
+                    'eclipse', 'elegant', 'erlang-dark', 'gruvbox-dark', 'hopscotch',
+                    'icecoder', 'idea', 'isotope', 'lesser-dark', 'liquibyte', 'lucario',
+                    'material', 'mbo', 'mdn-like', 'midnight', 'monokai', 'neat', 'neo',
+                    'night', 'oceanic-next', 'panda-syntax', 'paraiso-dark', 'paraiso-light',
+                    'pastel-on-dark', 'railscasts', 'rubyblue', 'seti', 'shadowfox',
+                    'solarized dark', 'solarized light', 'the-matrix', 'tomorrow-night-bright',
+                    'tomorrow-night-eighties', 'ttcn', 'twilight', 'vibrant-ink', 'xq-dark', 'xq-light', 'yeti', 'zenburn'
+                ],
+            },
+            //			theme: ['default', '3024-day', '3024-night', 'abcdef', 'ambiance',
+            //				'base16-dark', 'base16-light', 'bespin', 'blackboard', 'cobalt',
+            //				'colorforth', 'darcula', 'dracula', 'duotone-dark', 'duotone-light',
+            //				'eclipse', 'elegant', 'erlang-dark', 'gruvbox-dark', 'hopscotch',
+            //				'icecoder', 'idea', 'isotope', 'lesser-dark', 'liquibyte', 'lucario',
+            //				'material', 'mbo', 'mdn-like', 'midnight', 'monokai', 'neat', 'neo',
+            //				'night', 'oceanic-next', 'panda-syntax', 'paraiso-dark', 'paraiso-light',
+            //				'pastel-on-dark', 'railscasts', 'rubyblue', 'seti', 'shadowfox',
+            //				'solarized dark', 'solarized light', 'the-matrix', 'tomorrow-night-bright',
+            //				'tomorrow-night-eighties', 'ttcn', 'twilight', 'vibrant-ink', 'xq-dark', 'xq-light', 'yeti', 'zenburn'],
+        });
+        if (localStorage.cursor)
+            editor.setCursor(JSON.parse(localStorage.cursor));
+        if (localStorage.scrollTop)
+            editor.display.scroller.scrollTop = localStorage.scrollTop;
+    }
+    function getContent(){
+        return editor.getValue()
+    }
+</script>
+
+</html>

@@ -1,0 +1,87 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "标题名称",
+        "bindControlAttr": "headerName",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "显示更多",
+        "bindControlAttr": "showMore",
+        "showType": "boolean",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "更多跳转页",
+        "bindControlAttr": "moreUrl",
+        "showType": "text"
+      },
+      {
+        "text": "字体颜色",
+        "bindControlAttr": "fontColor",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题图片地址",
+        "bindControlAttr": "headerImg",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "左右边距",
+        "bindControlAttr": "paddingLeft",
+        "showType": "boolean",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "上下边距",
+        "bindControlAttr": "paddingTop",
+        "showType": "boolean",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "跳转设置",
+        "showType": "dialog",
+        "bindControlAttr": "columns",
+        "config": {
+          "title": "跳转设置",
+          "url": "/dsfa/pd/views/jxStuSer.html",
+          "width": "600px",
+          "height": "400px",
+          "buttonText": "设置",
+          "value": [
+            {
+              "text": "常见问题",
+              "code": "eq",
+              "value": ""
+            },
+            {
+              "text": "学习要求",
+              "code": "request",
+              "value": ""
+            },
+            {
+              "text": "操作指南",
+              "code": "guild",
+              "value": ""
+            },
+            {
+              "text": "联系我们",
+              "code": "askus",
+              "value": ""
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

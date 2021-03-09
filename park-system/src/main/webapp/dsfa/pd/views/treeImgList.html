@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="myController">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>树图标选择</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <style>
+        .imgs-box {
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .img-box {
+            width: 20%;
+            float: left;
+            text-align: center;
+            height: 118px;
+            padding: 8px;
+            position: relative;
+        }
+
+        .img-box:after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            top: 8px;
+            bottom: 8px;
+            border: 1px dashed transparent;
+            border-radius: 5px;
+        }
+
+        .img-box.select:after {
+            border-color: #999;
+        }
+
+        .img-box img {
+            vertical-align: middle;
+            width: 36px;
+            margin-top: 18px;
+        }
+
+        .icon-name {
+            display: block;
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 16px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding: 0 8px;
+        }
+
+        .layui-colla-title {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid dialog_container;">
+        <div class="imgs-box">
+            <div class="img-box" ng-repeat="one in imgList" ng-class="{select: chooseImgObj.icon==one.icon}"
+                ng-click="chooseImg(one)">
+                <img ng-src="../../../res/dsf_styles/themes/img/tree_img/{{one.showIcon}}.png" alt="">
+                <span class="icon-name" ng-bind="one.icon"></span>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+   
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myController', function ($scope, $location) {
+            window.dialogInit = function (args) {
+                dsf.http.request("../res/treeImgList.json", null, "GET").done(function (response) {
+                    $scope.imgList = response[args.type];
+                    if (args.icon) {
+                        $scope.chooseImgObj = { icon: args.icon };
+                    }
+                    $scope.$apply();
+                }).error(function (response) {
+
+                }).exec();
+                $scope.$apply();
+            }
+
+            $scope.chooseImg = function (imgObj) {
+                $scope.chooseImgObj = imgObj;
+            }
+            window.getDialogResult = function () {
+                return $scope.chooseImgObj;
+            }
+        });
+
+    </script>
+</body>
+
+</html>

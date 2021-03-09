@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>流程绘制</title>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
+    <meta http-equiv="description" content="this is my page" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link href="../../../admin_client/resource/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+    <script src="../../../scripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../../scripts/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../../scripts/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../../../scripts/jquery.autocomplete.js" type="text/javascript"></script>
+    <script src="../../../scripts/jquery.xml2json.js" type="text/javascript"></script>
+    <script src="../../../scripts/DS_Base.js" type="text/javascript"></script>
+    <script src="../../../scripts/json2.js" type="text/javascript"></script>
+    <script src="../../../scripts/common.js" type="text/javascript"></script>
+    <script src="../../../scripts/config.js" type="text/javascript"></script>
+    <script src="../scripts/raphael-min.js" type="text/javascript"></script>
+    <script src="../scripts/property_common_send.js" type="text/javascript"></script>
+    <script src="../scripts/property_dialog_pre_send.js" type="text/javascript"></script>
+    <style>
+        .superPanel {}
+        
+        #ysj {
+            width: 150px;
+            height: 180px;
+            overflow: auto;
+            border: 1px solid #E5E5E5;
+        }
+    </style>
+    <script type="text/javascript">
+        var dialogArgs = (window.frameElement && window.frameElement.dialogArgs) ? window.frameElement.dialogArgs : [];
+        var row = dialogArgs.rowData;
+        var element = dialogArgs.el;
+        var workFlow = dialogArgs.workFlow;
+        var nodeObj = dialogArgs.nodeObj;
+        var appInfo = dialogArgs.appInfo;
+        var flow = dialogArgs.flowPlugin;
+
+        function getReturnValue() {
+            return getReturnXml();
+        }
+
+        $(document).ready(function() {
+            init();
+            //失去焦点，加载结果集和参数
+            $("#action").blur(function() {
+                getResultData();
+                getParamData("#dataSet");
+            });
+            $("#action").bind("keyup", function() {
+                getResultData();
+                getParamData("#dataSet");
+            });
+            $("#className").bind("keyup", function() {
+                getMethods();
+            });
+            //打开页面，只要action的值不为空，就加载结果集
+            if ($("#action").val() != null) {
+                getResultData();
+            }
+            complete();
+        });
+
+        //类路径自动关联
+        function complete() {
+            var ___indicator = {
+                "INDICATORCODE": "",
+                "INDICATORNAME": ""
+            };
+            var key = $.trim($("#className").val());
+            $(document).ready(function() {
+                $("#className").autocomplete("../../tools/views/doPost.jsp?CATEGORY=&KEY=" + key + "&xml=admin_client/workflow/xml/getClass.xml", {
+                    minChars: 0,
+                    width: 200,
+                    matchCase: true,
+                    matchContains: "word",
+                    autoFill: false,
+                    selectAutoFillInput: false,
+                    formatItem: function(row, i, max) {
+                        return row;
+                    },
+                    formatMatch: function(row, i, max) {
+                        return row;
+                    },
+                    formatResult: function(row) {
+                        return row;
+                    },
+                    parse: function(data) {
+                        if (data) {
+                            var rows = JSON.parse(data);
+                            if (rows && rows.ROWS1) {
+                                var list = [];
+                                var rows = rows.ROWS1[0];
+                                for (var i = 0; i < rows.length; i++) {
+                                    var row = rows[i];
+                                    list[list.length] = {
+                                        data: row,
+                                        result: this.formatResult(row)
+                                    };
+                                }
+                                return list;
+                            }
+                        }
+                        return [];
+                    }
+                }).result(function(evt, item) {
+                    ___indicator = item;
+                    getMethods();
+                });
+            });
+            getMethods();
+        }
+    </script>
+
+</head>
+
+<body class="easyui-layout">
+
+    <div data-options="region:'center',title:'',border:false" id="center" fit="true" style="height: 200px;">
+        <div id="superType0" class="superPanel" style="float:left;margin-right: 150px;width:420px;display: none">
+            <div style="margin-bottom: 5px">
+                数据源：
+                <select id="dbName" name="dbName" style="width: 150px;">
+						<option value="dsfa">
+							dsfa
+						</option>
+						<option value="temp">
+							temp
+						</option>
+					</select>
+            </div>
+            <textarea id="sql" style="width: 100%; height: 150px" onfocus="_focus=this;"></textarea>
+        </div>
+
+        <div id="superType4" class="superPanel" style="float:left;margin-right: 150px;width:420px;">
+            <textarea id="code" style="width: 100%; height: 175px" onfocus="_focus=this;"></textarea>
+        </div>
+
+
+        <div id="superType1" class="superPanel" style="float:left;margin-right: 150px;width:420px;">
+            <div style="margin-bottom: 5px">
+                类：
+                <input id="className" style="width: 100px;" type="text" /> 方法：
+                <select id="method" style="width: 100px;" value="" onchange="javascript:getMethodParam(this,'');"></select>
+                <a href="#" onclick="parameterSelect('dataGrid1');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-addfile'"></a>
+                <a href="#" onclick="parameterRemove('dataGrid1');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-remove'"></a>
+                <a href="#" onclick="parameterClear('dataGrid1');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-cancel'"></a>
+            </div>
+            <div style="overflow-y: auto; overflow-x: hidden; width: 100%; height: 150px;">
+                <table id="dataGrid1" class="parameterGrid"></table>
+            </div>
+        </div>
+
+        <div id="superType2" class="superPanel" style="float:left;margin-right: 150px;width:420px;">
+            <div style="margin-bottom: 5px">
+                Action：
+                <input id="action" style="width: 100px;" type="text" /> 结果集：
+                <select id="dataSet" style="width: 100px;" onchange="javascript:getParamData(this);" value=""></select>
+                <a href="#" onclick="parameterSelect('dataGrid2');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-addfile'"></a>
+                <a href="#" onclick="parameterRemove('dataGrid2');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-remove'"></a>
+                <a href="#" onclick="parameterClear('dataGrid2');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-cancel'"></a>
+            </div>
+            <div style="overflow-y: auto; overflow-x: hidden; width: 100%; height: 150px;">
+                <table id="dataGrid2" class="parameterGrid"></table>
+            </div>
+        </div>
+
+        <div id="superType3" class="superPanel" style="float:left;margin-right: 150px;width:420px;">
+            <div style="margin-bottom: 5px">
+                URL地址：
+                <input id="url" style="width: 100px;" type="text" /> 结果：
+                <input id="urlDateSet" style="width: 100px;" type="text" />
+                <a href="#" onclick="parameterSelect('dataGrid3');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-addfile'"></a>
+                <a href="#" onclick="parameterRemove('dataGrid3');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-remove'"></a>
+                <a href="#" onclick="parameterClear('dataGrid3');return false" class="easyui-linkbutton" style="float: right; margin-left: 5px;" data-options="iconCls:'icon-cancel'"></a>
+            </div>
+            <div style="overflow-y: auto; overflow-x: hidden; width: 100%; height: 150px;">
+                <table id="dataGrid3" class="parameterGrid"></table>
+            </div>
+        </div>
+
+
+        <div id="ysj" style="position:absolute;right:0px;top:0px;">
+            <ul id="flowParams" style="height: 100%; overflow: auto;"></ul>
+        </div>
+    </div>
+
+    <div region="north" split="false" border="false" title="" style="height: 30px; overflow: auto; padding-top: 0px;">
+        <label style="margin-right: 30px;">
+				<input type="radio" name="superType" value="0" checked="checked" />
+				SQL
+			</label>
+        <label style="margin-right: 30px;">
+				<input type="radio" name="superType" value="4" />
+				JavaScript
+			</label>
+        <label style="margin-right: 30px;">
+				<input type="radio" name="superType" value="1" />
+				JavaMethod
+			</label>
+        <label style="margin-right: 30px;">
+				<input type="radio" name="superType" value="2" />
+				ActionXml
+			</label>
+        <label style="margin-right: 30px;">
+				<input type="radio" name="superType" value="3" />
+				RestFul
+			</label>
+    </div>
+
+    <div region="south" split="false" border="false" title="" style="height: 200px; overflow: hidden; padding-top: 0px;">
+        <div style="text-align: center; padding: 5px;">
+            <a href="#" onclick="doSelect()" class="easyui-linkbutton" data-options="iconCls:'icon-down'">添加</a>
+            <a href="#" onclick="doRemove()" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+            <a href="#" onclick="doClear()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">清空</a>
+        </div>
+        <div style="overflow-y: auto; width: 100%; height: 150px;">
+            <table id="tableResult" border="0" fit="true"></table>
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

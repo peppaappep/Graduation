@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <style>
+        th,td{
+            min-width: 80px;
+        }
+        tr>td:first-child {
+            text-align: center;
+        }
+
+        tr th:first-child,
+        tr td:first-child {
+            text-align: center;
+        }
+
+        .selected {
+            background: #f2f2f2 !important;
+            box-shadow: 0 0 10px #e2e2e2;
+        }
+        .treeSelector_small{
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body ng-controller='myController'>
+    <div class="treeSelector_small">
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th width="80">序号</th>
+                    <th>文本</th>
+                    <th>值</th>
+                </tr>
+            </thead>
+            <tbody ng-if='data_table && data_table.length>0'>
+                <tr ng-repeat='tr in data_table track by $index' ng-class='{"selected":selectedTr.id==tr.id}' ng-click='selected(tr)'>
+                    <td width="80" ng-bind='$index+1'></td>
+                    <td ng-bind='tr.name'></td>
+                    <td ng-bind='tr.id'></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script src="../../../dsfa/bhc/hc/bhc.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var argsV = {};
+        angular.module('myApp', []).controller('myController', function ($scope) {
+            window.dialogInit = function (args) {
+                debugger
+                argsV = args.data.data;
+                $scope.selectedTr = args.choose;
+                $scope.data_table = args.data.data.valueAttributes;
+                for(let i in $scope.data_table){
+                   let obj = $scope.data_table[i];
+                   obj.id = argsV.id+"_"+obj.code;
+                }
+                $scope.$apply();
+            }
+            $scope.selected = function (tr) {
+                console.log(tr.id);
+                tr.at = argsV.at;
+                $scope.selectedTr = tr;
+            }
+            window.getDialogResult = function () {
+                return $scope.selectedTr;
+            }
+        })
+
+    </script>
+</body>
+
+</html>

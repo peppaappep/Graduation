@@ -1,0 +1,76 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "标题",
+                "showType": "text",
+                "bindControlAttr": "label"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly"
+            },
+            {
+                "text": "子控件可编辑",
+                "showType": "boolean",
+                "bindControlAttr": "$foreverEditor"
+            },
+            {
+                "text": "是否显示标题",
+                "showType": "boolean",
+                "bindControlAttr": "showLabel"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "列设置",
+                "showType": "dialog",
+                "bindControlAttr": "$columns",
+                "changeExecFunction": "analysisRow",
+                "config": {
+                    "title": "数据列设置",
+                    "url": "/dsfa/pd/views/subTableColumnEdit.html",
+                    "width": "1000px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            },
+            {
+                "text": "主栏设置",
+                "showType": "dialog",
+                "bindControlAttr": "$mainColumnsSetting",
+                "changeExecFunction": "analysisRow",
+                "config": {
+                    "title": "数据列设置",
+                    "url": "/dsfa/pd/views/subtable2dFrozen.html",
+                    "width": "1000px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            },{
+                "text": "按钮设置",
+                "showType": "dialog",
+                "bindControlAttr": "$buttonBar",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "title": "按钮设置",
+                    "url": "/dsfa/pd/views/buttonsEdit.html",
+                    "width": "1400px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            }
+        ]
+    }
+]

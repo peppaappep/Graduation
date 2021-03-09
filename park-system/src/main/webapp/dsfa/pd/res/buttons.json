@@ -1,0 +1,471 @@
+[{
+    "text": "系统按钮",
+    "type": "0",
+    "children": [
+    	{
+            "text": "公共",
+            "type": "0",
+            "children": [{
+                "text": "新窗口打开页面",
+                "actionName": "system_window_open",
+                "buttonType": "auxiliary",
+                "icon": "icon-icon_wangye",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+                "actionArgs": "/dsfa/teas/cms/views/main.html"
+            }, {
+                "text": "浮动层打开页面",
+                "actionName": "system_layer_open",
+                "icon": "icon-icon_wangye",
+                "buttonType": "auxiliary",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+                "actionArgs": "/dsfa/teas/cms/views/main.html;标题;500px;500px",
+                "actionArgsHelper": "参数1：打开页面的url地址\r\n参数2：浮动层标题\r\n参数3：浮动层宽\r\n参数4：浮动层高\r\n参数5：是否显示关闭按钮（0不显示，1显示）"
+            }, {
+                "text": "关闭",
+                "actionName": "sytem_form_close",
+                "icon": "icon-guanbi",
+                "buttonType": "auxiliary",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+                "actionArgs": "",
+                "actionArgsHelper": "参数1：[默认值：无]为保存后刷新的页面有效值为opener、parent"
+
+            }, {
+                "text": "文件下载",
+                "actionName": "system_file_download",
+                "icon": "icon-xia",
+                "buttonType": "auxiliary",
+                "style": "0",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "isUpload": true,
+                "actionArgs": "",
+                "actionArgsHelper": "参数1：文件id，多个文件用','分割\r\n参数2：[可选][默认值：无]自定义文件名称，不填优先原文件名，如果是压缩文件，则生成uuid名称"
+            }, {
+                "text": "导入",
+                "actionName": "system_layui_upload",
+                "icon": "icon-yunduanshangchuan",
+                "buttonType": "auxiliary",
+                "style": "0",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "isUpload": true,
+                "alias": "",
+                "actionArgs": "file/upload/excel;file;application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;",
+                "actionArgsHelper": "参数1：服务端上传接口\r\n参数2：指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）\r\n参数3：规定打开文件选择框时，筛选出的文件类型，值为用逗号隔开的 MIME 类型列表。如： acceptMime: 'image/*'（只显示图片文件） acceptMime: 'image/jpg, image/png'（只显示 jpg 和 png 文件）\r\n参数4：选择后完成回调方法名\r\n参数5：[可选][默认值：{}]额外参数\r\n参数6：选择文件前回调方法名\r\n参数7：[可选]上传文件类型。如：'doc|docx|pdf'\r\n参数8：[可选]上传文件大小，单位KB。如：50\r\n参数9：[默认值：false]是否开启多文件上传。\r\n参数10：[默认值：0]同时可上传文件数量\r\n参数11：上传失败的回调"
+            }, {
+                "text": "执行接口",
+                "actionName": "system_exec_interface",
+                "icon": "icon-zhihangfankui",
+                "buttonType": "auxiliary",
+                "style": "0",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "isUpload": true,
+                "alias": "",
+                "actionArgs": "接口地址;GET;",
+                "actionArgsHelper": "参数1：接口地址\r\n参数2：请求类型\r\n参数：请求参数对以[名称;值];[名称;值];[名称;值]"
+            }, {
+            	"text": "倒计时",
+                "actionName": "system_count_down",
+                "buttonType": "auxiliary",
+                "icon": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+                "actionArgs": "获取验证码;10;click;false;重新获取;true",
+                "actionArgsHelper": "参数1：默认文字\r\n参数2：计时秒数\r\n参数3：计时触发方法(参考值：click、render)\r\n参数4：计时进行中是否可以点击(参考值：true、false)\r\n参数5：计时结束文字\r\n参数6：是否可以重复点击（true、false）"
+            }]
+        }, {
+            "text": "通用业务",
+            "type": "0",
+            "children":[{
+                "text": "点赞",
+                "actionName": "system_comment_like",
+                "icon": "icon-dianzan",
+                "activeIcon":"icon-dianzan_kuai",
+                "buttonType": "auxiliary",
+                "style": "5",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "color":"#5f5f5f",
+                "cate":"tags",
+                "alias": "",
+                "actionArgs": "kc_pl;课程评论",
+                "actionArgsHelper": "参数1[例如：'kc_pl']：按钮业务类型\r\n参数2：[例如：'课程评论']业务类型文本\r\n参数3：[例如：render]初始化加载查询"
+            },{
+                "text": "关注",
+                "actionName": "system_comment_attention",
+                "icon": "icon-guanzhu",
+                "activeIcon":"icon-guanzhu_kuai",
+                "buttonType": "auxiliary",
+                "style": "5",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "color":"#5f5f5f",
+                "cate":"concern",
+                "alias": "",
+                "actionArgs": "kc_pl;课程评论",
+                "actionArgsHelper": "参数1[例如：'kc_pl']：按钮业务类型\r\n参数2：[例如：'课程评论']业务类型文本\r\n参数3：[例如：render]初始化加载查询"
+            },{
+                "text": "收藏",
+                "actionName": "system_collection",
+                "icon": "icon-aixin",
+                "activeIcon":"icon-aixin_shixin",
+                "buttonType": "auxiliary",
+                "style": "5",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "color":"#5f5f5f",
+                "cate":"concern",
+                "alias": "",
+                "actionArgs": "kc_pl;课程评论",
+                "actionArgsHelper": "参数1[例如：'kc_pl']：按钮业务类型\r\n参数2：[例如：'课程评论']业务类型文本\r\n参数3：[例如：render]初始化加载查询"
+            },{
+                "text": "订阅",
+                "actionName": "system_subscriptionFn",
+                "icon": "icon-iconfontzhizuobiaozhun13",
+                "activeIcon":"icon-dingyue1",
+                "buttonType": "auxiliary",
+                "style": "5",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "color":"#5f5f5f",
+                "cate":"concern",
+                "alias": "",
+                "actionArgs": "kc_pl;课程评论",
+                "actionArgsHelper": "参数1[例如：'kc_pl']：按钮业务类型\r\n参数2：[例如：'课程评论']业务类型文本\r\n参数3：[例如：render]初始化加载查询"
+            },{
+                "text": "分享",
+                "actionName": "system_shareFn",
+                "icon": "icon-fenxiangfangshi",
+                "activeIcon":"icon-fenxiangfangshi1",
+                "buttonType": "auxiliary",
+                "style": "5",
+                "show": "default",
+                "size": "small",
+                "isSystem": true,
+                "color":"#5f5f5f",
+                "cate":"share",
+                "alias": "",
+                "actionArgs": "",
+                "actionArgsHelper": "参数1：微信分享请求的接口地址"
+            }]
+        },{
+            "text": "表单详情",
+            "type": "0",
+            "children": [{
+                    "text": "保存",
+                    "actionName": "system_form_save",
+                    "icon": "icon-baocun",
+                    "buttonType": "",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": "opener;null;false",
+                    "actionArgsHelper": "参数1：[默认值：opener]为保存后刷新的页面有效值为opener、parent\r\n参数2：[可选][默认值：无]保存时附加的参数多用于二次开发判断区分\r\n;参数3：保存后是否关闭窗口默认为false\r\n;参数4：按钮动作名称，用于成功或失败后的提示前缀;\r\n参数5：是否刷新当前页面"
+                },
+                {
+                    "text": "暂存",
+                    "actionName": "system_form_saveZc",
+                    "icon": "icon-baocun",
+                    "buttonType": "",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": "opener;null;false",
+                    "actionArgsHelper": "参数1：[默认值：opener]为保存后刷新的页面有效值为opener、parent\r\n参数2：[可选][默认值：无]保存时附加的参数多用于二次开发判断区分\r\n;参数3：保存后是否关闭窗口默认为false\r\n;参数4：按钮动作名称，用于成功或失败后的提示前缀;\r\n参数5：为保存后刷新的页面有效值为opener、parent"
+                },
+                {
+                    "text": "保存并下一步",
+                    "actionName": "system_form_steps",
+                    "icon": "icon-baocun",
+                    "buttonType": "",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": "self;null;next",
+                    "actionArgsHelper": "参数1：[默认值：self]为保存后导航所在页面有效值为self、parent\r\n参数2：[默认值：无]步骤导航的组件标识\r\n参数3：[固定值]该按钮执行下一步操作\r\n;参数4：按钮动作名称，用于成功或失败后的提示前缀\r\n;参数5：为保存后刷新的页面有效值为opener、parent\r\n;参数5：是否静默保存页面有效值为true、false"
+                },
+                {
+                    "text": "保存并上一步",
+                    "actionName": "system_form_steps",
+                    "icon": "icon-baocun",
+                    "buttonType": "",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": "self;null;pre",
+                    "actionArgsHelper": "参数1：[默认值：self]为保存后导航所在页面有效值为self、parent\r\n参数2：[默认值：无]步骤导航的组件标识\r\n参数3：[固定值]该按钮执行上一步操作\r\n;参数4：按钮动作名称，用于成功或失败后的提示前缀\r\n;参数5：保存后是否刷新页面"
+                }
+            ]
+        }, {
+            "text": "问卷",
+            "type": "0",
+            "children": [{
+                "text": "保存",
+                "actionName": "system_qi_save",
+                "icon": "icon-baocun",
+                "buttonType": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+                "actionArgs": "opener;null;false",
+                "actionArgsHelper": "参数1：[默认值：opener]为了保存后刷新的页面有效值为opener、parent\r\n参数2：[可选][默认值：无]保存时附加的参数多用于二次开发判断区分\r\n;参数3：保存后是否关闭窗口默认为false\r\n;参数4：按钮动作名称，用于成功或失败后的提示前缀;\r\n参数5：保存后是否刷新页面;\r\n参数6：页面刷新后是否只读"
+            }]
+        },
+        {
+            "text": "列表(DataGrid)",
+            "type": "0",
+            "children": [{
+                    "text": "新增",
+                    "actionName": "system_datagrid_addnew",
+                    "icon": "icon-hao",
+                    "buttonType": "",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "alias": "",
+                    "isSystem": true,
+                    "actionArgs": ""
+                },
+                {
+                    "text": "导出",
+                    "actionName": "system_datagrid_export",
+                    "icon": "icon-yunduanxiazai",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                },
+                {
+                    "text": "导入",
+                    "actionName": "system_datagrid_import",
+                    "icon": "icon-yunduanshangchuan",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                },
+                {
+                    "text": "批量删除",
+                    "actionName": "system_datagrid_delete",
+                    "icon": "icon-shanchu",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "isHide": "false",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                },
+                {
+                    "text": "行编辑",
+                    "actionName": "system_datagrid_row_edit",
+                    "icon": "icon-bianji",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "isHide": "false",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                },
+                {
+                    "text": "行删除",
+                    "actionName": "system_datagrid_row_delete",
+                    "icon": "icon-shanchu",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "isHide": "false",
+                    "show": "default",
+                    "size": "",
+                    "isSystem": true,
+                    "actionArgs": "",
+                    "alias": "",
+                    "actionArgsHelper": "参数1：[默认值：meta/list/data]为删除按钮请求的接口地址"
+                }
+            ]
+        }, {
+            "text": "子表",
+            "type": "0",
+            "children": [{
+                    "text": "新增",
+                    "actionName": "system_subtable_addnew",
+                    "icon": "icon-hao",
+                    "buttonType": "",
+                    "style": "0",
+                    "show": "default",
+                    "size": "small",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                },
+                {
+                    "text": "清空",
+                    "actionName": "system_subtable_clear",
+                    "icon": "icon-shanchu",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "isHide": "false",
+                    "show": "default",
+                    "size": "small",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                }, {
+                    "text": "导入",
+                    "actionName": "system_subtable_import",
+                    "icon": "icon-yunduanshangchuan",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "show": "default",
+                    "size": "small",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": ""
+                }, {
+                    "text": "选择",
+                    "actionName": "system_subtable_datachoice",
+                    "icon": "icon-Magnifier",
+                    "buttonType": "auxiliary",
+                    "style": "0",
+                    "show": "default",
+                    "size": "small",
+                    "isSystem": true,
+                    "alias": "",
+                    "actionArgs": "http://xxxx.xxxx.xxxx/;请选择;1000px;600px"
+                }
+
+            ]
+        },
+		{
+    		"text": "流程",
+            "type": "0",
+            "children": [{
+            	"text": "发送",
+                "actionName": "system_flow_send",
+                "buttonType": "auxiliary",
+                "icon": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+				"actionArgs": "",
+				"actionArgsHelper": ""
+			},{
+            	"text": "退回",
+                "actionName": "system_flow_sendBack",
+                "buttonType": "auxiliary",
+                "icon": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+				"actionArgs": "",
+                "actionArgsHelper": "参数1：流转环节ID\r\n参数2：退回的环节ID\r\n参数3：意见弹框高\r\n参数4：意见弹框款"
+            },{
+				"text": "销毁",
+				"actionName": "system_flow_destroy",
+				"buttonType": "auxiliary",
+				"icon": "",
+				"style": "0",
+				"show": "default",
+				"size": "",
+				"isSystem": true,
+				"alias": "",
+				"actionArgs": "",
+				"actionArgsHelper": ""
+			},{
+				"text": "强制办结",
+				"actionName": "system_flow_forceClose",
+				"buttonType": "auxiliary",
+				"icon": "",
+				"style": "0",
+				"show": "default",
+				"size": "",
+				"isSystem": true,
+				"alias": "",
+				"actionArgs": "",
+				"actionArgsHelper": ""
+			},{
+            	"text": "回收",
+                "actionName": "system_flow_send_test",
+                "buttonType": "auxiliary",
+                "icon": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+				"actionArgs": "",
+				"actionArgsHelper": ""
+            },{
+            	"text": "待送",
+                "actionName": "system_flow_send_test",
+                "buttonType": "auxiliary",
+                "icon": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+				"actionArgs": "",
+				"actionArgsHelper": ""
+            },{
+            	"text": "移交",
+                "actionName": "system_flow_send_test",
+                "buttonType": "auxiliary",
+                "icon": "",
+                "style": "0",
+                "show": "default",
+                "size": "",
+                "isSystem": true,
+                "alias": "",
+				"actionArgs": "",
+				"actionArgsHelper": ""
+            }
+        ]
+    	}
+    ]
+}]

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <style>
+        tr>td:first-child {
+            text-align: center;
+        }
+
+        ._special_ico_docu {
+            margin-right: 2px !important;
+            background-position: -110px -2px;
+        }
+
+        .ztree li span.button.chk {
+            margin-left: 3px
+        }
+        .content {
+            box-sizing: border-box;
+            height: 100%;
+            overflow: hidden;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content>div {
+            max-height: 450px;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .fl {
+            float: left;
+            width: 41%;
+            height: 100%;
+            border-right: 1px solid #f2f2f2;
+            box-sizing: border-box;
+        }
+
+        .content>.fr {
+            float: right;
+            width: 59%;
+            padding-right: 10px;
+            overflow: auto;
+        }
+        .content>.fr .layui-table{
+            margin: 0;
+        }
+
+        tr th:first-child,
+        tr td:first-child {
+            text-align: center;
+        }
+
+        .selected {
+            background: #f2f2f2 !important;
+            box-shadow: 0 0 10px #e2e2e2;
+        }
+    </style>
+</head>
+
+<body ng-controller='myController'>
+    <div class="content">
+        <div class='fl ds_tree_box'>
+            <div class="ds_tree_search">
+                <input type="text" class="layui-input" placeholder="输入名称" ng-model='searchName' ng-keyup='myKeyup($event)'>
+                <i class="search iconfont layui-icon icon-Magnifier" ng-click='search()'></i>
+            </div>
+            <div class="ds_tree">
+                <ul id="tree" class="ztree"></ul>
+            </div>
+        </div>
+        <div class="fr">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th width="80">序号</th>
+                        <th>文本</th>
+                        <th>值</th>
+                    </tr>
+                </thead>
+                <tbody ng-if='data_table && data_table.length>0'>
+                    <tr ng-repeat='tr in data_table track by $index' ng-class='{"selected":chooseMetaData.id==tr.value || (chooseSmallData.length>0 && chooseSmallData[0]==tr.value)}' ng-click='selected(tr)'>
+                        <td width="80" ng-bind='$index+1'></td>
+                        <td ng-bind='tr.text'></td>
+                        <td ng-bind='tr.value'></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script src="../../../dsfa/bhc/hc/bhc.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var treeObj = null;
+        var loadingIndex = 0;
+        var nodeList = [];
+        loadingIndex = dsf.layer.loadding();
+        angular.module('myApp', []).controller('myController', function ($scope) {
+            $scope.chooseMetaData = {};
+            $scope.chooseSmallData = [];
+            window.dialogInit = function (args) {
+                $scope.chooseMetaData = args.value || {};
+                if($scope.chooseMetaData.id && $scope.chooseMetaData.id.indexOf('_')!=-1){
+                    $scope.chooseSmallData = $scope.chooseMetaData.id.split("_");
+                }
+                // 数据字典
+                treeObj = $.fn.zTree.init($("#tree"), {
+                    view: {
+                        selectedMulti: false,
+                        fontCss: getFontCss
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "radio",
+                        radioType: "all"
+                    },
+                    callback: {
+                        onCheck: zTreeOnCheck,
+                        onClick: zTreeOnClick
+                    }
+                });
+
+                dsf.http.request(dsf.UrlSetting.design_metadata, {
+                    namespace: ""
+                }, "GET")
+                    .done(function (response) {
+                        console.log(response)
+                        function fn(data) {
+                            if(data.name=='文档元数据'){
+                                // debugger
+                            }
+                            let obj = {
+                                "name": data.name,
+                                "nocheck": data.type_value == "3" ? false : true,
+                                "ID": data.ID,
+                                "iconSkin": (!data.children && data.type_value != '3') ? '_special' : '',
+                                "metadata": data.metadata
+                            }
+                            if (data.children) {
+                                obj.children = [];
+                                for (var i = 0; i < data.children.length; i++) {
+                                    var n = data.children[i];
+                                    let node = fn(n);
+                                    obj.children.push(node);
+                                }
+                            }
+                            if (data.type_value == "3" && obj.ID == $scope.chooseMetaData.at) {
+                                obj.checked = true;
+                                zTreeOnCheck("", "", obj);
+                            }
+                            return obj;
+                        }
+                        var nodes = [];
+                        for (var i = 0; i < response.data.length; i++) {
+                            let n = fn(response.data[i]);
+                            nodes.push(n);
+                        }
+                        treeObj.addNodes(null, nodes);
+                        treeObj.expandAll(true);
+                        dsf.layer.close(loadingIndex);
+
+                        if($scope.chooseMetaData.at){
+                            let node = treeObj.getNodesByParam('ID', $scope.chooseMetaData.at);
+                            if(node && node.length>0){
+                                setTimeout(function(){
+                                    treeObj.selectNode(node[node.length-1],false,false);
+                                },500)
+                            }
+                        }
+                    })
+                    .error(function (response) {
+
+                    })
+                    .exec();
+
+                $scope.$apply();
+            }
+
+            $scope.selected = function (tr) {
+                if(tr.data.valueAttributes.length>1){
+                    window.parent.dsf.layer.openDialog({
+                        title: "请选择",
+                        content: '../views/treeSelector_small.html',
+                        area: ['500px', '550px'],
+                        args: {data:tr,choose:$scope.chooseMetaData},
+                        btn: [{
+                            text: "确定",
+                            handler: function (index, layero) {
+                                let frame = layero.find("iframe");
+                                let win = frame.get(0).contentWindow;
+                                let result = win.getDialogResult();
+                                $scope.chooseMetaData = result;
+                                $scope.chooseSmallData = $scope.chooseMetaData.id.split("_");
+                                console.log(result)
+                                $scope.$apply();
+                            }
+                        }, {
+                            text: "取消",
+                            handler: function (index, layero) {
+                            }
+                        }]
+                    });
+                }else{
+                    $scope.chooseSmallData = [];
+                    $scope.chooseMetaData = tr.data;
+                }
+            }
+
+            window.getDialogResult = function () {
+                if ($scope.chooseMetaData.id) {
+                    return $scope.chooseMetaData;
+                } else {
+                    dsf.layer.message("请选择元数据组", 5);
+                    return false;
+                }
+            }
+
+            function zTreeOnCheck(event, treeId, treeNode) {
+                let d = treeNode;
+
+                let items = [];
+                for (let k in d.metadata) {
+                    items.push({
+                        "text": d.metadata[k].name,
+                        "value": d.metadata[k].id,
+                        "data": d.metadata[k]
+                    });
+                }
+                items = items.sort((v1, v2) => {
+                    let order1 = v1.data.order ? parseInt(v1.data.order) : 0;
+                    let order2 = v2.data.order ? parseInt(v2.data.order) : 0;
+                    if (order1 < order2) {
+                        return -1;
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+                $scope.data_table = items;
+                $scope.$apply();
+            }
+
+            function zTreeOnClick(event, treeId, treeNode) {
+                treeObj.checkNode(treeNode, !treeNode.checked);
+                zTreeOnCheck(event, treeId, treeNode);
+            }
+
+
+            $scope.search = function(){
+                updateNodes(false);
+                if($scope.searchName=='' || !$scope.searchName) return;
+                nodeList = treeObj.getNodesByParamFuzzy('name', $scope.searchName);
+                if(nodeList.length>0) treeObj.selectNode(nodeList[0],false,false);
+                updateNodes(true);
+            }
+
+            $scope.myKeyup = function(e){
+                var keycode = window.event?e.keyCode:e.which;
+                if(keycode==13){
+                    $scope.search();
+                }
+            };
+            function getFontCss(treeId,treeNode){
+			    return (!!treeNode.highlight) ? {color:"#A60000", "font-weight":"bold"} : {color:"#333", "font-weight":"normal"};
+            }
+            function updateNodes(highlight){
+                for( var i=0, l=nodeList.length; i<l; i++) {
+                    nodeList[i].highlight = highlight;
+                    treeObj.updateNode(nodeList[i]);
+                }
+		    }
+        })
+
+    </script>
+</body>
+
+</html>

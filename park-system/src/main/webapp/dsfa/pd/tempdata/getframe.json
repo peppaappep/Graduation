@@ -1,0 +1,70 @@
+{
+    "data": [{
+        "teas_seat.teas_seat_id": "1",
+        "teas_seat.name": "班级1",
+        "teas_seat.type": "class",
+        "children": [{
+            "teas_seat.teas_seat_id": "2",
+            "teas_seat.name": "班委1",
+            "teas_seat.type": "committee",
+            "children": [{
+                    "teas_seat.teas_seat_id": "3",
+                    "teas_seat.name": "赵满延",
+                    "teas_seat.type": "student"
+                },
+                {
+                    "teas_seat.teas_seat_id": "2-1",
+                    "teas_seat.name": "慕白",
+                    "teas_seat.type": "student"
+                },
+                {
+                    "teas_seat.teas_seat_id": "2-2",
+                    "teas_seat.name": "唐三",
+                    "teas_seat.type": "student"
+                },
+                {
+                    "teas_seat.teas_seat_id": "6",
+                    "teas_seat.name": "戴穆白",
+                    "teas_seat.type": "student"
+                }
+            ]
+        }, {
+            "teas_seat.teas_seat_id": "4",
+            "teas_seat.name": "班委2",
+            "teas_seat.type": "committee",
+            "children": [{
+                "teas_seat.teas_seat_id": "5",
+                "teas_seat.name": "committee",
+                "teas_seat.type": "group",
+                "children": [{
+                        "teas_seat.teas_seat_id": "5-1",
+                        "teas_seat.name": "佐罗",
+                        "teas_seat.type": "student"
+                    },
+                    {
+                        "teas_seat.teas_seat_id": "5-2",
+                        "teas_seat.name": "聂天",
+                        "teas_seat.type": "student"
+                    },
+                    {
+                        "teas_seat.teas_seat_id": "5-3",
+                        "teas_seat.name": "萧炎",
+                        "teas_seat.type": "student"
+                    },
+                    {
+                        "teas_seat.teas_seat_id": "5-4",
+                        "teas_seat.name": "林动",
+                        "teas_seat.type": "student"
+                    }, {
+                        "teas_seat.teas_seat_id": "5-5",
+                        "teas_seat.name": "莫凡",
+                        "teas_seat.type": "student"
+                    }
+                ]
+            }]
+        }]
+    }],
+    "success": true,
+    "message": "成功",
+    "state": "20000"
+}

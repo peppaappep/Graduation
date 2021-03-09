@@ -1,0 +1,38 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text"
+            },
+            {
+                "text": "是否查询所有班级",
+                "showType": "boolean",
+                "bindControlAttr": "queryType"
+            },
+            {
+                "text": "应用范围",
+				"bindControlAttr": "role",
+                "showType": "select",
+				"hidden":"_isShowRole==false",
+                "dictionary": [
+                    {
+                        "value": "1",
+                        "text": "教师"
+                    },
+                    {
+                        "value": "2",
+                        "text": "学员"
+                    }
+                ]
+            }
+        ]
+    }
+]    

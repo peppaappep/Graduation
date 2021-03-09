@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+  <style>
+    #box{
+      padding:20px 20px 0 10px;
+    }
+  </style>
+</head>
+
+<body>
+<div id="box">
+  <div class="layui-form-item">
+    <label class="layui-form-label">题干：</label>
+    <div class="layui-input-block">
+      <input type="text" id="question" required  placeholder="请输入" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+</div>
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+<script>
+  (function () {
+
+    window.dialogInit = function (args) {
+      $("#question").val(args.owner.$questionBody||"")
+    };
+
+    window.getDialogResult = function () {
+      var $scope=$("#question").val();
+      return {$questionBody:$scope};
+    }
+  })()
+</script>
+</body>
+
+</html>

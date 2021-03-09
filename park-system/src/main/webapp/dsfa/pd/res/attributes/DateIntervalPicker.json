@@ -1,0 +1,176 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "名称是否显示",
+                "bindControlAttr": "showLabel",
+                "showType": "boolean"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly"
+            },
+			{
+				"text": "移动端提示文字",
+				"showType": "text",
+				"bindControlAttr": "dataCapion"
+			},
+			{
+				"text":"移动端语音地址",
+				"showType": "text",
+				"bindControlAttr": "dataAudioUrl"
+			},
+			{
+				"text":"移动端视频地址",
+				"showType": "text",
+				"bindControlAttr": "dataVideoUrl"
+			}
+        ]
+    },
+    {
+        "name":"控件属性",
+        "attributes":[{
+                "text": "时间格式",
+                "showType": "select",
+                "bindControlAttr":"$timeFormat",
+                "dictionary":[{"value":"1","text":"yyyy-MM-dd"},{"value":"2","text":"yyyy年MM月dd日"},{"value":"3","text":"yyyy年MM月"},{"value":"4","text":"MM月dd日"}]
+            },
+            {
+                "text": "日期选择器类型",
+                "showType": "select",
+                "bindControlAttr": "$chooseType",
+                "dictionary": [
+                    {
+                        "value":"year",
+                        "text":"年"
+                    },
+                    {
+                        "value": "date",
+                        "text": "日期"
+                    },
+                    {
+                        "value": "month",
+                        "text": "年月"
+                    },
+                    {
+                        "value":"datetime",
+                        "text":"日期时间"
+                    }
+                ]
+            },
+            {
+                "text": "是否显示节日",
+                "showType": "boolean",
+                "bindControlAttr":"$calendar"
+            },
+            {
+                "text":"是否显示底部栏",
+                "showType":"boolean",
+                "bindControlAttr":"$showBottom"
+            },
+            {
+                "text": "显示小时段",
+                "showType": "timePicker",
+                "pickerRange":"true",
+                "pickerID":"stime",
+                "pickerType":"time",
+                "bindControlAttr": "$timeInter"
+            },
+            {
+                
+                "text": "显示分钟步长",
+                "showType": "text",
+                "bindControlAttr": "$hourStep"
+            }
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [
+            {
+                "text": "默认日期",
+                "pickerID":"sdatePicker",
+                "bindControlAttr": "metadata.defaultValue",
+                "showType": "defaultValue",
+                "config": {
+                    "value": [
+                        { "text": "开始日期", "code": "sdate", "value": "" },
+                        { "text": "结束日期", "code": "edate", "value": "" }
+                    ]
+                }
+            },
+            {
+                "text": "必填标识",
+                "bindControlAttr": "$required",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "校验规则",
+                "bindControlAttr": "metadata.validate",
+                "showType": "validateEditor",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/validateCode.html",
+                    "width": "800px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            },
+            {
+                "text": "校验错误提示位置",
+                "bindControlAttr": "$error_tipsPosition",
+                "showType": "select",
+                "dictionary": [{
+                        "text": "上",
+                        "value": "top"
+                    }, {
+                        "text": "右",
+                        "value": "right"
+                    },
+                    {
+                        "text": "下",
+                        "value": "bottom"
+                    },
+                    {
+                        "text": "左",
+                        "value": "left"
+                    }
+                ]
+                
+            },
+            {
+                "text": "值属性设置",
+                "bindControlAttr": "metadata.valueAttributes",
+                "showType": "dialog",
+                "config": {
+                    "url": "/dsfa/pd/views/valueAttributesEdit.html",
+                    "width": "600px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>流程设计器</title>
+		<link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/font/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/bhc.css" />
+	</head>
+
+	<body>
+		<div class="ds_workflow" id="desginer">
+			<div class="design ds_control">
+				<!-- 按钮栏 -->
+				<div class="desginer_head">
+					<div class="desginer_tools">
+						<a class="ds_button ds_icon_button_text" id='btn_Save'>
+							<i class="iconfont icon-baocun"></i>
+							<div class="ds_button_div_text">保存</div>
+						</a>
+						<a class="ds_button ds_icon_button_text" id='btn_Path'>
+							<i class="iconfont icon-liujisuan"></i>
+							<div class="ds_button_div_text">连线</div>
+						</a>
+						<a class="ds_button ds_icon_button_text">
+							<i class="iconfont icon-iframetianjia"></i>
+							<div class="ds_button_div_text">
+								泳道
+								<i class="iconfont icon-xia1"></i>
+							</div>
+							<dl class="layui-nav-child">
+								<dd id='lane_vertical'><span>泳道(垂直)</span></dd>
+								<dd id='lane_horizontal'><span>泳道(水平)</span></dd>
+							</dl>
+						</a>
+						<a class="ds_button ds_icon_button_text">
+							<i class="iconfont icon-dakai"></i>
+							<div class="ds_button_div_text">
+								查看结构
+								<i class="iconfont icon-xia1"></i>
+							</div>
+							<dl class="layui-nav-child">
+								<dd onclick='exportFlow()'><span>导出xml</span></dd>
+								<dd onclick='openFlow()'><span>在线浏览xml</span></dd>
+							</dl>
+						</a>
+						<a class="ds_button ds_icon_button_text">
+							<i class="iconfont icon-lianjieliu"></i>
+							<div class="ds_button_div_text">
+								模拟运行
+								<i class="iconfont icon-xia1"></i>
+							</div>
+							<dl class="layui-nav-child">
+								<dd onclick="startTestFlow()"><span>模拟测试</span></dd>
+								<dd onclick="monitorFlow()"><span>监控</span></dd>
+								<dd onclick="showOrgInfo()"><span>查看人员组织机构</span></dd>
+							</dl>
+						</a>
+					</div>
+				</div>
+				<!-- 中、左、右 -->
+				<div class="desginer_content">
+					<div class="desginer_center">
+						<div class="ds_form">
+							<div class="ds_control ds_page layui-form leftRight_ design">
+								<div id='flow_box'></div>
+							</div>
+						</div>
+					</div>
+					<div class="desginer_left ">
+						<div class="ds_tools" style="margin-top: 62px;">
+							<div class="layui-tab layui-tab-brief" style="margin-top:0px">
+								<div class="layui-tab-item no_padding layui-show">
+									<div class="layui-collapse" id="ds_tools_content" lay-accordion="" lay-filter="control_tools">
+										<div class="layui-colla-item">
+											<h2 class="layui-colla-title ellipsis">环节类型</h2>
+											<div class="layui-colla-content layui-show">
+												<div class="ds_tool_item nodeButton" type="开始节点" flownodetype="0">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/0.png">
+													开始节点
+												</div>
+												<div class="ds_tool_item nodeButton" type="一般节点" flownodetype="1">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/1.png">
+													一般节点
+												</div>
+												<div class="ds_tool_item nodeButton" type="判断节点" flownodetype="6">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/6.png">
+													判断节点
+												</div>
+												<div class="ds_tool_item nodeButton" type="结束节点" flownodetype="2">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/2.png">
+													结束节点
+												</div>
+												<div class="ds_tool_item nodeButton" type="跳转节点" flownodetype="3">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/3.png">
+													跳转节点
+												</div>
+												<div class="ds_tool_item nodeButton" type="子流程" flownodetype="4">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/4.png">
+													子流程
+												</div>
+												<div class="ds_tool_item nodeButton" type="自动流" flownodetype="5">
+													<img src="/dsfa/res/dsf_styles/themes/workFlow/5.png">
+													自动流
+												</div>
+												<div style="clear:both"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="desginer_right" id='propertyBox' style="margin-top: 62px;"></div>
+				</div>
+			</div>
+		</div>
+		<script src="../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../res/libs/layui/layui.all.js"></script>
+		<script src="../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../app.js"></script>
+		<script src="../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../res/dsf_res/dsf_common.js"></script>
+
+		<!-- jq拖拽 -->
+		<script src="../../res/libs/workFlow/jquery-ui.min.dragdrop.js"></script>
+		<!-- 矢量图标库 -->
+		<script src="../../res/libs/workFlow/raphael-min.js"></script>
+		<script src="../scripts/flow.js"></script>
+		<script src="../scripts/property.js"></script>
+		<script src="../scripts/propertySource.js"></script>
+		<script src="../scripts/common.js"></script>
+		<script src="../scripts/init.js"></script>
+	</body>
+</html>

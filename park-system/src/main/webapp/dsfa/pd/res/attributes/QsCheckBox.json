@@ -1,0 +1,130 @@
+[{
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text",
+                "isShow":"@[$pageType]!='QIPage'"
+            },
+            {
+                "text": "题目序号",
+                "bindControlAttr": "questionIndex",
+                "showType": "text",
+                "config": {
+                    "disabled": true
+                }
+            },
+            {
+                "text": "题干",
+                "bindControlAttr": "questionBody",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "选项设置",
+                "showType": "dialog",
+                "bindControlAttr": "$metadata.dataSource",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/qsEnumEditor.html",
+                    "width": "850px",
+                    "height": "550px",
+                    "buttonText": "编辑选项"
+                }
+            },
+            {
+                "text": "跳题设置",
+                "showType": "dialog",
+                "bindControlAttr": "logic",
+                "config": {
+                    "url": "/dsfa/pd/views/questionLogic.html?type=c",
+                    "width": "1200px",
+                    "height": "550px",
+                    "buttonText": "编辑选项"
+                }
+            },
+            {
+                "text": "列数(0表示自适应)",
+                "bindControlAttr": "colNum",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "限制选择数量(0表示不显示)",
+                "bindControlAttr": "mustCheckNum",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "最大选择数量(0表示最大)",
+                "bindControlAttr": "maxCheckNum",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否其他",
+                "bindControlAttr": "isOther",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            }
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [{
+                "text": "默认值",
+                "bindControlAttr": "metadata.defaultValue",
+                "showType": "defaultValue",
+                "isShow":"@[$pageType]!='QIPage'",
+                "config": {
+                    "value": [
+                        { "text": "文本", "code": "text", "value": "" },
+                        { "text": "值", "code": "value", "value": "" }
+                    ]
+                }
+            },
+            {
+                "text": "必填标识",
+                "bindControlAttr": "$required",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "校验规则",
+                "bindControlAttr": "metadata.validate",
+                "showType": "validateEditor",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/validateCode.html",
+                    "width": "800px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            },
+            {
+                "text": "值属性设置",
+                "bindControlAttr": "metadata.valueAttributes",
+                "showType": "dialog",
+                "config": {
+                    "url": "/dsfa/pd/views/valueAttributesEdit.html",
+                    "width": "600px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            }
+        ]
+    }
+]

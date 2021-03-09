@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>宿舍</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/jquery-ui/jquery-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+  <style>
+    div.warn-box{
+      font-size: 20px;
+      text-align: center;
+      height: 100px;
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+<div id="view"></div>
+</body>
+
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../res/libs/lodash/lodash.min.js"></script>
+<script src="../../../res/dsf_res/dsf_config.js"></script>
+<script src="../../../res/dsf_res/dsf_common.js"></script>
+<script src="../../../res/dsf_res/dsf_hostel_layout.js"></script>
+<script src="../../../dsfa/bhc/hc/bhc.js"></script>
+<script src="../../../dsfa/pd/hc/pd.js"></script>
+<script>
+  $(document).ready(function() {
+    var m = dsf.url.queryString("step") || "setHostel";
+
+    //加载排宿舍设计器的配置
+    var defaultOption = dsf.hostelOption['default'] || {};
+    var option = dsf.hostelOption[m] || {};
+    option = $.extend(true, defaultOption, option);
+
+    var target;
+    var judgeRoute = false;
+
+    //url里面 m=sortHostel 进入排宿舍预发布页面
+    switch (m) {
+      case "setHostel":
+        document.title = "宿舍分配"
+        target = new dsf.PD.hostelDesign('hostelDesign');
+        judgeRoute = true;
+        break;
+      case "setPerson":
+        document.title = "宿舍安排"
+        target = new dsf.PD.hostel('hostel');
+        judgeRoute = true;
+        break;
+    }
+
+    if (!judgeRoute) {
+      const dom = "<div class='warn-box'><p>url查询参数，step路径不正确</p>" +
+                    "<p>step=setHostel （分配宿舍）</p>" +
+                    "<p>step=setPerson（人员入住）</p>" +
+                  "</div>";
+      $("#view").html(dom)
+    }
+    target.option = option;
+    target.render(document.getElementById('view'));
+  })
+</script>
+
+</html>

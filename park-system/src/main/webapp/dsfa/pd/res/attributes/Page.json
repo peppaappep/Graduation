@@ -1,0 +1,195 @@
+[
+
+  {
+    "name": "基础属性",
+    "attributes": [{
+        "text": "业务名称",
+        "bindControlAttr": "context.B",
+        "showType": "text"
+      },
+      {
+        "text": "模块名称",
+        "bindControlAttr": "context.M",
+        "showType": "text"
+      },
+      {
+        "text": "页面名称",
+        "bindControlAttr": "$name",
+        "showType": "text"
+      },
+      {
+        "text": "页面标题",
+        "bindControlAttr": "title",
+        "showType": "text"
+      },
+      {
+        "text": "终端",
+        "bindControlAttr": "_pageDesign.client",
+        "showType": "select",
+        "dictionary": [{
+          "text": "PC",
+          "value": "PC"
+        }, {
+          "text": "APP",
+          "value": "APP"
+        }]
+      },
+      {
+        "text": "页面宽度",
+        "bindControlAttr": "$pageWidth",
+        "showType": "select",
+        "dictionary": [{
+            "text": "全屏",
+            "value": "100%"
+          }, {
+            "text": "1400像素",
+            "value": "1400px"
+          },
+          {
+            "text": "1170像素",
+            "value": "1170px"
+          }, {
+            "text": "1200像素",
+            "value": "1200px"
+          }
+        ]
+      },
+      {
+        "text": "页头页脚宽度",
+        "bindControlAttr": "$headfootwidth",
+        "showType": "select",
+        "changeExecFunction": "resize",
+        "dictionary": [{
+          "text": "跟随页面宽度",
+          "value": "same"
+        }, {
+          "text": "跟随窗体宽度",
+          "value": "full"
+        }]
+      },
+      {
+        "text": "页头显示",
+        "bindControlAttr": "$hasHeader",
+        "showType": "boolean",
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "页脚显示",
+        "bindControlAttr": "$hasFooter",
+        "showType": "boolean",
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "正文高度",
+        "bindControlAttr": "fit",
+        "showType": "select",
+        "dictionary": [{
+          "text": "自适应内容",
+          "value": "0"
+        }, {
+          "text": "自适应屏幕",
+          "value": "1"
+        }]
+      },
+      {
+        "text": "上下间隔",
+        "bindControlAttr": "topBottom",
+        "showType": "select",
+        "dictionary": [{
+            "text": "无",
+            "value": ""
+          }, {
+            "text": "小",
+            "value": "split_small"
+          },
+          {
+            "text": "中",
+            "value": "split_medium"
+          },
+          {
+            "text": "大",
+            "value": "split_big"
+          }
+        ],
+        "changeExecFunction": "resize"
+      },
+      {
+        "text": "列间隔",
+        "bindControlAttr": "leftRight",
+        "showType": "select",
+        "dictionary": [{
+            "text": "无",
+            "value": ""
+          }, {
+            "text": "小",
+            "value": "split_small"
+          },
+          {
+            "text": "中",
+            "value": "split_medium"
+          },
+          {
+            "text": "大",
+            "value": "split_big"
+          }
+        ]
+      },
+      {
+        "text": "左右视图宽度",
+        "bindControlAttr": "$viewSplit",
+        "showType": "text",
+        "changeExecFunction": "resize"
+      },
+      {
+        "text": "页面类型",
+        "bindControlAttr": "$pageType",
+        "showType": "select",
+        "dictionary": [{
+          "text": "表单详情",
+          "value": "form"
+        }, {
+          "text": "问卷",
+          "value": "question"
+        }, {
+          "text": "考试",
+          "value": "exam"
+        }, {
+          "text": "其他",
+          "value": "other"
+        }]
+      },
+      {
+        "text": "页脚是否不定位",
+        "bindControlAttr": "bottomLayoutAuto",
+        "showType": "boolean"
+      },
+      {
+        "text": "XSS允许",
+        "bindControlAttr": "$xssConfig.allow",
+        "showType": "boolean"
+      },
+      {
+        "text": "页面权限",
+        "bindControlAttr": "$pagePrivilege",
+        "showType": "privilegeEditor",
+        "config": {
+          "width": "700px",
+          "height": "600px",
+          "buttonText": "设置",
+          "title": "设置"
+        }
+      },
+      {
+        "text": "访问权限",
+        "bindControlAttr": "$dataAccessRole",
+        "showType": "roleEditor",
+        "config": {
+          "width": "700px",
+          "height": "600px",
+          "buttonText": "设置",
+          "title": "设置"
+        }
+      }
+    ]
+  }
+]

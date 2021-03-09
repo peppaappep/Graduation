@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>子表列设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body ng-controller="subTableColumnEdit">
+    <div class="container-fluid dialog_container" style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="float: right">
+                    <a class="ds_button" ng-click="add()">新增</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid dialog_container;" style="margin-top:68px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td ng-repeat="col in columns track by $index" style="text-align: center;" ng-if="columns.length-1>$index">{{col.text}}</td>
+                            <td style="text-align: center;">操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in args.value track by $index">
+                            <td ng-repeat="col in columns track by $index" style="text-align: center;" ng-if="columns.length-1>$index">
+                                <input type="text" autocomplete="off" class="layui-input" ng-model="row.columns[col.id].text" ng-trim="false"/>
+                            </td>
+                            <td style="text-align: center;"><a ng-click="deleteItem(row)">删除</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+   
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {},
+            tempMap = {};
+        app.controller('subTableColumnEdit', function($scope) {
+            $scope.args = null;
+            $scope.last = null;
+
+            window.dialogInit = function(args) {
+                console.log(args);
+                $scope.args = $.extend(true, {}, args);
+                $scope.last = $scope.args.value;
+
+                if (args.owner.$columns.length <= 0) {
+                    dsf.layer.message("请先设置表头", false);
+                    return;
+                }
+                $scope.columns = args.owner.$columns;
+                $scope.$apply();
+            }
+
+            $scope.addNew = function() {
+                $scope.last.push(createColInfo())
+            }
+
+
+            $scope.deleteItem = function(item) {
+                var index = $scope.last.indexOf(item);
+                if (index >= 0) {
+                    $scope.last.splice(index, 1);
+                }
+            }
+
+            $scope.sort = function(item, type) {
+                var index = $scope.last.indexOf(item);
+                if (index >= 0) {
+                    if (type == "up") {
+                        if (index > 0) {
+                            var prev = $scope.last[index - 1];
+                            $scope.last[index - 1] = item;
+                            $scope.last[index] = prev;
+                        }
+                    } else {
+                        if (index < $scope.last.length - 1) {
+                            var next = $scope.last[index + 1];
+                            $scope.last[index + 1] = item;
+                            $scope.last[index] = next;
+                        }
+                    }
+                }
+            }
+
+            $scope.add = function(index) {
+                var obj = {
+                    "id": dsf.uuid(),
+                    "controls": [],
+                    "columns": {}
+                }
+                for (var i = 0; i < $scope.columns.length - 1; i++) {
+                    var col = $scope.columns[i];
+                    var c={
+                        "id":col.id,
+                        "text":""
+                    }
+                    obj.columns[c.id]=c;
+                }
+                $scope.args.value.push(obj)
+            }
+
+            window.getDialogResult = function() {
+                return $scope.args.value;
+            }
+        });
+    </script>
+</body>
+
+</html>

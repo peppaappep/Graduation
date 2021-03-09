@@ -1,0 +1,182 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "提示文字",
+                "bindControlAttr": "placeholder",
+                "showType": "text"
+            },
+            {
+                "text": "名称是否显示",
+                "bindControlAttr": "showLabel",
+                "showType": "boolean"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly"
+            },
+            {
+                "text": "是否失效",
+                "showType": "boolean",
+                "bindControlAttr": "disabled",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "取消上下边距",
+                "bindControlAttr": "tbNoPadding",
+                "showType": "boolean"
+            },
+			{
+			    "text": "发生击键和执行搜索之间的延迟（以毫秒为单位)",
+			    "bindControlAttr": "delay",
+			    "showType": "number"
+			},
+			{
+				"text": "移动端提示文字",
+				"showType": "text",
+				"bindControlAttr": "dataCapion"
+			},
+			{
+				"text":"移动端语音地址",
+				"showType": "text",
+				"bindControlAttr": "dataAudioUrl"
+			},
+			{
+				"text":"移动端视频地址",
+				"showType": "text",
+				"bindControlAttr": "dataVideoUrl"
+			}
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [
+            {
+                "text": "数据源类型",
+                "bindControlAttr":"$metaDataType",
+                "showType": "select",
+                "hiddenKeyClass":"sqlUrl",
+                "showKeyClass":"metaDataDialog",
+                "dictionary": [
+                    {
+                        "text": "接口",
+                        "value": "0"
+                    },
+                    {
+                        "text": "元数据组",
+                        "value": "1"
+                    }
+                ]
+            },
+            {
+                "text": "元数据组选择",
+                "bindControlAttr": "chooseMetaData",
+                "showType": "dialog",
+                "config": {
+                    "url": "//dsfa/pd/views/treeSelector.html",
+                    "width": "1000px",
+                    "height": "550px",
+                    "buttonText": "选择",
+                    "title": "选择元数据组"
+                },
+                "class":"metaDataDialog",
+                "hidden":"$metaDataType==0"
+            },
+            {
+                "text": "数据接口地址",
+                "showType": "text",
+                "class":"sqlUrl",
+                "bindControlAttr":"$source",
+                "changeExecFunction": "loadData",
+                "hidden":"$metaDataType==1"
+            },
+            {
+                "text": "显示最大条目",
+                "bindControlAttr": "$maxItemsNumber",
+                "showType": "text"
+            },
+            {
+                "text": "默认值",
+                "bindControlAttr": "metadata.defaultValue",
+                "showType": "defaultValue",
+                "config": {
+                    "value": [
+                        { "text": "值", "code": "text", "value": "" }
+                    ]
+                }
+            },
+            {
+                "text": "必填标识",
+                "bindControlAttr": "$required",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "校验错误提示位置",
+                "bindControlAttr": "$error_tipsPosition",
+                "showType": "select",
+                "dictionary": [{
+                        "text": "上",
+                        "value": "top"
+                    }, {
+                        "text": "右",
+                        "value": "right"
+                    },
+                    {
+                        "text": "下",
+                        "value": "bottom"
+                    },
+                    {
+                        "text": "左",
+                        "value": "left"
+                    }
+                ]
+                
+            },
+            {
+                "text": "校验规则",
+                "bindControlAttr": "metadata.validate",
+                "showType": "validateEditor",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/validateCode.html",
+                    "width": "800px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            },
+            {
+                "text": "值属性设置",
+                "bindControlAttr": "metadata.valueAttributes",
+                "showType": "dialog",
+                "config": {
+                    "url": "/dsfa/pd/views/valueAttributesEdit.html",
+                    "width": "600px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            }
+        ]
+    }
+]

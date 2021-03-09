@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>查询条件配置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+
+    <style>
+        body {
+            height: auto;
+        }
+        
+        .error {
+            border: 1px solid red;
+        }
+        
+        .form-control {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 28px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        
+        table>tbody td {
+            padding: 5px !important;
+        }
+    </style>
+</head>
+
+<body ng-controller="dataGridColumnEdit">
+    <div class="layui-row" style="margin-top:10px">
+        <div class="layui-col-xs12 layui-form" style="padding:0px 10px 0px 10px">
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">匹配方式</label>
+                    <div class="layui-input-inline">
+                        <select name="operator">
+                            <option value="eq">等于</option>
+                            <option value="in">包含</option>
+                            <option value="like">匹配</option>
+                            <option value="slike">匹配开始</option>
+                            <option value="elike">匹配结束</option>
+                            <option value="range">区间</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">依赖</label>
+                    <div class="layui-input-inline">
+                        <select name="rel">
+                            <option value=""></option>
+                            <option value="{{x.id}}" ng-repeat="x in all">{{x.aliasName||x.name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="position:absolute;top:38px;bottom:0px;width:100%;">
+        <ul class="layui-tab-title">
+            <li class="layui-this" type="1">自定义</li>
+            <li type="2">数据字典</li>
+            <li type="3">数据源</li>
+            <li type="4">接口</li>
+        </ul>
+        <div class="layui-tab-content" style="box-sizing: border-box; position: absolute;top:40px;bottom:0px;width:100%;overflow:auto;">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-row" style="margin-top:10px">
+                    <div class="layui-col-xs12">
+                        <table class="layui-table" style="margin-top:0px;margin-bottom: 0px">
+                            <thead>
+                                <tr>
+                                    <th style="width:40px;text-align: center">序号</th>
+                                    <th style="width:100px;">选项文本</th>
+                                    <th>选项值</th>
+                                    <th style="width:100px;text-align: center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in items track by $index">
+                                    <td style="text-align: center">{{$index+1}}</td>
+                                    <td>
+                                        <input class="form-control" type="text" ng-model="item.text" placeholder="选项标签的名称">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" ng-model="item.value" placeholder="多个值用;号分隔">
+                                    </td>
+                                    <td style="text-align: center">
+                                        <a href="#" ng-click="up(item)">上移</a>
+                                        <a href="#" ng-click="down(item)">下移</a>
+                                        <a href="#" ng-click="deleteItem(item)">移除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <ul id="tree" class="ztree"></ul>
+            </div>
+            <div class="layui-tab-item">
+                <ul id="tree1" class="ztree"></ul>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">接口地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="url" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {};
+        var tree = null,
+            tree1 = null,
+            nodeList = [],
+            TabNum = 0,
+            nodeListOther = [],
+            metaDataList = [],
+            currEnum = null;
+        app.controller('dataGridColumnEdit', function($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.items = [];
+            $scope.deleteItem = function(item) {
+                var index = $scope.items.indexOf(item);
+                if (index >= 0) {
+                    $scope.items.splice(index, 1);
+                }
+            }
+            $scope.addNew = function() {
+                $scope.items.push({
+                    "text": "",
+                    "value": ""
+                });
+            }
+            $scope.clearItems = function() {
+                $scope.items = [];
+            }
+            window.dialogInit = function(args) {
+                dialogArgs = $scope.args = $.extend(true, {}, args);
+                currEnum = $scope.args.item;
+                $scope.all = _.filter($scope.args.list, (item) => {
+                    return item.id != currEnum.id;
+                });
+                $scope.rel = currEnum.rel || "";
+                $scope.url = currEnum.dataSource && currEnum.dataSource.type == "interface" ? currEnum.dataSource.path : "";
+                //自定义数据
+                $scope.items = currEnum.enumItems && currEnum.enumItems.items ? currEnum.enumItems.items : [];
+                $("input[name=url]").val($scope.url)
+                $scope.$apply();
+
+                if (currEnum.enumItems) {
+                    let operator = currEnum.enumItems && currEnum.enumItems.operator ? currEnum.enumItems.operator : "eq";
+                    $("select[name=operator]").val(operator);
+                } else {
+                    let operator = currEnum.dataSource && currEnum.dataSource.operator ? currEnum.dataSource.operator : "eq";
+                    $("select[name=operator]").val(operator);
+                }
+
+                if (currEnum.rel) {
+                    let rel = currEnum.rel ? currEnum.rel : "";
+                    $("select[name=rel]").val(rel);
+                }
+
+                layui.form.render("select");
+
+                //数据字典
+                loadTree();
+
+                //加载当前tab
+                let d = {
+                    "static": 1,
+                    "dict": 2,
+                    "dbsource": 3,
+                    "interface": 4
+                }
+                let type = (currEnum.dataSource) ? currEnum.dataSource.type : "static";
+                if (currEnum.enumItems && currEnum.enumItems.items.length) {
+                    type = "static";
+                }
+                $("li[type=" + d[type] + "]").click();
+            }
+            window.getDialogResult = function() {
+                var tab = $(".layui-tab .layui-this");
+                currEnum.rel = $("select[name=rel]").val();
+                if (tab.attr("type") == "1") {
+                    if ($scope.items.length > 0) {
+                        currEnum.enumItems = {
+                            "operator": $("select[name=operator]").val(),
+                            "items": $scope.items
+                        }
+                        currEnum.dataSource = {
+                            code: "",
+                            type: "static",
+                            operator: $("select[name=operator]").val(),
+                            path: ""
+                        }
+                    }
+                } else if (tab.attr("type") == "2" || tab.attr("type") == "3") {
+                    var nodes = tab.attr("type") == "2" ? nodes = tree.getCheckedNodes(true) : nodes = tree1.getCheckedNodes(true);
+                    if (nodes.length > 0) {
+                        currEnum.enumItems = null;
+                        currEnum.dataSource = {
+                            code: nodes[0].dsfa_rm_id,
+                            type: tab.attr("type") == "2" ? "dict" : "dbsource",
+                            operator: $("select[name=operator]").val(),
+                            path: nodes[0].path
+                        }
+                    } else {
+                        dsf.layer.message("请选择一个数据字典作为数据源", false);
+                        return false;
+                    }
+                } else if (tab.attr("type") == "4") {
+                    currEnum.enumItems = null;
+                    currEnum.dataSource = {
+                        code: "interface_"+dsf.uuid(),
+                        type: "interface",
+                        operator: $("select[name=operator]").val(),
+                        path: $("input[name=url]").val()
+                    }
+                }
+                if (currEnum.dataSource.type == "static") {
+                    currEnum.rel = "";
+                }
+                return currEnum;
+            }
+            window.addNew = function() {
+                $scope.addNew();
+                $scope.$apply();
+            }
+            window.clearItems = function() {
+                dsf.layer.confirm("确定更要清空所有选项？", function() {
+                    $scope.clearItems();
+                    $scope.$apply();
+                });
+            }
+        });
+
+        function loadTree() {
+            tree = $.fn.zTree.init($("#tree"), {
+                "view": {
+                    "selectedMulti": false,
+                    "fontCss": getFontCss
+                },
+                "check": {
+                    enable: true,
+                    chkStyle: "radio",
+                    radioType: "all"
+                },
+
+                "callback": {
+                    "onClick": zTreeOnClick //,
+                        // "onCheck": zTreeOnCheck
+                }
+            });
+            tree1 = $.fn.zTree.init($("#tree1"), {
+                "view": {
+                    "selectedMulti": false,
+                    "fontCss": getFontCss
+                },
+                "check": {
+                    enable: true,
+                    chkStyle: "radio",
+                    radioType: "all"
+                },
+                "callback": {
+                    "onClick": zTreeOnClick,
+                    // "onCheck": zTreeOnCheck
+                }
+            });
+
+            var queue = dsf.queue(true);
+            queue.step(function(def) {
+                    dsf.http.request(dsf.UrlSetting.get_dict, null, "GET")
+                        .done(function(response) {
+                            if (response.success) {
+                                var nodes = response.data;
+                                for (var i = 0; i < nodes.length; i++) {
+                                    fn(nodes[i]);
+                                    tree.addNodes(null, nodes[i]);
+                                }
+                                tree.expandAll(true);
+                            }
+                            def.resolve();
+                        })
+                        .error(function(response) {
+                            def.resolve();
+                        })
+                        .exec();
+                })
+                .step(function(def) {
+                    dsf.http.request(dsf.UrlSetting.design_sqlds, null, "GET")
+                        .done(function(response) {
+                            if (response.success) {
+                                var nodes = response.data;
+                                for (var i = 0; i < nodes.length; i++) {
+                                    fn(nodes[i]);
+                                    tree1.addNodes(null, nodes[i]);
+                                }
+                                tree1.expandAll(true);
+                            }
+                            def.resolve();
+                        })
+                        .error(function(response) {
+                            def.resolve();
+                        })
+                        .exec();
+                })
+                .exec();
+            // http: //localhost:8000/dsfa/rm/list/dataDic
+
+        }
+
+        function getFontCss(treeId, treeNode) {
+            return (!!treeNode.highlight) ? {
+                color: "#A60000",
+                "font-weight": "bold"
+            } : {
+                color: "#333",
+                "font-weight": "normal"
+            };
+        }
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.type_value == "5" || treeNode.type_value == "8") {
+                window[treeId].checkNode(treeNode, !treeNode.checked, false, true);
+            }
+        }
+
+        function fn(node) {
+            if (currEnum.dataSource) {
+                if (node.dsfa_rm_id == currEnum.dataSource.code) {
+                    node.checked = true;
+                }
+            }
+            if (node.type_value != "5" && node.type_value != "8") {
+                node.nocheck = true;
+            }
+            if (node.children) {
+                for (var i = 0; i < node.children.length; i++) {
+                    fn(node.children[i]);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

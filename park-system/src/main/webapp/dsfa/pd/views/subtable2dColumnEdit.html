@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>子表列设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body ng-controller="subTableColumnEdit">
+    <div class="container-fluid dialog_container" style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="float: right">
+                    <a class="ds_button" ng-click="addNew()">新增</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid dialog_container;" style="margin-top:68px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">列名</th>
+                            <th style="text-align: center;width:120px;">宽度</th>
+                            <th style="text-align: center;width:120px;">表头格式</th>
+                            <th style="text-align: center;width:120px;">数据格式</th>
+                            <!-- <th style="text-align: center;width:120px;">是否隐藏</th> -->
+                            <!-- <th style="text-align: center;width:120px;">内容超出是否省略</th> -->
+                            <th style="text-align: center;width:120px;">是否固定</th>
+                            <th style="text-align: center;width:150px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="col in args.value track by $index">
+                            <td>
+                                <input name="text_{{$index}}" class="form-control" type="text" ng-model="col.text">
+                            </td>
+                            <td>
+                                <input name="width_{{$index}}" class="form-control" type="text" ng-model="col.width">
+                            </td>
+                            <td>
+                                <select name="headAilgn_{{$index}}" class="form-control" ng-model="col.headAilgn">
+                                    <option value="left">居左</option>
+                                    <option value="center">居中</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="bodyAilgn_{{$index}}" class="form-control" ng-model="col.bodyAilgn">
+                                    <option value="left">居左</option>
+                                    <option value="center">居中</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="hide_{{$index}}" class="form-control" ng-model="col.frozen">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </td>
+                            <!-- <td>
+                                <select name="hide_{{$index}}" class="form-control" ng-model="col.hide">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="overflow_{{$index}}" class="form-control" ng-model="col.ellipsis">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </td> -->
+                            <td style="vertical-align: middle;text-align: center">
+                                <a ng-click="sort(col,'up')">上移</a>
+                                <a ng-click="sort(col,'down')">下移</a>
+                                <a ng-click="deleteItem(col)">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+   
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {},
+            tempMap = {};
+        app.controller('subTableColumnEdit', function($scope) {
+            $scope.args = null;
+            $scope.last = null;
+
+            window.dialogInit = function(args) {
+                console.log(args);
+                $scope.args = $.extend(true, {}, args);
+                $scope.last = $scope.args.value;
+
+                for (var i in $scope.last) {
+                    if (!$scope.last[i].headAilgn) {
+                        $scope.last[i].headAilgn = "left";
+                    }
+                    if (!$scope.last[i].bodyAilgn) {
+                        $scope.last[i].bodyAilgn = "left";
+                    }
+                    if (!$scope.last[i].hide) {
+                        $scope.last[i].hide = "0";
+                    }
+                }
+                $scope.$apply();
+            }
+
+            $scope.addNew = function() {
+                $scope.last.push(createColInfo())
+            }
+            $scope.deleteItem = function(item) {
+                var index = $scope.last.indexOf(item);
+                if (index >= 0) {
+                    $scope.last.splice(index, 1);
+                }
+            }
+
+            $scope.sort = function(item, type) {
+                var index = $scope.last.indexOf(item);
+                if (index >= 0) {
+                    if (type == "up") {
+                        if (index > 0) {
+                            let prev = $scope.last[index - 1];
+                            $scope.last[index - 1] = item;
+                            $scope.last[index] = prev;
+                        }
+                    } else {
+                        if (index < $scope.last.length - 1) {
+                            let next = $scope.last[index + 1];
+                            $scope.last[index + 1] = item;
+                            $scope.last[index] = next;
+                        }
+                    }
+                }
+            }
+
+            window.getDialogResult = function() {
+                // for (var i = 0; i < $scope.last.length; i++) {
+                //     var r = $scope.last[i];
+                //     if (!vaildate(r, "text", i, "required", "请填写名称")) {
+                //         return false;
+                //     }
+                // }
+                return $scope.args.value;
+            }
+
+            function vaildate(r, key, index, vaildateType, message) {
+                var result = true;
+                if (vaildateType == "required") {
+                    if (!$.trim(r[key])) {
+                        result = false;
+                    }
+                } else if (vaildateType == "metadatename") {
+                    if (!dsf.metadata.vaildateMetaName(r[key])) {
+                        result = false;
+                    }
+                }
+                if (!result) {
+                    let control = $("[name='" + key + "_" + index + "']");
+                    control.addClass("error");
+                    control.one("click", function(evt) {
+                        control.removeClass("error");
+                        return false;
+                    });
+                    dsf.Dom.scrollToElement(control, -78);
+                    dsf.layer.message(message, false);
+                    return false;
+                }
+                return true;
+            }
+
+            function createColInfo() {
+                return {
+                    "id": dsf.uuid(),
+                    "text": "列" + ($scope.last.length + 1),
+                    "width": "",
+                    "headAilgn": "center",
+                    "bodyAilgn": "center",
+                    "hide": "0",
+                    "ellipsis": "1"
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

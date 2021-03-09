@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>流程绘制 </title>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3"/>
+    <meta http-equiv="description" content="this is my page"/>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<link href="../res/css/systemskins/dsfa/themes/gray/DSSkin.css" rel="stylesheet" type="text/css" />
+	<link href="../res/css/easyui1.4.1/themes/gray/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="../res/css/easyui1.4.1/icon.css" rel="stylesheet" type="text/css" />
+	<script src="../../../res/libs/jquery-1.12.4.min.js" type="text/javascript"></script>
+    <script src="../script/jquery.easyui.min.js" type="text/javascript"></script>
+	<script src="../script/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<link href="../../../res/libs/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+	<script src="../script/common.js" type="text/javascript"></script>
+	<script src="../../../res/libs/lodash/lodash.min.js" type="text/javascript"></script>
+	<script src="../../../app.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_config.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_common.js" type="text/javascript"></script>
+	<!-- <script src="../../../scripts/jquery.xml2json.js" type="text/javascript"></script> -->
+	<!-- <script src="../../../scripts/DS_Base.js" type="text/javascript"></script>
+	<script src="../../../scripts/json2.js" type="text/javascript"></script>
+	<script src="../../../scripts/common.js" type="text/javascript"></script>
+	<script src="../../../scripts/config.js" type="text/javascript"></script> -->
+	<!-- <script src="../scripts/raphael-min.js" type="text/javascript"></script> -->
+	<script src="../script/property_dialog1.js" type="text/javascript"></script>
+	<script src="../script/property.js" type="text/javascript"></script>
+	<style>
+		.hideDiv{
+			display:none;
+		}
+
+        .toSearch {
+            border:1px;
+        }
+	</style>
+	<script type="text/javascript">
+		var dialogArgs = (window.frameElement && window.frameElement.dialogArgs) ? window.frameElement.dialogArgs : [];
+		var row = dialogArgs.rowData;
+		var element = dialogArgs.el;
+		var workFlow = dialogArgs.workFlow;
+		var nodeObj = dialogArgs.nodeObj;
+		var appInfo = dialogArgs.appInfo;
+		var flow=dialogArgs.flowPlugin;
+		function getReturnValue(){
+            return getReturnXml();
+		}
+
+        $(document).ready(function(){
+            init();
+            $("#dapartrole").bind('input',function(e){
+            	updateRolePanel();
+            });
+        });
+
+
+	</script>
+	</head>
+ <body class="easyui-layout" fit="true">
+	<div data-options="region:'center',title:'',border:false" id="center">
+		<div id="tabs" class="easyui-tabs" fit="true" style="border: 0px">
+	        <div id="tab0" title="行政岗位" style="padding:5px;">
+				<div class="easyui-layout" fit="true" border="false">
+					<div data-options="region:'north',title:'',split:false" border="false" style="height:30px;">
+						<div style="float: left;width:100px;">
+							<label><input type="radio" name="positionModule" value="assign" checked="checked" onclick="changePositionModule()"/>指定岗位</label>&nbsp;
+						</div>
+						<div style="float: left">
+							<label><input type="radio" name="positionModule" value="super" onclick="changePositionModule()"/>高级模式</label>
+						</div>
+						<div style="float: right">
+							<label><input type="text" class="toSearch" name="toSearch"/></label>
+						</div>
+						<div style="float: right">
+							<label><input type="checkbox" name="toPeople" class="toPeople" value=""/>发送选择到人&nbsp;&nbsp;</label>
+						</div>
+					</div>  
+					<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+						<div class="easyui-layout assignDiv" fit="true" border="false">   
+							<div data-options="region:'center',title:'',split:false" border="true" >
+									<table id="table0" fit="true" border="false"></table>
+							</div>   
+						</div>
+						<div class="easyui-layout superDiv hideDiv" fit="true" border="false">   
+							<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+								<iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;" src="gjSelect.htm?w=1"></iframe>
+							</div>   
+						</div>
+					</div>
+				</div>
+                <!-- <div>
+                    <div style="float: left;width:100px;">
+                        <label><input type="radio" name="positionModule" value="assign" checked="checked" onclick="changePositionModule()"/>指定岗位</label>&nbsp;
+                    </div>
+                    <div style="float: left">
+                        <label><input type="radio" name="positionModule" value="super" onclick="changePositionModule()"/>高级模式</label>
+                    </div>
+                    <div style="float: right">
+                        <label><input type="text" class="toSearch" name="toSearch"/></label>
+                    </div>
+                    <div style="float: right">
+                        <label><input type="checkbox" name="toPeople" class="toPeople" value=""/>发送选择到人&nbsp;&nbsp;</label>
+                    </div>
+                </div>
+				<div class="assignDiv" style="padding:0px;clear: both">
+					<table id="table0"></table>
+				</div>
+				<div class="superDiv hideDiv" style="padding-top:0px;border:0px solid #Ddd;clear:both;">
+                    <iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;height:210px;" src="gjSelect.htm?w=1"></iframe>
+                </div> -->
+			</div>
+	        <div id="tab1" title="直接选人" style="padding:5px;">
+				<div class="easyui-layout" fit="true" border="false">
+					<div data-options="region:'north',title:'',split:false" border="false" style="height:30px;">
+						<div style="float: left;width:100px">
+							<label><input type="radio" name="peopleModule" value="assign" onclick="changePeopleModule()" checked="checked"/>指定人员</label>&nbsp;
+						</div>
+						<div style="float: left;width:120px;">
+							<label><input type="radio" name="peopleModule" value="extend" onclick="changePeopleModule()"/>继承节点经办人</label>&nbsp;
+						</div>
+
+						<div style="float: left">
+							<label><input type="radio" name="peopleModule" value="super" onclick="changePeopleModule()"/>高级模式</label>
+						</div>
+						<div style="float: right">
+							<label><input type="text" class="toSearch" name="toSearch" value=""/></label>
+						</div>
+					</div>   
+					<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+						<div class="easyui-layout assignDiv" fit="true" border="false">   
+							<div data-options="region:'center',title:'',split:false" border="true" >
+								<ul id="peopleUL" fit="true"></ul>
+							</div>   
+						</div>
+						<div class="easyui-layout extendDiv hideDiv" fit="true" border="false">   
+							<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+								<table id="table1" fit="true"></table>
+							</div>   
+						</div>
+						<div class="easyui-layout superDiv hideDiv" fit="true" border="false">   
+							<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+								<iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;" src="gjSelect.htm?w=1"></iframe>
+							</div>   
+						</div>
+					</div>
+				</div>
+				
+                <!-- <div style="float: left;width:100px">
+	        	    <label><input type="radio" name="peopleModule" value="assign" onclick="changePeopleModule()" checked="checked"/>指定人员</label>&nbsp;
+                </div>
+                <div style="float: left;width:120px;">
+				    <label><input type="radio" name="peopleModule" value="extend" onclick="changePeopleModule()"/>继承节点经办人</label>&nbsp;
+                </div>
+
+                <div style="float: left">
+                    <label><input type="radio" name="peopleModule" value="super" onclick="changePeopleModule()"/>高级模式</label>
+                </div>
+                <div style="float: right">
+                    <label><input type="text" class="toSearch" name="toSearch" value=""/></label>
+                </div>
+                <div class="assignDiv" style="padding:5px;clear:both;">
+					<ul id="peopleUL" style="height:180px;width:100%;overflow:auto;border:1px solid #Ddd;"></ul>
+				</div>
+				<div class="extendDiv hideDiv" style="padding:5px;clear:both;">
+					<table id="table1" style="height:180px;width:100%;overflow:auto;"></table>
+				</div>
+				<div class="superDiv hideDiv" style="clear:both;">
+                    <iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;height:210px;" src="gjSelect.htm?w=1"></iframe>
+                </div> -->
+	        </div>
+	        <div id="tab2" title="部门+角色" style="padding:5px;">
+					<div class="easyui-layout" fit="true" border="false">   
+						<div data-options="region:'east',title:'',split:false" style="width:200px">
+							<input type="text" class="toSearch" style="margin-bottom: 5px;line-height: 20px;margin-top:0px;border: 1px solid #E5E5E5" id="dapartrole"/>
+							<ul id="flowPositionUL" fit="true" style="overflow:auto;"></ul>
+						</div>   
+						<div data-options="region:'center',title:''" border="false">
+							<div class="easyui-layout" fit="true" border="false">
+								<div data-options="region:'north',title:'',split:false" border="false" style="height:30px;">
+										<div style="float: left;width:100px;">
+											<label><input type="radio" name="orgModule" value="assign" onclick="changeOrgModule()" checked="checked"/>指定部门</label>&nbsp;
+										</div>
+										<div style="float: left;;width:120px;">
+											<label><input type="radio" name="orgModule" value="extend" onclick="changeOrgModule()"/>继承节点部门</label>&nbsp;
+										</div>
+										<div style="float: left">
+											<label><input type="radio" name="orgModule" value="super" onclick="changeOrgModule()"/>高级模式</label>
+										</div>
+										<div style="float: right">
+											<label><input type="checkbox" name="toPeople" class="toPeople" value=""/>发送选择到人&nbsp;&nbsp;</label>
+										</div>
+								</div>
+								<div data-options="region:'center',title:''" border="false">
+									<div class="easyui-layout assignDiv" fit="true" border="false">   
+										<div data-options="region:'center',title:'',split:false" border="true">
+											<ul id="orgUL" fit="true"></ul>
+										</div>   
+									</div>
+									<div class="easyui-layout extendDiv hideDiv" fit="true" border="false">   
+										<div data-options="region:'center',title:'',split:false" border="true">
+											<table id="table2" fit="true" border="false"></table>
+										</div>   
+									</div>
+									<div class="easyui-layout superDiv hideDiv" fit="true" border="false">   
+											<div data-options="region:'center',title:'',split:false" border="true">
+												<iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;" src="gjSelect.htm"></iframe>
+											</div>   
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+	        	<!-- <table style="width:780px;border:0px solid #ddd;">
+					<tr>
+						<td width="75%">
+                            <div style="float: left;width:100px;">
+                                <label><input type="radio" name="orgModule" value="assign" onclick="changeOrgModule()" checked="checked"/>指定部门</label>&nbsp;
+                            </div>
+                            <div style="float: left;;width:120px;">
+                                <label><input type="radio" name="orgModule" value="extend" onclick="changeOrgModule()"/>继承节点部门</label>&nbsp;
+                            </div>
+                            <div style="float: left">
+                                <label><input type="radio" name="orgModule" value="super" onclick="changeOrgModule()"/>高级模式</label>
+                            </div>
+                            <div style="float: right">
+                                <label><input type="checkbox" name="toPeople" class="toPeople" value=""/>发送选择到人&nbsp;&nbsp;</label>
+                            </div>
+							<div class="assignDiv" style="padding:5px;clear:both">
+								<ul id="orgUL" style="height:190px;overflow:auto;border:1px solid #ddd;"></ul>
+							</div>
+							<div class="extendDiv hideDiv" style="padding:5px;clear:both;">
+								<table id="table2" style="height:190px"></table>
+							</div>
+							<div class="superDiv hideDiv" style="clear:both;">
+                                <iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;height:210px;" src="gjSelect.htm"></iframe>
+                            </div>
+						</td>
+						<td style="padding-top:0px;border:1px solid #ddd;overflow:auto;height:200px">
+							<input type="text" class="toSearch" style="margin-bottom: 5px;line-height: 20px;margin-top:0px;border: 1px solid #E5E5E5" id="dapartrole"/>
+							<ul id="flowPositionUL" style="height:170px;overflow:auto;"></ul>
+						</td>
+					</tr>
+				</table> -->
+	        </div>
+			<div id="tab3" title="人员+关系" style="padding:5px;overflow: hidden">
+					<div class="easyui-layout" fit="true" border="false">   
+						<div data-options="region:'east',title:'',split:false" style="width:200px">
+								<ul id="peopleRelationUL" style="overflow:auto;" fit="true"></ul>
+						</div>   
+						<div data-options="region:'center',title:''" border="false">
+							<div class="easyui-layout" fit="true" border="false">
+								<div data-options="region:'north',title:'',split:false" border="false" style="height:30px;">
+										<div style="float: left;width:120px;">
+											<label><input type="radio" name="peopleRelationModule" value="extend" onclick="changePeopleRelationModule()" checked="checked"/>继承节点经办人</label>&nbsp;
+										</div>
+										<div style="float: left">
+											<label><input type="radio" name="peopleRelationModule" value="super" onclick="changePeopleRelationModule()"/>高级模式</label>
+										</div>
+										<div style="float: right">
+											<label><input type="checkbox" name="toPeople" class="toPeople" value="0"/>发送选择到人&nbsp;&nbsp;</label>
+										</div>
+								</div>
+								<div data-options="region:'center',title:''" border="false">
+									<div class="easyui-layout assignDiv hideDiv" fit="true" border="false">   
+											<div data-options="region:'center',title:'',split:false" border="true" >
+												<ul id="peopleParams41" fit="true"></ul>
+											</div>   
+										</div>
+										<div class="easyui-layout extendDiv" fit="true" border="false">   
+											<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+													<table id="table3" fit="true"></table>
+											</div>   
+										</div>
+										<div class="easyui-layout superDiv hideDiv" fit="true" border="false">   
+											<div data-options="region:'center',title:'',split:false" border="false" style="overflow:hidden">
+												<iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;" src="gjSelect.htm"></iframe>
+											</div>   
+										</div>
+									</div>
+								</div>  
+							</div>
+						</div>   
+					</div> 
+				<!-- <table style="width:780px;border:0px solid #ddd;">
+					<tr>
+						<td width="75%">
+                            <div style="float: left;width:120px;">
+                                <label><input type="radio" name="peopleRelationModule" value="extend" onclick="changePeopleRelationModule()" checked="checked"/>继承节点经办人</label>&nbsp;
+                            </div>
+                            <div style="float: left">
+                                <label><input type="radio" name="peopleRelationModule" value="super" onclick="changePeopleRelationModule()"/>高级模式</label>
+                            </div>
+                            <div style="float: right">
+                                <label><input type="checkbox" name="toPeople" class="toPeople" value="0"/>发送选择到人&nbsp;&nbsp;</label>
+                            </div>
+                            <div class="assignDiv hideDiv" style="padding:5px;clear:both">
+								<ul id="peopleParams41" style="border:1px solid #ddd;height:180px;overflow:auto;"></ul>
+							</div>
+							<div class="extendDiv" style="padding:5px;clear:both">
+								<table id="table3" style="height:180px"></table>
+							</div>
+							<div class="superDiv hideDiv" style="clear:both">
+                                <iframe  name="frameMain" width="100%" height="100%" frameborder="0" style="border: 0px;height:210px;" src="gjSelect.htm"></iframe>
+                            </div>
+						</td>
+						<td style="padding-top:15px;">
+							<ul id="peopleRelationUL" style="height:100%;overflow:auto;border:1px solid #ddd;"></ul>
+						</td>
+					</tr>
+				</table> -->
+			</div>
+		</div>
+	</div>
+    <div region="south" split="false" border="false" title="" style="height: 160px; overflow: hidden; padding-top: 0px;">
+        <div style="text-align:center;padding:5px;">
+            <a href="#" onclick="doSelect()" class="easyui-linkbutton" data-options="iconCls:'icon-down'">选择</a>
+            <a href="#" onclick="doRemove()" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+            <a href="#" onclick="doClear()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">清空</a>
+        </div>
+        <table id="tableResult" style="height:120px;" fit="true"></table>
+    </div>
+</body>
+</html>

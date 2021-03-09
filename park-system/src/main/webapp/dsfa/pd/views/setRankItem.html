@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>设置评分项</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/libs/layui/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/dsf_style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/font/iconfont.css"
+    />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+      .layui-form-label {
+        padding: 9px 0 !important;
+        width: 100px;
+      }
+
+      form {
+        position: relative;
+        left: -15px;
+        padding: 17px 0;
+      }
+
+      form a {
+        position: absolute;
+        right: 0;
+      }
+
+      .layui-input-block {
+        margin-right: 20px;
+      }
+
+      .layui-form-radio {
+        margin: 6px 0 0 0;
+      }
+
+      .text_center {
+        text-align: center;
+      }
+
+      .row {
+        margin: 0 -10px;
+      }
+
+      .error {
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+
+  <body ng-controller="myCtrl">
+    <div
+      style="width:100%;position:fixed;top:0px;background-color:#fff;z-index:10"
+    >
+      <form class="layui-form" lay-filter="example">
+        <div class="layui-inline">
+          <label class="layui-form-label">项目层级：</label>
+          <div class="layui-input-block">
+            <input
+              type="radio"
+              name="level"
+              value="1"
+              lay-filter="level"
+              title="一级"
+            />
+            <input
+              type="radio"
+              name="level"
+              value="2"
+              lay-filter="level"
+              title="二级"
+            />
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">计算权重：</label>
+          <div class="layui-input-block">
+            <input
+              type="radio"
+              name="weight"
+              value="1"
+              lay-filter="weight"
+              title="是"
+            />
+            <input
+              type="radio"
+              name="weight"
+              value="0"
+              lay-filter="weight"
+              title="否"
+            />
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">显示评分标准：</label>
+          <div class="layui-input-block">
+            <input
+              type="radio"
+              name="norm"
+              value="1"
+              lay-filter="norm"
+              title="是"
+            />
+            <input
+              type="radio"
+              name="norm"
+              value="0"
+              lay-filter="norm"
+              title="否"
+            />
+          </div>
+        </div>
+        <a class="ds_button" ng-click="addNew()">新增</a>
+      </form>
+    </div>
+    <div style="padding: 10px;position: relative;top: 58px;">
+      <div class="row">
+        <div class="col-xs-12">
+          <table id="table" class="layui-table">
+            <thead>
+              <tr>
+                <th style="text-align: center;width:60px;">序号</th>
+                <th style="text-align: center;">项目</th>
+                <th style="text-align: center;" ng-if="config.norm==1">
+                  评分标准
+                </th>
+                <th style="text-align: center;width:120px">层级</th>
+                <th
+                  style="text-align: center;width:120px"
+                  ng-if="config.weight==1"
+                >
+                  权重（%）
+                </th>
+                <th style="text-align: center;width:150px;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="row in config.rows track by $index">
+                <td style="text-align:center">{{$index+1}}</td>
+                <td>
+                  <input
+                    name="project_{{$index}}"
+                    class="form-control"
+                    type="text"
+                    ng-model="row.project"
+                  />
+                </td>
+                <td ng-if="config.norm==1">
+                  <input
+                    name="norm_{{$index}}"
+                    class="form-control"
+                    type="text"
+                    ng-model="row.norm"
+                  />
+                </td>
+                <td class="text_center">
+                  <div ng-if='config.level=="1"'>一级</div>
+                  <select
+                    ng-if='config.level=="2"'
+                    name="level_{{$index}}"
+                    class="form-control"
+                    ng-model="row.level"
+                  >
+                    <option value="1">一级</option>
+                    <option value="2">二级</option>
+                  </select>
+                </td>
+                <td ng-if="config.weight==1">
+                  <input
+                    name="weight_{{$index}}"
+                    class="form-control"
+                    type="number"
+                    ng-model="row.weight"
+                  />
+                </td>
+                <td
+                  style="width:190px;vertical-align: middle;text-align: center"
+                >
+                  <a ng-click="setMode($index)">评分模式</a>
+                  <a ng-click="sort(row,'up')">上移</a>
+                  <a ng-click="sort(row,'down')">下移</a>
+                  <a ng-click="deleteItem(row)">删除</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var app = angular.module('myApp', [])
+      var ctrl = null
+      // 默认权重总和
+      var defaultTotalWeight = 0
+      // 默认 type
+      var defaultStyleType = 0
+      // 默认选项
+      var defaultChooseType = 0
+      // 默认全局自定义分制
+      var defaultScoring = []
+      app.controller('myCtrl', function($scope) {
+        $scope.rows = []
+        $scope.config = {
+          level: '1',
+          weight: '1',
+          norm: '1',
+          rows: [],
+        }
+
+        window.dialogInit = function(args) {
+          ctrl = args.owner
+          defaultTotalWeight = parseInt(ctrl.totalWeight)
+          defaultStyleType = parseInt(ctrl.styleType)
+          defaultChooseType = parseInt(ctrl.chooseType)
+          defaultScoring =
+            defaultStyleType == 4 && defaultChooseType == 9
+              ? ctrl.scoringOptions
+              : []
+
+          $scope.config = $.extend(true, {}, args.value)
+          var rows = []
+          _.forEach($scope.config.rows, function(val, key) {
+            var children = []
+            if (val.children) {
+              children = val.children
+            }
+            if (!val.level) {
+              val.level = '1'
+            }
+            delete val.children
+            rows.push(val)
+            rows = rows.concat(children)
+          })
+          $scope.config.rows = rows
+          //表单初始赋值
+          layui.form.val('example', {
+            level: $scope.config.level,
+            weight: $scope.config.weight,
+            norm: $scope.config.norm,
+          })
+          $scope.$apply()
+        }
+
+        layui.form.on('radio(level)', function(data) {
+          $scope.config.level = data.value
+          $scope.$apply()
+        })
+        layui.form.on('radio(weight)', function(data) {
+          $scope.config.weight = data.value
+          $scope.$apply()
+        })
+        layui.form.on('radio(norm)', function(data) {
+          $scope.config.norm = data.value
+          $scope.$apply()
+        })
+        $scope.addNew = function() {
+          $scope.config.rows.push({
+            project: '',
+            norm: '',
+            weight: '',
+            score: null,
+            level: '1',
+            styleType: defaultStyleType,
+            chooseType: defaultChooseType,
+            scoringOptions: defaultScoring,
+          })
+        }
+
+        $scope.sort = function(item, type) {
+          var index = $scope.config.rows.indexOf(item)
+          if (index >= 0) {
+            if (type == 'up') {
+              if (index > 0) {
+                let prev = $scope.config.rows[index - 1]
+                $scope.config.rows[index - 1] = item
+                $scope.config.rows[index] = prev
+              }
+            } else {
+              if (index < $scope.config.rows.length - 1) {
+                let next = $scope.config.rows[index + 1]
+                $scope.config.rows[index + 1] = item
+                $scope.config.rows[index] = next
+              }
+            }
+          }
+        }
+        $scope.deleteItem = function(item) {
+          var index = $scope.config.rows.indexOf(item)
+          if (index >= 0) {
+            $scope.config.rows.splice(index, 1)
+          }
+        }
+
+        $scope.setMode = function(i) {
+          window.parent.dsf.layer.openDialog({
+            title: '编辑评分模式',
+            content: './setRankMode.html',
+            area: ['300px', '400px'],
+            args: {
+              ctrl: ctrl,
+              data: $scope.config.rows[i],
+            },
+            btn: [
+              {
+                text: '确定',
+                handler: function(index, layero) {
+                  let frame = layero.find('iframe')
+                  let win = frame.get(0).contentWindow
+                  let result = win.getDialogResult()
+                  if (result) {
+                    $scope.config.rows[i] = $.extend(
+                      $scope.config.rows[i],
+                      result
+                    )
+                  }
+                },
+              },
+              {
+                text: '取消',
+                handler: function(index, layero) {},
+              },
+            ],
+          })
+        }
+
+        window.getDialogResult = function() {
+          var rows = []
+          // 一级项目权重和
+          var weight_total = 0
+          // 二级项目对应的一级权重和
+          var parent_weight_total = 0
+          // 二级项目分组的权重和
+          var children_weight_total = 0
+          var parent_index = 0
+          var error = false
+          _.forEach($scope.config.rows, function(val, key) {
+            if (val.level == '2' && rows.length == 0) {
+              dsf.layer.message('请先定义一级项目', false)
+              error = true
+              return false
+            }
+            if (!vaildate(val, 'project', key, 'required', '请填写项目名')) {
+              error = true
+              return false
+            }
+            if (
+              $scope.config.norm == '1' &&
+              !vaildate(val, 'norm', key, 'required', '请填写评分标准')
+            ) {
+              error = true
+              return false
+            }
+            if ($scope.config.weight == '1') {
+              if (!vaildate(val, 'weight', key, 'required', '请填写权重值')) {
+                error = true
+                return false
+              } else if (val.level == '1') {
+                weight_total += val.weight * 1
+                parent_weight_total = val.weight
+                children_weight_total = 0
+                parent_index = key
+              } else if (val.level == '2') {
+                children_weight_total += val.weight * 1
+                var _d = $scope.config.rows[key * 1 + 1]
+                if (
+                  ((_d && _d.level == '1') || !_d) &&
+                  children_weight_total != parent_weight_total
+                ) {
+                  if (children_weight_total < parent_weight_total) {
+                    dsf.layer.message(
+                      '第' +
+                        rows.length +
+                        '组的子权重和才' +
+                        children_weight_total +
+                        '，需要达到' +
+                        parent_weight_total +
+                        '才能提交',
+                      false
+                    )
+                  } else {
+                    dsf.layer.message(
+                      '第' +
+                        rows.length +
+                        '组的子权重和已超过 ' +
+                        parent_weight_total +
+                        '不能提交',
+                      false
+                    )
+                  }
+                  error = true
+
+                  let control = $("[name='weight_" + parent_index + "']")
+                  control.addClass('error')
+                  control.one('click', function(evt) {
+                    control.removeClass('error')
+                    return false
+                  })
+                  dsf.Dom.scrollToElement(control, -78)
+                  return false
+                }
+              }
+            }
+            if (val.level == '1') {
+              delete val.children
+              rows.push(val)
+            } else {
+              var _obj = rows[rows.length - 1]
+              if (!_obj['children']) {
+                _obj['children'] = []
+              }
+              _obj['children'].push(val)
+            }
+          })
+          if (error) {
+            return false
+          } else if (
+            rows.length > 0 &&
+            $scope.config.weight == '1' &&
+            weight_total != defaultTotalWeight
+          ) {
+            if (weight_total < defaultTotalWeight) {
+              dsf.layer.message(
+                '权重和才' +
+                  weight_total +
+                  '，需要达到' +
+                  defaultTotalWeight +
+                  '才能提交',
+                false
+              )
+            } else {
+              dsf.layer.message(
+                '权重和已超出' + defaultTotalWeight + '不能提交',
+                false
+              )
+            }
+            return false
+          }
+          console.log('确定后返回的值', JSON.stringify($scope.config.rows))
+
+          $scope.config.rows = rows
+          return $scope.config
+        }
+        function vaildate(r, key, index, vaildateType, message) {
+          var result = true
+          if (vaildateType == 'required') {
+            if (!$.trim(r[key])) {
+              result = false
+            }
+          } else if (vaildateType == 'metadatename') {
+            if (!dsf.metadata.vaildateMetaName(r[key])) {
+              result = false
+            }
+          }
+          if (!result) {
+            let control = $("[name='" + key + '_' + index + "']")
+            control.addClass('error')
+            control.one('click', function(evt) {
+              control.removeClass('error')
+              return false
+            })
+            dsf.Dom.scrollToElement(control, -78)
+            dsf.layer.message(message, false)
+            return false
+          }
+          return true
+        }
+      })
+    </script>
+  </body>
+</html>

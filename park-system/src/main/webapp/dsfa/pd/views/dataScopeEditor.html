@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>浏览范围</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+</head>
+
+<body>
+    <div style="position:absolute;top:0px;right:0px;left:0px;bottom:0px">
+        <div id="base" style="height:100%;">
+            <div class="layui-form" id="scopeForm" lay-filter="scopeForm">
+                <div class="layui-card">
+                    <!-- <div class="layui-card-header">浏览范围</div> -->
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">范围：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" lay-filter="scopeitem" name="scope" value="0" title="无限制" />
+                                <input type="radio" lay-filter="scopeitem" name="scope" value="1" title="我的"  />
+                                <input type="radio" lay-filter="scopeitem" name="scope" value="2" title="本机构的" checked />
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="unitblock" style="display:none">
+                            <label class="layui-form-label">本机构范围：</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="unit" value="1" title="上级机构" lay-skin="primary" />
+                                <input type="checkbox" name="unit" value="2" title="下级机构" lay-skin="primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script>
+        var dialogArgs = null;
+        window.dialogInit = function(args) {
+            dialogArgs = args;
+            layui.form.on("radio(scopeitem)", function(data) {
+                data.value == "2" ? $("#unitblock").show() : $("#unitblock").hide();
+            })
+            loadForm(dialogArgs.value);
+        }
+
+        window.getDialogResult = function() {
+            var scopeForm = $("#scopeForm");
+            result = {
+                scope: "",
+                unit: []
+            };
+            result.scope = scopeForm.find("input[name=scope]:checked").val();
+            if (result.scope == "2") {
+                let unitInputs = scopeForm.find("input[name=unit]:checked");
+                if (unitInputs.length > 0) {
+                    for (var i = 0; i < unitInputs.length; i++) {
+                        result.unit.push(unitInputs.eq(i).val())
+                    }
+                }
+            }
+            return result;
+        }
+
+        function loadForm(data) {
+            var scopeForm = $("#scopeForm");
+            scopeForm.find("input[name=scope][value='" + data.scope + "']").prop("checked", true);
+            data.scope == "2" ? $("#unitblock").show() : $("#unitblock").hide();
+            for (let i = 0; i < data.unit.length; i++) {
+                scopeForm.find("input[name=unit][value='" + data.unit[i] + "']").prop("checked", true)
+            }
+            layui.form.render()
+        }
+    </script>
+</body>
+
+</html>

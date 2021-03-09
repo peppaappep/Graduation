@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+  <link rel="stylesheet" type="text/css" href="../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+  <style>
+    .content{
+      padding: 10px;
+    }
+    .ztree{
+      width: 262px;
+      box-sizing: border-box;
+      margin: 0;
+    }
+    .ztree li a:hover {
+      text-decoration: none;
+      background-color: transparent;
+    }
+
+    .ztree li span {
+      line-height: 30px;
+    }
+
+    .ztree li {
+      line-height: 30px;
+    }
+
+    .ztree * {
+      font-size: 16px;
+    }
+
+    .ztree li a.curSelectedNode{
+      height:30px;
+    }
+  </style>
+</head>
+
+<body ng-controller='myController'>
+<div class="content">
+  <div id="tree" class="ztree"></div>
+</div>
+<script src="../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../res/libs/layui/layui.all.js"></script>
+<script src="../../res/libs/lodash/lodash.min.js"></script>
+
+<script src="../../app.js"></script>
+<script src="../../res/dsf_res/dsf_config.js"></script>
+<script src="../../res/dsf_res/dsf_common.js"></script>
+<script src="../../res/libs/angular/angular.min.js"></script>
+<script src="../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+<script>
+  angular.module('myApp', []).controller('myController', function ($scope) {
+    $scope.zTreeData = [];
+    $scope.chooseId=null;
+    window.dialogInit = function (args) {
+      $scope.zTreeData = args.treeArr || [];
+      $scope.zTreeData.unshift({
+        teasJwglJxjhId:"",
+        treeinfoPid:0,
+        name:'顶级'
+      });
+      $scope.tree=$.fn.zTree.init($("#tree"), {
+        view: {
+          showLine: false,
+          showIcon: false,
+          selectedMulti: false,
+          dblClickExpand: false,
+        },
+        data: {
+          simpleData: {
+            enable: true,
+            idKey: "teasJwglJxjhId",
+            pIdKey: "treeinfoPid",
+            rootPId: 0
+          }
+        },
+        callback: {
+          onClick: treeClick
+        }
+      },$scope.zTreeData);
+      $scope.tree.expandAll(true);
+    };
+
+
+    window.getDialogResult = function () {
+      return $scope.chooseId;
+    };
+
+    function treeClick(evt, treeId, treeNode) {
+      $scope.chooseId=treeNode.teasJwglJxjhId;
+      var zTree = $.fn.zTree.getZTreeObj("tree");
+      zTree.expandNode(treeNode);
+      return false;
+    }
+  })
+
+</script>
+</body>
+
+</html>

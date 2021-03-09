@@ -1,0 +1,142 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+			{
+			    "text": "是否只读",
+			    "showType": "boolean",
+			    "bindControlAttr": "readOnly"
+			},
+            {
+                "text": "评分模式",
+                "bindControlAttr": "styleType",
+                "showType": "select",
+                "changeExecFunction": "render",
+                "dictionary": [
+                    {
+                        "text": "混合模式",
+                        "value": "1"
+                    },
+                    {
+                        "text": "滑块模式",
+                        "value": "2"
+                    },
+					{
+						"text": "文本模式",
+						"value": "3"
+					},
+                    {
+                        "text": "选项模式",
+                        "value": "4"
+                    },
+					{
+						"text": "下拉模式",
+						"value": "5"
+					}
+                ],
+                "showKeyClass":"chooseType,4;selectMaxV,5",
+				"hiddenKeyClass":"chooseTypeInput,!3"
+            },
+			{
+			    "text": "文本分制",
+			    "bindControlAttr": "chooseTypeInput",
+			    "showType": "select",
+			    "class":"chooseTypeInput",
+			    "hidden":"styleType!=3",
+			    "changeExecFunction": "render",
+			    "dictionary": [
+			        {
+			            "text": "5分制",
+			            "value": "5"
+			        },
+			        {
+			            "text": "10分制",
+			            "value": "10"
+			        },
+			        {
+			            "text": "30分制",
+			            "value": "30"
+			        }
+			    ]
+			},
+            {
+                "text": "选项模式",
+                "bindControlAttr": "chooseType",
+                "showType": "select",
+                "class":"chooseType",
+                "hidden":"styleType!=4",
+                "changeExecFunction": "render",
+                "dictionary": [
+                    {
+                        "text": "5分制",
+                        "value": "1"
+                    },
+                    {
+                        "text": "10分制",
+                        "value": "2"
+                    },
+                    {
+                        "text": "等级制1",
+                        "value": "3"
+                    },
+                    {
+                        "text": "等级制2",
+                        "value": "4"
+                    },
+                    {
+                        "text": "等级制3",
+                        "value": "5"
+                    },
+                    {
+                        "text": "等级制4",
+                        "value": "6"
+                    },
+                    {
+                        "text": "等级制5",
+                        "value": "7"
+                    },
+                    {
+                        "text": "等级制6",
+                        "value": "8"
+                    }
+                ]
+            },
+			{
+				"text": "下拉分制(分)",
+			    "bindControlAttr": "selectMaxV",
+			    "showType": "text",
+                "class":"selectMaxV",
+                "hidden":"styleType!=5"
+			},
+            {
+                "text": "评分项",
+                "showType": "dialog",
+                "bindControlAttr": "rowSet",
+                "config": {
+                    "title": "评分项设置",
+                    "url": "/dsfa/pd/views/setRankItem.html",
+                    "width": "900px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                },
+                "changeExecFunction": "render"
+            },
+            {
+                "text": "是否必评",
+                "bindControlAttr": "$required",
+                "showType": "boolean"
+            }
+        ]
+    }
+]

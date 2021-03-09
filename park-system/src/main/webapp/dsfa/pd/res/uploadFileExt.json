@@ -1,0 +1,283 @@
+{
+	"file":[
+		{
+			"itemName":"office文档类",
+			"children":[
+				{
+					"title": ".txt",
+					"name":"txt",
+					"filter": "doc",
+					"value": "text/plain"
+				}, {
+					"title": ".doc",
+					"name":"doc",
+					"filter": "doc",
+					"value": "application/msword"
+				}, {
+					"title": ".docx",
+					"name":"docx",
+					"filter": "doc",
+					"value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+				}, {
+					"title": ".pdf",
+					"name":"pdf",
+					"filter": "doc",
+					"value": "application/pdf"
+				}, {
+					"title": ".pptx",
+					"name":"pptx",
+					"filter": "doc",
+					"value": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+				}, {
+					"title": ".ppt",
+					"name":"ppt",
+					"filter": "doc",
+					"value": "application/mspowerpoint,application/powerpoint,application/vnd.ms-powerpoint,application/x-mspowerpoint"
+				}, {
+					"title": ".xls",
+					"name":"xls",
+					"filter": "doc",
+					"value": "application/vnd.ms-excel,application/x-excel"
+				}, {
+					"title": ".xlsx",
+					"name":"xlsx",
+					"filter": "doc",
+					"value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+				}
+			]
+		},{
+			"itemName":"wps文档类",
+			"children":[
+				{
+					"title": ".wps",
+					"name":"wps",
+					"filter": "doc",
+					"value": "application/kswps"
+				}, {
+					"title": ".et",
+					"name":"et",
+					"filter": "doc",
+					"value": "application/kset,application/ocelet-stream"
+				}, {
+					"title": ".dps",
+					"name":"dps",
+					"filter": "doc",
+					"value": "application/ksdps"
+				}
+			]
+		},{
+			"itemName":"压缩文档类",
+			"children":[
+				{
+					"title": ".zip",
+					"name":"zip",
+					"filter": "doc",
+					"value": "application/x-zip-compressed"
+				}, {
+					"title": ".7z",
+					"name":"7z",
+					"filter": "doc",
+					"value": "application/x7zcompressed"
+				}, {
+					"title": ".rar",
+					"name":"rar",
+					"filter": "doc",
+					"value": "application/octet-stream"
+				}
+			]
+		},{
+			"itemName":"图片类",
+			"children":[
+				{
+					"title": ".bpm",
+					"name":"bpm",
+					"filter": "images",
+					"value": "image/bmp"
+				}, {
+					"title": ".jpg",
+					"name":"jpg",
+					"filter": "images",
+					"value": "image/jpeg"
+				
+				}, {
+					"title": ".jpeg",
+					"name":"jpeg",
+					"filter": "images",
+					"value": "image/jpeg"
+				}, {
+					"title": ".png",
+					"name":"png",
+					"filter": "images",
+					"value": "image/png"
+				}, {
+					"title": ".gif",
+					"name":"gif",
+					"filter": "images",
+					"value": "image/gif"
+				}
+			]
+		},{
+			"itemName":"视频类",
+			"children":[
+				{
+					"title": ".avi",
+					"name":"avi",
+					"filter": "video",
+					"value": "video/avi,video/msvideo,video/x-msvideo,application/x-troff-msvideo"
+				}, {
+					"title": ".qt",
+					"name":"qt",
+					"filter": "video",
+					"value": "video/quicktime"
+				}, {
+					"title": ".mov",
+					"name":"mov",
+					"filter": "video",
+					"value": "video/quicktime"
+				}, {
+					"title": ".mp4",
+					"name":"mp4",
+					"filter": "video",
+					"value": "video/mp4"
+				},
+				{
+					"title": ".asf",
+					"name":"asf",
+					"filter": "video",
+					"value": "video/x-ms-asf"
+				},
+				{
+					"title": ".rm",
+					"name":"rm",
+					"filter": "video",
+					"value": "application/vnd.rn-realmedia,audio/x-pn-realaudio"
+				},
+				{
+					"title": ".mpeg",
+					"name":"mpeg",
+					"filter": "video",
+					"value": "video/mpeg"
+				}
+			]
+		},{
+			"itemName":"音频类",
+			"children":[
+				{
+					"title": ".mp3",
+					"name":"mp3",
+					"filter": "audio",
+					"value": "audio/mpeg3,audio/x-mpeg-3,video/mpeg,video/x-mpeg"
+				}, {
+					"title": ".rm",
+					"name":"rm",
+					"filter": "audio",
+					"value": "application/vnd.rn-realmedia,audio/x-pn-realaudio"
+				}, {
+					"title": ".wav",
+					"name":"wav",
+					"filter": "audio",
+					"value": "audio/wav,audio/x-wav"
+				}, {
+					"title": ".midi",
+					"name":"midi",
+					"filter": "audio",
+					"value": "application/x-midi,audio/midi,audio/x-mid,audio/x-midi,music/crescendo,x-music/x-midi"
+				}
+			]
+		}
+		
+	],
+	"images": [
+		{
+			"title": ".bpm",
+			"name":"bpm",
+			"filter": "images",
+			"value": "image/bmp"
+		}, {
+			"title": ".jpg",
+			"name":"jpg",
+			"filter": "images",
+			"value": "image/jpeg"
+
+		}, {
+			"title": ".jpeg",
+			"name":"jpeg",
+			"filter": "images",
+			"value": "image/jpeg"
+		}, {
+			"title": ".png",
+			"name":"png",
+			"filter": "images",
+			"value": "image/png"
+		}, {
+			"title": ".gif",
+			"name":"gif",
+			"filter": "images",
+			"value": "image/gif"
+		}
+	],
+	"video": [
+		{
+			"title": ".avi",
+			"name":"avi",
+			"filter": "video",
+			"value": "video/avi,video/msvideo,video/x-msvideo,application/x-troff-msvideo"
+		}, {
+			"title": ".qt",
+			"name":"qt",
+			"filter": "video",
+			"value": "video/quicktime"
+		}, {
+			"title": ".mov",
+			"name":"mov",
+			"filter": "video",
+			"value": "video/quicktime"
+		}, {
+			"title": ".mp4",
+			"name":"mp4",
+			"filter": "video",
+			"value": "video/mp4"
+		},
+		{
+			"title": ".asf",
+			"name":"asf",
+			"filter": "video",
+			"value": "video/x-ms-asf"
+		},
+		{
+			"title": ".rm",
+			"name":"rm",
+			"filter": "video",
+			"value": "application/vnd.rn-realmedia,audio/x-pn-realaudio"
+		},
+		{
+			"title": ".mpeg",
+			"name":"mpeg",
+			"filter": "video",
+			"value": "video/mpeg"
+		}
+	],
+	"audio": [
+		{
+			"title": ".mp3",
+			"name":"mp3",
+			"filter": "audio",
+			"value": "audio/mpeg3,audio/x-mpeg-3,video/mpeg,video/x-mpeg"
+		}, {
+			"title": ".rm",
+			"name":"rm",
+			"filter": "audio",
+			"value": "application/vnd.rn-realmedia,audio/x-pn-realaudio"
+		}, {
+			"title": ".wav",
+			"name":"wav",
+			"filter": "audio",
+			"value": "audio/wav,audio/x-wav"
+		}, {
+			"title": ".midi",
+			"name":"midi",
+			"filter": "audio",
+			"value": "application/x-midi,audio/midi,audio/x-mid,audio/x-midi,music/crescendo,x-music/x-midi"
+		}
+	]
+}

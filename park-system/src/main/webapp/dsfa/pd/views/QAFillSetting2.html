@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>填空题设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/bhc.css" />
+    <style>
+      body {
+        background: #fff;
+      }
+
+      .ds_page .ds_question {
+        border: none;
+        padding: 20px;
+      }
+
+      form {
+        background: #fafafa;
+        padding: 20px;
+        position: relative;
+        border-top: 1px solid #EAEDEE;
+      }
+
+      form::before {
+        content: "";
+        border: 12px solid transparent;
+        display: inline-block;
+        border-bottom-color: #fafafa;
+        position: absolute;
+        top: -22px;
+        left: 30px;
+        z-index: 2;
+      }
+
+      form::after {
+        content: "";
+        border: 11px solid transparent;
+        display: inline-block;
+        border-bottom-color: #EAEDEE;
+        position: absolute;
+        top: -23px;
+        left: 31px;
+        z-index: 1;
+      }
+
+      .layui-textarea {
+        min-height: auto;
+      }
+
+      .layui-form-item {
+        margin: 15px 0;
+        overflow: hidden;
+      }
+
+      .layui-form-label {
+        width: auto;
+        line-height: 14px;
+      }
+
+      .layui-form-item .layui-inline:first-child .layui-form-label {
+        padding-left: 0 !important;
+      }
+
+      .layui-form-item .layui-inline:last-child {
+        float: right;
+        margin-right: 0 !important;
+      }
+
+      .layui-form-item .layui-inline:last-child .layui-input-inline {
+        width: auto;
+        margin-right: 0;
+      }
+
+      .layui-unselect.layui-form-radio:last-child {
+        padding-right: 0;
+        margin-right: 0;
+      }
+
+      .layui-form-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .required::before {
+        content: '*';
+        display: inline-block;
+        color: red;
+        vertical-align: sub;
+      }
+
+      input[type=number] {
+        width: 80px;
+      }
+
+      .layui-form-item .layui-input-inline {
+        width: auto
+      }
+
+      .layui-input {
+        height: 32px;
+      }
+
+      .layui-form-radio {
+        margin-top: 2px;
+      }
+
+      .layui-form-item .layui-inline {
+        margin-bottom: 0;
+      }
+
+      .ds_button{
+        height: 30px;
+        line-height: 30px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      #content{
+        display: inline;
+      }
+      .pld {
+        padding-top: 9px;
+        padding-left: 12px;
+        background: rgba(242, 242, 242);
+        border: 1px dashed #ccc;
+        margin-top: 50px;
+      }
+
+      .pld>span {
+        margin-bottom: 9px;
+        margin-right: 14px;
+        display: inline-block;
+      }
+
+      .pld>span:not(.pld-title) {
+        border-bottom: 1px solid;
+        cursor: pointer;
+      }
+
+      .pld>.pld-title {
+        font-weight: 600;
+        margin-right: 16px;
+      }
+    </style>
+  </head>
+
+  <body ng-controller='myCtrl'>
+    <div id="box">
+      <!-- 控件 -->
+      <div class="ds_page">
+        <div class="ds_question ds_fill">
+          <div class="ds_question_input">
+            <div class="required question_index">
+              <span ng-bind='questionIndex'>编号</span>.
+              <div id='content' title="{{data.readOnly?data.questionBody:''}}"></div>
+            </div>
+          </div>
+          <pre id='fontsize'></pre>
+        </div>
+      </div>
+      <!-- 设置 -->
+      <form class="layui-form" action="" lay-filter="example">
+        <div class="layui-form-item">
+          <!-- <textarea rows='2' type="text" required placeholder="请输入题干" ng-model='data.questionBody' autocomplete="off" class="layui-textarea"></textarea> -->
+          <input type="text" required placeholder="请输入题干" ng-model='data.questionBody' autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">
+            <p style='color: #FF7474;'>注：题干中输入（）系统自动识别为填空内容</p>
+          </label>
+          <div class="layui-inline">
+            <a class="ds_button" ng-click='pushHtml()'>插入填空符</a>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">本题是否显示：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="visible" ng-value="true" title="是" ng-checked="data.visible==true" ng-model="data.visible"
+                key="visible">
+              <input type="radio" name="visible" ng-checked="data.visible==false" ng-value="false" title="否" ng-model="data.visible"
+                key="visible">
+            </div>
+          </div>
+
+          <div class="layui-inline">
+            <label class="layui-form-label">本题不允许填写：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="readOnly" value="true" title="是" ng-checked="data.readOnly==true" ng-model="data.readOnly"
+                key="readOnly">
+              <input type="radio" name="readOnly" value="false" title="否" ng-checked='data.readOnly==false' ng-model="data.readOnly"
+                key="readOnly">
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">输入框是否数字：</label>
+            <div class="layui-input-inline">
+              <input type="radio" name="isNumber" ng-checked="data.isNumber==1" key="isNumber" ng-value="1" title="是"
+                ng-model="data.isNumber">
+              <input type="radio" name="isNumber" key="isNumber" ng-checked="data.isNumber==0" ng-value="0" title="否"
+                ng-model="data.isNumber">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <label class="layui-form-label">归类：</label>
+            <div class="layui-input-inline">
+              <input type="text" placeholder="请输入归类" ng-model='data.group' autocomplete="off" class="layui-input">
+            </div>
+          </div>
+        </div>
+        <!-- 逻辑设置模块 -->
+        <div class="pld">
+          <span class="pld-title">逻辑设置：</span>
+          <span ng-click='goQuRe()'>题目关联</span>
+        </div>
+      </form>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var ctrl = null;
+      var app = angular.module('myApp', []);
+      const inputMinWidth = 60; //对应js中也要修改
+      const inputMaxWidth = 300; //对应js中也要修改
+      var logic_rela = {};
+      app.controller('myCtrl', function($scope) {
+        $scope.data = {};
+        $scope.pre = "";
+        window.dialogInit = function(args) {
+          ctrl = args.owner;
+          $scope.data.isNumber = ctrl.isNumber;
+          $scope.data.questionBody = ctrl.$questionBody || "";
+          $scope.data.readOnly = ctrl.$readOnly;
+          $scope.data.visible = ctrl.$visible;
+          $scope.questionIndex = ctrl.questionIndex;
+          $scope.data.group = ctrl.group || '';
+          logic_rela = ctrl.$logic_rela || {};
+          $scope.$apply();
+          layui.form.render();
+        };
+        $scope.$watch('data.questionBody', function(newValue, oldValue) {
+          if (oldValue != newValue) {
+            render();
+          }
+        });
+        $scope.pushHtml = function() {
+          $scope.data.questionBody += "（）";
+        }
+
+        layui.form.on('radio', function(data) {
+          var key = data.elem.getAttribute('key');
+          $scope.data[key] = eval(data.value);
+          $scope.$apply();
+          if (key == 'readOnly') {
+            render();
+          }
+        });
+
+        function render() {
+          var reg = /\(\)|（）/gi;
+          var content = ""
+          if ($scope.data.questionBody) {
+            var str = $scope.data.questionBody.replace(reg, function(a, b, c) {
+              var html = "";
+              if (!$scope.data.readOnly) {
+                html = "<input type='text' placeholder='请输入' class='filltext' autocomplete='off'/>";
+              } else {
+                html = "<input type='text' class='filltext' readonly='readonly' autocomplete='off'/>";
+              }
+              return html;
+            });
+            content = str;
+          } else {
+            content = "请输入题干";
+          }
+          $('#content').html(content);
+        }
+        $('body').on("input", "input.filltext", function(evt) {
+          var input = $(evt.target);
+          var width = $('#fontsize').html(input.val()).width();
+          if (width < inputMinWidth) {
+            width = inputMinWidth;
+          } else if (width > inputMaxWidth) {
+            width = inputMaxWidth;
+          }
+          input.css("width", width + "px");
+        })
+        window.getDialogResult = function() {
+          $scope.data.logic_rela = logic_rela;
+          return $scope.data;
+        }
+
+        // 逻辑设置
+        $scope.goQuRe = function() {
+          openDialog('题目关联', 'questionRelation.html', (index, layero, res) => {
+            logic_rela = res;
+          })
+        }
+
+        function openDialog(title, page, okFun, cancelFun) {
+          dsf.layer.openDialog({
+            title: title || '标题',
+            content: dsf.url.getWebPath("dsfa/pd/views/" + page),
+            area: ['600px', '400px'],
+            args: {
+              owner: ctrl,
+              logic_rela: logic_rela
+            },
+            btn: [{
+              text: "确定",
+              handler: function(index, layero) {
+                if (okFun) {
+                  var frame = layero.find("iframe");
+                  let win = frame.get(0).contentWindow;
+                  let result = win.getDialogResult();
+                  okFun(index, layero, result);
+                }
+              }
+            }, {
+              text: "取消",
+              handler: function(index, layero) {
+                if (cancelFun) {
+                  cancelFun(index, layero);
+                }
+              }
+            }]
+          });
+        }
+      })
+    </script>
+  </body>
+
+</html>

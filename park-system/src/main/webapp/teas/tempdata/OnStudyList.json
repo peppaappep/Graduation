@@ -1,0 +1,40 @@
+{
+   "success": true,
+   "data": [{
+         "sourceUrl": "/res/dsf_styles/themes/nc/banner/img1.jpeg"
+      },
+      {
+         "sourceUrl": "/res/dsf_styles/themes/nc/banner/img2.jpeg"
+      },
+      {
+         "sourceUrl": "/res/dsf_styles/themes/nc/banner/img3.jpeg"
+      },
+      {
+         "sourceUrl": "/res/dsf_styles/themes/nc/banner/img4.jpeg"
+      }
+   ],
+   "onStudyData": {
+      "unLine": [{
+         "sourceUrl": "/res/dsf_styles/themes/nc/banner/img4.jpeg",
+         "isBx": 1,
+         "title": "UNLINE深入学习贯彻习近平新时代中国特色社会主义思想",
+         "seTime": "09-21至10-21",
+         "dept": "中共中央组织部",
+         "bxxs": 20,
+         "xxxs": 38,
+         "xxrs": 1258,
+         "endRemind": "距离班级结束10天"
+      }],
+      "Line": [{
+         "sourceUrl": "/res/dsf_styles/themes/nc/banner/img4.jpeg",
+         "isBx": 1,
+         "title": "深入学习贯彻习近平新时代中国特色社会主义思想",
+         "seTime": "09-21至10-21",
+         "dept": "中共中央组织部",
+         "bxxs": 20,
+         "xxxs": 38,
+         "xxrs": 1258,
+         "endRemind": "距离班级结束10天"
+      }]
+   }
+}

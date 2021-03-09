@@ -1,0 +1,168 @@
+[{
+	"name": "基础属性",
+	"attributes": [{
+			"text": "组件标识",
+			"bindControlAttr": "caption",
+			"showType": "text"
+		},
+		{
+			"text": "组件名称",
+			"class": "setTitle",
+			"bindControlAttr": "titleText",
+			"hidden": "!titleEnabled",
+			"showType": "text",
+			"changeExecFunction": "changeTitleText"
+		},
+		{
+			"text": "组件图标class/图片地址",
+			"class": "setTitle",
+			"bindControlAttr": "titlePic",
+			"hidden": "!titleEnabled",
+			"showType": "text",
+			"changeExecFunction": "changeTitlePic",
+			"helper": {
+				"url": "/dsfa/res/dsf_styles/font/demo_index.html",
+				"title": "图标列表"
+			}
+		},
+		{
+			"text": "启用头部",
+			"showType": "boolean",
+			"bindControlAttr": "titleEnabled",
+			"hiddenKeyClass": "setTitle",
+			"changeExecFunction": "changeTitleEnabled"
+		},
+		{
+			"text": "取消上下外边距",
+			"showType": "boolean",
+			"bindControlAttr": "$bTNoPadding",
+			"changeExecFunction": "changeTbNoPadding"
+		},
+		{
+			"text": "取消左右外边距",
+			"showType": "boolean",
+			"bindControlAttr": "$rlNoPadding",
+			"changeExecFunction": "changeRlNoPadding"
+		},
+		{
+			"text": "显示列表行下边框",
+			"showType": "boolean",
+			"bindControlAttr": "liBBorder",
+			"changeExecFunction": "changeliBBorder"
+		},
+		{
+			"text": "显示列表行小圆点",
+			"showType": "boolean",
+			"bindControlAttr": "listStyle",
+			"changeExecFunction": "changeListStyle"
+		},
+		{
+			"text": "列表行间距",
+			"bindControlAttr": "$lineHeight",
+			"changeExecFunction": "changeLineHeight",
+			"showType": "select",
+			"dictionary": [{
+					"text": "小",
+					"value": "split_small"
+				},
+				{
+					"text": "中",
+					"value": "split_medium"
+				},
+				{
+					"text": "大",
+					"value": "split_big"
+				}
+			]
+		},
+		{
+			"text": "组件高度",
+			"showType": "select",
+			"bindControlAttr": "ctrlHeightType",
+			"changeExecFunction": "changeCtrlHeightType",
+			"dictionary": [{
+					"text": "固定高度",
+					"value": "0"
+				},
+				{
+					"text": "自适应内容",
+					"value": "1"
+				},
+				{
+					"text": "填满父元素",
+					"value": "2"
+				}
+			],
+			"hiddenKeyClass": "setHeight,!0"
+		},
+		{
+			"text": "固定高度",
+			"class": "setHeight",
+			"bindControlAttr": "ctrlHeight",
+			"hidden": "ctrlHeightType!=0",
+			"showType": "text",
+			"changeExecFunction": "changeCtrlHeightType"
+		},
+		{
+			"text": "组件背景色",
+			"showType": "text",
+			"bindControlAttr": "bgColor",
+			"changeExecFunction": "changeBgColor"
+		},
+		{
+			"text": "鼠标移入样式类型",
+			"bindControlAttr": "hoverStyle",
+			"changeExecFunction": "changeHoverStyle",
+			"showType": "select",
+			"dictionary": [{
+					"text": "无",
+					"value": ""
+				},
+				{
+					"text": "悬浮",
+					"value": "hover_width"
+				}
+			]
+		}
+	]
+}, {
+	"name": "数据设置",
+	"attributes": [
+		{
+			"text": "接口地址",
+			"bindControlAttr": "url",
+			"showType": "text"
+		},
+		{
+			"text": "设置列表行",
+			"showType": "dialog",
+			"bindControlAttr": "title",
+			"changeExecFunction": "render",
+			"config": {
+				"title": "设置列表行",
+				"url": "/dsfa/pd/views/customListSetList.html",
+				"width": "1000px",
+				"height": "600px",
+				"buttonText": "设置"
+			}
+		},
+		{
+			"text": "设置Tab列表",
+			"showType": "dialog",
+			"bindControlAttr": "typeTabs",
+			"changeExecFunction": "render",
+			"config": {
+				"title": "设置Tab列表",
+				"url": "/dsfa/pd/views/customListSetTypeTabs.html",
+				"width": "1000px",
+				"height": "600px",
+				"buttonText": "设置"
+			}
+		},
+		{
+			"text": "分类Tab数据一次性加载",
+			"showType": "boolean",
+			"bindControlAttr": "oneTimeLoaded"
+		}
+	]
+}]

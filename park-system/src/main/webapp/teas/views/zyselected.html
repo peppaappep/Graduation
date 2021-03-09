@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>资源选择</title>
+    <link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../res/dsf_styles/bhc.css" />
+    
+</head>
+<style>
+    .ds_zy_carousel *{
+        border:0;
+    }
+</style>
+<body>
+    <div class="ds_full_screen ds_has_head ds_has_foot ds_zy">
+        <div class="ds_page_head" style="border-bottom:1px solid #D9D9D9;padding:5px 5px 5px 10px">
+            <label style="width:80px;height:35px;line-height: 35px;float: left;"> 已选资源：</label>
+            <div class="selectedzy"></div>
+        </div>
+        <div class="ds_page_body" style="margin-bottom:60px">
+            <div class="layui-row" style="height:100%">
+                <div class="layui-col-sm3 bk_white" style="height:100%;overflow-y:auto;border-right:1px solid #D9D9D9;">
+                    <ul class="jz"></ul>
+                </div>
+                <div class="layui-col-sm9 bk_white" style="height:100%;overflow: auto;">
+                    <div class="zy"></div>
+                </div>
+            </div>
+        </div>
+        <div class="ds_page_foot" style="border-top:1px solid #D9D9D9;height:60px;padding:5px 5px 5px 10px">
+            <div>
+                <label style="width:80px;display: inline-block"><i class="iconfont icon-fangxing" style="color:#43B553;margin-right:5px;"></i>已选教室</label>
+                <label style="width:80px;display: inline-block"><i class="iconfont icon-fangxing" style="color:#FF0000;margin-right:5px;"></i>已被占用</label>
+                <!-- <label style="width:80px;display: inline-block"><i class="iconfont icon-fangxing" style="color:#FFAF12;margin-right:5px;"></i>部分占用</label> -->
+                <label style="width:80px;display: inline-block"><i class="iconfont icon-fangxing" style="color:#DEDFE0;margin-right:5px;"></i>维修停用</label>
+            </div>
+            <div style="margin-top:10px">
+                <label style="width:80px;display: inline-block"><i class="iconfont icon-huatong" style="margin-right:5px;"></i>有话筒</label>
+                <label style="width:80px;display: inline-block"><i class="iconfont icon-luxiangji" style="margin-right:5px;"></i>有投影</label>
+                <label style="width:80px;display: inline-block"><i class="iconfont icon-shipinbofangyingpian" style="margin-right:5px;"></i>有录播</label>
+                <!-- <label style="width:80px;display: inline-block"><i class="iconfont icon-kafei" style="margin-right:5px;"></i>有茶歇</label> -->
+            </div>
+        </div>
+    </div>
+    <script src="../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../res/libs/layui/layui.all.js"></script>
+    <script src="../../res/libs/lodash/lodash.min.js"></script>
+    
+    <script src="../../app.js"></script>
+    <script src="../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/zyselected.js"></script>
+</body>
+
+</html>

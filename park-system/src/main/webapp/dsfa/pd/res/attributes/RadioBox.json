@@ -1,0 +1,180 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "名称是否显示",
+                "bindControlAttr": "showLabel",
+                "showType": "boolean"
+            },
+            {
+                "text": "选项设置",
+                "showType": "dialog",
+                "bindControlAttr": "$metadata.dataSource",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/enumEditor.html",
+                    "width": "850px",
+                    "height": "550px",
+                    "buttonText": "编辑选项"
+                }
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly"
+            },
+            {
+                "text": "是否失效",
+                "showType": "boolean",
+                "bindControlAttr": "disabled",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "取消上下边距",
+                "bindControlAttr": "tbNoPadding",
+                "showType": "boolean"
+            },
+            {
+                "text": "显示模式",
+                "bindControlAttr": "showModel",
+                "showType": "select",
+                "dictionary": [{
+                    "text": "默认",
+                    "value": "none"
+                }, {
+                    "text": "文本输入",
+                    "value": "text"
+                }]
+            },
+            {
+                "text": "提示文字",
+                "bindControlAttr": "placeholder",
+                "showType": "text"
+            },
+            {
+                "text": "只读状态显示内容",
+                "bindControlAttr": "readOnlyShowText",
+                "showType": "select",
+                "dictionary": [{
+                    "text": "文本",
+                    "value": "text"
+                }, {
+                    "text": "值",
+                    "value": "value"
+                }]
+            },
+			{
+				"text": "移动端提示文字",
+				"showType": "text",
+				"bindControlAttr": "dataCapion"
+			},
+			{
+				"text":"移动端语音地址",
+				"showType": "text",
+				"bindControlAttr": "dataAudioUrl"
+			},
+			{
+				"text":"移动端视频地址",
+				"showType": "text",
+				"bindControlAttr": "dataVideoUrl"
+			},
+            {
+                "text": "是否其他",
+                "bindControlAttr": "isOther",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            }
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [{
+                "text": "默认值",
+                "bindControlAttr": "metadata.defaultValue",
+                "showType": "defaultValue",
+                "config": {
+                    "value": [
+                        { "text": "文本", "code": "text", "value": "" },
+                        { "text": "值", "code": "value", "value": "" }
+                    ]
+                }
+            },
+            {
+                "text": "必填标识",
+                "bindControlAttr": "$required",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "校验规则",
+                "bindControlAttr": "metadata.validate",
+                "showType": "validateEditor",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/validateCode.html",
+                    "width": "800px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            },
+            {
+                "text": "校验错误提示位置",
+                "bindControlAttr": "$error_tipsPosition",
+                "showType": "select",
+                "dictionary": [{
+                        "text": "上",
+                        "value": "top"
+                    }, {
+                        "text": "右",
+                        "value": "right"
+                    },
+                    {
+                        "text": "下",
+                        "value": "bottom"
+                    },
+                    {
+                        "text": "左",
+                        "value": "left"
+                    }
+                ]
+
+            },
+            {
+                "text": "值属性设置",
+                "bindControlAttr": "metadata.valueAttributes",
+                "showType": "dialog",
+                "config": {
+                    "url": "/dsfa/pd/views/valueAttributesEdit.html",
+                    "width": "600px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            },
+            {
+                "text": "是否即时触发审核",
+                "bindControlAttr": "$immediatelyAudit",
+                "showType": "boolean"
+            }
+        ]
+    }
+]

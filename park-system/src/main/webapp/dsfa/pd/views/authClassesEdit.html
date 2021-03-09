@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>查询条件配置</title>
+      <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+      <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+      <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+      <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+
+      <style>
+         body {
+            height: auto;
+         }
+
+         .error {
+            border: 1px solid red;
+         }
+
+         .form-control {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 28px;
+            padding-left: 5px;
+            padding-right: 5px;
+         }
+
+         table>tbody td {
+            padding: 5px !important;
+         }
+      </style>
+   </head>
+
+   <body ng-controller="dataGridColumnEdit">
+      <div class="layui-row" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;">
+         <div class="layui-col-xs3" style="height:100%;overflow:auto;bottom:0px;border-right:1px solid #eee">
+            <ul id="tree" class="ztree"></ul>
+         </div>
+         <div class="layui-col-xs9" style="padding:10px">
+            <table class="layui-table">
+               <thead>
+                  <tr>
+                     <th style="width:40px;text-align: center">序号</th>
+                     <th style="width:100px;">名称</th>
+                     <th>标识</th>
+                     <th style="width:150px;">检索方式</th>
+                     <th style="width:150px;text-align: center">操作</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr ng-repeat="item in list track by $index">
+                     <td style="text-align: center">{{$index+1}}</td>
+                     <td>
+                        <input class="form-control" type="text" ng-model="item.aliasName">
+                     </td>
+                     <td>
+                        <div class="layui-table-cell">{{item.id}}</div>
+                     </td>
+                     <td>
+                        <select class="form-control" ng-model="item.queryType">
+                           <!-- <option value="text">文本检索</option> -->
+                           <option value="enum_multi">选项</option>
+                           <option value="datetime">时间区间</option>
+                        </select>
+                     </td>
+                     <td style="text-align: center">
+                        <a href="#" ng-click="setting(item)" ng-if="item.queryType=='enum_multi'">自定义选项</a>
+                        <a href="#" ng-click="up(item)">上移</a>
+                        <a href="#" ng-click="down(item)">下移</a>
+                        <a href="#" ng-click="deleteItem(item)">移除</a>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+
+
+      <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+      <script src="../../../res/libs/layui/layui.all.js"></script>
+      <script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+      <script src="../../../app.js"></script>
+      <script src="../../../res/dsf_res/dsf_config.js"></script>
+      <script src="../../../res/dsf_res/dsf_common.js"></script>
+      <script src="../res/ds_prop.js"></script>
+      <script src="../res/libs/angular/angular.min.js"></script>
+      <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+      <script>
+         var app = angular.module('myApp', []);
+         var dialogArgs = {};
+         var tree = null,
+            tree1 = null,
+            nodeList = [],
+            TabNum = 0,
+            nodeListOther = [],
+            metaDataList = [],
+            orangData = null;
+         app.controller('dataGridColumnEdit', function ($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.orangList = [];
+            $scope.deleteItem = function (item) {
+               var index = $scope.list.indexOf(item);
+               if (index >= 0) {
+                  $scope.list.splice(index, 1);
+                  var node = tree.getNodeByParam("id", item.id, null);
+                  tree.checkNode(node, false)
+               }
+            }
+
+            $scope.setting = function (item) {
+               dsf.layer.openDialog({
+                  "title": "设置",
+                  "content": "authClassEnumItemEdit.html",
+                  "args": {
+                     item,
+                     orangData
+                  },
+                  "area": ["800px", "600px"],
+                  btn: [{
+                     "text": "确定",
+                     "handler": function (index, layero, win) {
+                        var obj = win.getDialogResult();
+                        if (obj == false) {
+                           return false;
+                        }
+                        console.log(obj)
+                        $.extend(item, obj);
+                        return true;
+                     }
+                  }, {
+                     "text": "新增选项",
+                     "handler": function (index, layero, win) {
+                        win.addNew();
+                        return false
+                     }
+                  }, {
+                     "text": "清空选项",
+                     "handler": function (index, layero, win) {
+                        win.clearItems();
+                        return false
+                     }
+                  }, {
+                     "text": "取消",
+                     "handler": function (index, layero, win) {
+                        return;
+                     }
+                  }]
+               })
+            }
+
+            $scope.up = function (item) {
+               var index = $scope.list.indexOf(item);
+               if (index > 0) {
+                  var tmp = $scope.list[index - 1];
+                  $scope.list[index - 1] = item;
+                  $scope.list[index] = tmp;
+               }
+            }
+
+            $scope.down = function (item) {
+               var index = $scope.list.indexOf(item);
+               if (index >= 0) {
+                  var tmp = $scope.list[index + 1];
+                  if (tmp) {
+                     $scope.list[index + 1] = item;
+                     $scope.list[index] = tmp;
+                  }
+               }
+            }
+
+            window.dialogInit = function (args) {
+               console.log(args)
+               $scope.args = $.extend(true, {}, args);
+               $scope.list = $scope.args.value.list || [];
+               $scope.$apply();
+               metaDataList = args.owner.chooseMetaDataClass;
+               orangData = args.owner.chooseMetaData;
+               initTree();
+            }
+
+            window.getDialogResult = function () {
+
+               for (var i = 0; i < $scope.list.length; i++) {
+                  var item = $scope.list[i];
+                  if (item.queryType != "enum_multi") {
+                     item.enumItems = null;
+                  }
+               }
+               return $scope.args.value;
+            }
+
+            function initTree() {
+               tree = $.fn.zTree.init($("#tree"), {
+                  "view": {
+                     "selectedMulti": false,
+                     "fontCss": getFontCss
+                  },
+                  "check": {
+                     "enable": true
+                  },
+                  "callback": {
+                     "onClick": zTreeOnClick,
+                     "onCheck": zTreeOnCheck
+                  }
+               });
+               if (metaDataList.type == 0) { //0元数据 1数据源 2接口
+                  console.log(metaDataList)
+                  if (metaDataList.data.length > 0) {
+                     renderTree(metaDataList.data)
+                  } else {
+                     dsf.layer.message("请先选择元数据组", false)
+                  }
+               } else {
+                  if (metaDataList && metaDataList.data) {
+                     var id = metaDataList.data[0].dsfa_rm_id;
+                     var dbUrl = dsf.url.getWebPath('dbsource/rmId?rmId=' + id);
+                     dsf.http.request(dbUrl, {}, "GET")
+                        .done(function (res) {
+                           if (res.success) {
+                              if (res.data.length > 0) {
+                                 var children = [];
+                                 for (var i = 0; i < res.data.length; ++i) {
+                                    for (let k in res.data[i].metadata) {
+                                       let n = res.data[i].metadata[k];
+                                       let n1 = {
+                                          "name": n.name,
+                                          "id": n.id,
+                                          "order": n.order,
+                                          "attr": n
+                                       }
+                                       children.push(n1);
+                                    }
+                                    children = children.sort(function (v1, v2) {
+                                       if (v1.order > v2.order) {
+                                          return 1;
+                                       }
+                                       return -1;
+                                    })
+                                    tree.addNodes(null, children);
+                                    tree.expandAll(true);
+                                 }
+                                 console.log(children)
+                                 $scope.orangList = children;
+                              }
+                           }
+                        })
+                        .error(function (err) {})
+                        .exec();
+                  } else {
+                     dsf.layer.message("请先选择元数据", false)
+                  }
+               }
+            }
+
+            function renderTree(data) {
+               let children = [];
+               for (let i = 0; i < data.length; ++i) {
+                  let n = data[i].data;
+                  let n1 = {
+                     "name": n.name,
+                     "id": n.id,
+                     "order": n.order,
+                     "attr": n
+                  }
+                  children.push(n1);
+               }
+               children = children.sort(function (v1, v2) {
+                  if (v1.order > v2.order) {
+                     return 1;
+                  }
+                  return -1;
+               })
+               tree.addNodes(null, children);
+               tree.expandAll(true);
+            }
+
+
+            $('#search').on('click', function (e) {
+               search();
+            });
+            $('#search_input').on('keyup', function (e) {
+               let keycode = window.event ? e.keyCode : e.which;
+               if (keycode == 13) {
+                  search();
+               }
+            });
+
+            function search() {
+               updateNodes(false);
+               let v = $('#search_input').val();
+               if (v == '' || !v) return;
+               let treeObj = (TabNum == 0 ? tree : tree1);
+               nodeList = treeObj.getNodesByParamFuzzy('name', v);
+               if (nodeList.length > 0) treeObj.selectNode(nodeList[0], false, false);
+               updateNodes(true, false);
+
+               let treeObjOther = (TabNum == 1 ? tree : tree1);
+               nodeListOther = treeObjOther.getNodesByParamFuzzy('name', v);
+               updateNodes(true, true);
+            }
+
+            function getFontCss(treeId, treeNode) {
+               return (!!treeNode.highlight) ? {
+                  color: "#A60000",
+                  "font-weight": "bold"
+               } : {
+                  color: "#333",
+                  "font-weight": "normal"
+               };
+            }
+
+            function updateNodes(highlight, isOther) {
+               for (var i = 0, l = nodeList.length; i < l; i++) {
+                  nodeList[i].highlight = highlight;
+                  tree.updateNode(nodeList[i]);
+                  tree1.updateNode(nodeList[i]);
+                  if (isOther || !highlight) {
+                     nodeListOther[i].highlight = highlight;
+                     tree.updateNode(nodeListOther[i]);
+                     tree1.updateNode(nodeListOther[i]);
+                  }
+               }
+            }
+
+            function zTreeOnClick(event, treeId, treeNode) {
+               window[treeId].checkNode(treeNode, !treeNode.checked, false, true);
+            }
+
+            function zTreeOnCheck(event, treeId, treeNode) {
+               var result = $scope.list.filter(function (v) {
+                  return v.id == treeNode.id;
+               })
+               if (result.length > 0) {
+                  $.extend(true, {}, result, treeNode.attr);
+               } else {
+                  treeNode.attr.queryType = "enum_multi";
+                  treeNode.attr.aliasName = treeNode.attr.name;
+                  var r = $.extend(true, {}, treeNode.attr);
+                  $scope.list.push(r)
+               }
+               $scope.$apply();
+            }
+         });
+      </script>
+   </body>
+
+</html>

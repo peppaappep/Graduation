@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <!-- <link  rel="stylesheet" type="text/css"  href="../res/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/datatables/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/datatables/css/dataTables.bootstrap.min.css" /> -->
+    <style>
+        body {
+            background-color: #F2F2F2;
+        }
+        
+        .layui-anim-upbit {
+            z-index: 999999999999999 !important;
+        }
+        tr td:nth-child(3) .layui-table-cell{
+            overflow: initial;
+        }
+        .layui-form-select dl{
+            max-width: 100%;
+        }
+        .layui-form-select dl dd {
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+        /* div.layui-table-cell {
+            overflow: visible;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="layui-container" style="padding-top:10px;padding-bottom:10px;">
+        <div class="layui-card" id="card3">
+            <div class="layui-card-header">值属性</div>
+            <div class="layui-card-body">
+                <table id="table" lay-filter="table" class="table table-striped table-bordered dataTable no-footer">
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <!-- <script src="../hc/control_mm_map.js"></script> -->
+    <!-- <script src="../../../res/libs/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../../../res/libs/datatables/js/dataTables.bootstrap.min.js"></script> -->
+    <script>
+        let table = layui.table;
+        let dialogArgs = null;
+        let data = [];
+        window.dialogInit = function(args) {
+            dialogArgs = args;
+            loadData(args.value);
+            initTable();
+            loadTable();
+        }
+
+        function loadData(args) {
+            if (args) {
+                //值属性
+                data = $.extend(true, [], args);
+                data.forEach(function(o,i){
+                    o.index=i;
+                });
+            }
+        }
+
+        function initTable() {
+            // $("#table").DataTable(dsf.dtConfig);
+            table.render({
+                elem: '#table',
+                size: 'lg',
+                height: 350,
+                cols: [
+                    [{
+                        field: 'code',
+                        title: '标识',
+                        width: 100,
+                        edit: 'text'
+                    }, {
+                        field: 'name',
+                        title: '描述',
+                        width: 100
+                    }, {
+                        field: 'type',
+                        title: '数据类型',
+                        width: 130,
+                        templet: '#typeTpl'
+                    }, {
+                        field: 'length',
+                        title: '数据长度',
+                        width: 100,
+                        edit: 'text'
+                    }, {
+                        field: 'defaultValue',
+                        title: '默认值',
+                        width: 100,
+                        edit: 'text'
+                    }]
+                ],
+                limit: 9999
+            });
+            layui.form.on('select(select_type)', function(obj) {
+                var index = $(obj.elem).attr("index");
+                if(typeof(data[index].type)!="object"){
+                    data[index].type={};
+                }
+                data[index].type.value = obj.value;
+                if(obj.value=="string"){
+                    data[index].type.text="文本"
+                }
+                else if(obj.value=="number"){
+                    data[index].type.text="数字"
+                }
+                else if(obj.value=="date"){
+                    data[index].type.text="日期"
+                }
+                else if(obj.value=="object"){
+                    data[index].type.text="对象"
+                }
+                else if(obj.value=="time"){
+                    data[index].type.text="时间"
+                }
+                else if(obj.value=="longObject"){
+                    data[index].type.text="大对象"
+                }
+            });
+            table.on('edit(table)', function(obj) {
+                var value = obj.value;
+                var rowdata = obj.data;
+                var field = obj.field;
+                let rowData = data[obj.data.index];
+                rowData[field] = obj.value;
+            });
+        }
+
+        function loadTable() {
+            table.reload("table", {
+                "data": data
+            });
+        }
+        window.updateForm = function(args) {
+            var newArgs = $.extend({}, args);
+            loadData(newArgs);
+            loadTable();
+
+        }
+        window.getDialogResult = function() {
+            var result = null;
+            var baseForm = $("#baseForm");
+            var validateForm = $("#validateForm");
+            result = data;
+            if (result) {
+                for (var i = 0; i < result.length; i++) {
+                    var r = result[i];
+                    var num_lengthReg = /^\d+(,\d+)?$/g;
+                    let other_lengthReg = /^(\d+)$/g;
+                    if (r.type == "string") {
+                        if (!$.trim(r.length)) {
+                            dsf.layer.message("数据类型为文本时，长度不可以为空", 5);
+                            return false;
+                        } else {
+                            if (!other_lengthReg.test(r.length)) {
+                                dsf.layer.message("长度格式不正确", 5);
+                                return false;
+                            }
+                        }
+                    }
+                    if (r.type == "number") {
+                        if (!$.trim(r.length)) {
+                            dsf.layer.message("数据类型为数字，长度不可以为空", 5);
+                            return false;
+                        } else {
+                            if (!num_lengthReg.test(r.length)) {
+                                dsf.layer.message("长度格式不正确", 5);
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+    </script>
+    <script type="text/html" id="typeTpl">
+        <select name="dataType" lay-filter="select_type" index='{{d.LAY_TABLE_INDEX}}'>
+            <option value="string" {{d.type.value == 'string' ? 'selected' : ''}}>文本</option>
+            <option value="number" {{d.type.value == 'number' ? 'selected' : ''}}>数字</option>
+            <option value="date" {{d.type.value == 'date' ? 'selected' : ''}}>日期</option>
+            <option value="object" {{d.type.value == 'object' ? 'selected' : ''}}>对象</option>
+            <option value="time" {{d.type.value == 'time' ? 'selected' : ''}}>时间</option>
+            <option value="longObject" {{d.type.value == 'longObject' ? 'selected' : ''}}>大对象</option>
+        </select>
+    </script>
+</body>
+
+</html>

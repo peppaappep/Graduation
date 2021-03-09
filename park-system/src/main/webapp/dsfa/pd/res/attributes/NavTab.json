@@ -1,0 +1,92 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "组件高度",
+                "bindControlAttr": "tabHeight",
+                "showType": "text",
+                "changeExecFunction": "resizeHeight"
+            },
+            {
+                "text": "组件风格",
+                "bindControlAttr": "tabStyle",
+                "showType": "select",
+                "changeExecFunction": "changeStyle",
+                "dictionary": [
+                    {
+                        "text": "原始风格",
+                        "value": " "
+                    },
+                    {
+                        "text": "简洁风格",
+                        "value": "layui-tab-brief"
+                    },
+                    {
+                        "text": "卡片风格",
+                        "value": "layui-tab-card"
+                    },
+                    {
+                        "text": "pad风格",
+                        "value": "customer-tab-pad"
+                    }
+                ]
+            },
+            {
+                "text": "组件位置",
+                "bindControlAttr": "tabPosition",
+                "showType": "select",
+                "changeExecFunction": "changeStyle",
+                "dictionary": [
+                    {
+                        "text": "顶部",
+                        "value": ""
+                    },
+                    {
+                        "text": "右侧",
+                        "value": "tabContainer tabSideContainer right_container"
+                    },
+                    {
+                        "text": "底部",
+                        "value": "tabContainer bottom_container"
+                    },
+                    {
+                        "text": "左侧",
+                        "value": "tabContainer tabSideContainer left_container"
+                    }
+                ]
+            },
+            {
+                "text": "页签是否可删除",
+                "showType": "boolean",
+                "bindControlAttr": "enableDelete",
+                "changeExecFunction": "changeDeleteStyle"
+            },
+            {
+                "text": "是否有边距",
+                "showType": "boolean",
+                "bindControlAttr": "$showPadding",
+                "changeExecFunction": "render"
+            },
+            {
+                "text": "页签设置", 
+                "showType": "dialog",
+                "bindControlAttr": "tabTitles",
+                "changeExecFunction": "renderDom",
+                "config": {
+                    "url": "/dsfa/pd/views/tabEditor.html",
+                    "width": "1000px",
+                    "height": "550px",
+                    "buttonText": "编辑页签",
+                    "title": "编辑页签",
+                    "hasBadge": true
+                }
+            }
+        ]
+    }
+]

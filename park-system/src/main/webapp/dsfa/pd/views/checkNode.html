@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="checkNodeController">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>选择控件</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/icomoon/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+
+    <style>
+        .checkNodeBox{
+            overflow: hidden;
+            height: 100%;
+        }
+        .checkNodeBox>div{
+            float: left;
+            width: 60%;
+            border: 1px solid #d4d4d4;
+            height: 100%;
+            box-shadow: 0px 0px 1px #d4d4d4;
+            position: relative;
+            padding-top: 40px;
+        }
+        .checkNodeBox>div:last-child{
+            width: 40%;
+            border-left: 0;
+        }
+        .head{
+            background: #efeff2;
+            height: 40px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #d4d4d4;
+            box-shadow: 0 0px 1px #d4d4d4;
+            padding: 5px 10px;
+            line-height: 30px;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+        }
+        .search-box{
+            padding-right: 38px;
+        }
+        .search-box input{
+            height: 100%;
+            border-radius: 4px !important;
+            padding-right: 36px;
+        }
+        .search-box i{
+            position: absolute;
+            top: 12px;
+            right: 11px;
+            font-size: 16px;
+            color: #b7b7b7;
+            cursor: pointer;
+        }
+        .search-box i.search{
+            right: 49px;
+        }
+        .fl{
+            float: left;
+        }
+        .fr{
+            float: right;
+        }
+        .head .fr,
+        .head b{
+            color: #3c8ddb;
+            cursor: pointer;
+        }
+        .head .fr i{
+            font-weight: bold;
+            font-size: 14px;
+            position: relative;
+            top: 2px;
+            left: -2px;
+        }
+        .content-box{
+            max-height: 100%;
+            overflow: auto;
+        }
+        .data-box .content-box{
+            padding: 7px 10px;
+        }
+        .data-box{
+            background: #f9f9f9;
+        }
+        .list{
+            margin-bottom: 0;
+        }
+        .item{
+            padding: 10px;
+            border-bottom: 1px solid #f8f8f8;
+            padding-right:30px; 
+            position: relative;
+        }
+        .closeIcon{
+            position: absolute !important;
+            top: 50% !important;
+            right: 7px;
+            margin-top: -7px;
+            cursor: pointer;
+        }
+        .closeIcon:hover{
+            color: #3c8ddb;
+            font-weight: bolder;
+        }
+        .result-box .item:nth-of-type(even){
+            background: #f8f8f8;
+        }
+        .ztree li a{
+            max-width: 97%;
+            height: 26px !important;
+            line-height: 26px;
+        }
+        .ztree li span{
+            line-height: 24px
+        }
+        .ztree li span{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
+        }
+        .ztree li span.button.switch {
+            width: 16px;
+            height: 16px;
+            margin-right: 1px;
+            position: relative;
+            top: 5px;
+        }
+        .noline_open,
+        .noline_close{
+            background-image:url(../../../res/dsf_styles/themes/img/jiajian.png) !important;
+            background-position: -14px 0px !important;
+        }
+        .noline_open{
+            position: relative;
+            left: 4px;
+        }
+        .noline_close{
+            background-position: 1px 0px !important;
+        }
+        .layui-tab-card > .layui-tab-title{
+            background: #efeff2;
+            margin: 0;
+        }
+        .layui-tab-card{
+            border: 0;
+            box-shadow: none;
+        }
+        .layui-tab-title{
+            height: 34px;
+        }
+        .layui-tab-title li{
+            height: 34px;
+            line-height: 34px;
+            font-size: 12px;
+        }
+        .layui-tab-title>li:after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: '';
+            width: 100%;
+            height: 34px;
+            border-left: 1px solid #e6e6e6;
+            border-bottom-color: #fff;
+            border-radius: 2px 2px 0 0;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        .layui-tab-title>li:last-child:after{
+            border-right: 1px solid #e6e6e6;
+        }
+        .layui-tab-title .layui-this{
+            background-color: #fff !important;
+        }
+        .layui-tab-title .layui-this:after{
+            z-index: 100;
+            height: 35px;
+        }
+        .layui-tab-content,
+        .ztree{
+            padding: 0;
+        }
+        .layui-tab-content{
+            padding: 10px 0;
+        }        
+        .layui-tab-title{
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+        }
+        .result-box .content-box{
+            padding-right: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid dialog_container checkNodeBox">
+        <div class="data-box">
+            <div class="head search-box">
+                <input type="text" class="layui-input" placeholder="输入名称" ng-model='searchName' ng-keyup='myKeyup($event)'>
+                <i class="clear iconfont layui-icon icon-shuaxin" ng-click="searchName='';search()"></i>
+                <i class="search icomoon layui-icon icon-bd-search" ng-click='search()'></i>
+            </div>
+            <div class="content-box">
+                <div class="ds_tab layui-tab layui-tab-card">
+                    <ul class="layui-tab-title" handler="layui-tab-title">
+                        <li ng-repeat='tab in tabs' ng-bind='tab.name' ng-class='{"layui-this":$index==0}'></li>
+                    </ul>
+                    <div class="layui-tab-content" handler="layui-tab-content">
+                        <div class="layui-tab-item" ng-repeat='tab in tabs'  ng-class='{"layui-show":$index==0}'>
+                            <ul id="tree_{{tab.value}}" class="ztree" ng-if='!tab.type'></ul>
+                            <div ng-if='tab.type==1' ng-bind='tab.name'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="result-box">
+            <div class="head">
+                <span class="fl">已选择（<b ng-bind='chooseData.length'>0</b>）</span>
+                <span class="fr" ng-click='chooseData=[]'>
+                    <i class="icomoon icon-bd-refresh"></i>
+                    <b>清空</b>
+                </span>
+            </div>
+            <div class="content-box">
+                <ul class="list" ng-if='chooseData.length>0'>
+                    <li id='{{item.ID || item.value}}' class="item" ng-repeat='item in chooseData'>
+                        <span ng-bind='item.Name || item.text'></span>
+                        <i class="closeIcon iconfont icon-guanbi1" ng-click='delectData($index)'></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var treeFramework = null;
+        var nodeList = [];
+        var key = null;
+        app.controller('checkNodeController', function ($scope) {
+            $scope.chooseData = [];
+            var tabs = {
+                "common":{name:"常用",type:1,value:"common"},
+                "unit":{name:"本部门",value:"unit"},
+                "group":{name:"小组",type:1,value:"group"},
+                "department":{name:"本单位",value:"department"},
+                "framework":{name:"组织架构",value:"framework"}
+            }
+            $scope.tabs = [];
+
+            window.setCheckedData = function(v,control){
+                if(control.maxTags || control.maxTags==0){
+                    $scope.maxLengh = parseInt(control.maxTags);
+                }
+                for(let i in control.tabs){
+                    $scope.tabs.push(tabs[control.tabs[i]]);
+                }
+                $scope.chooseData = v;
+
+                $scope.$apply();
+
+                treeFramework = $.fn.zTree.init($("#tree_framework"), {
+                    view: {
+                        selectedMulti: false,
+                        showIcon: false,
+                        showLine: false,
+                        fontCss: getFontCss
+                    },
+                    data:{
+                        key:{
+                            children: "children",
+                            name: "Name"
+                        }
+                    },
+                    callback: {
+                        onClick: zTreeOnClick
+                    }            
+                });
+
+                dsf.http.request(dsf.UrlSetting.org_list, {}, "GET")
+                    .done(function (response) {
+                        // console.log(response);
+                        if(response.state=='20000'){
+                            treeFramework.addNodes(null, response.data);
+                            treeFramework.expandAll(true);
+                        }
+                    })
+                    .error(function (response) {
+                        // console.log(response)
+                    })
+                    .exec();
+            }
+            window.getCheckedData = function(){
+                return $scope.chooseData;
+            }
+
+            $scope.search = function(){
+
+                updateNodes(false);
+                if($scope.searchName=='' || !$scope.searchName) return;
+                nodeList = treeFramework.getNodesByParamFuzzy('Name', $scope.searchName);
+                updateNodes(true);
+            }
+
+            $scope.myKeyup = function(e){
+                var keycode = window.event?e.keyCode:e.which;
+                if(keycode==13){
+                    $scope.search();
+                }
+            };
+
+            $scope.delectData = function(index){
+                $scope.chooseData.splice(index,1);
+                // console.log($scope.chooseData);
+            }
+
+            function zTreeOnClick(event, treeId, treeNode) {
+                if($('#'+treeNode.ID).length==0){
+                    treeNode = treeFramework.transformToArray(treeNode);
+                    for(let i in treeNode){
+                        if(treeNode[i].Type==1 && $('#'+treeNode[i].ID).length==0){
+                            $scope.chooseData.push(treeNode[i]);
+                            if(($scope.maxLengh || $scope.maxLengh==0) && parseInt($scope.chooseData.length)>parseInt($scope.maxLengh)){
+                                $scope.chooseData.splice(0, 1);
+                            }
+                        }
+                    }
+                    $scope.$apply();
+                }else{
+                    // console.log("您已经选择过了")
+                }
+
+            }
+
+        });
+        function getFontCss(treeId,treeNode){
+			return (!!treeNode.highlight) ? {color:"#A60000", "font-weight":"bold"} : {color:"#333", "font-weight":"normal"};
+        }
+        function updateNodes(highlight){
+			for( var i=0, l=nodeList.length; i<l; i++) {
+				nodeList[i].highlight = highlight;
+				treeFramework.updateNode(nodeList[i]);
+			}
+		}
+    </script>
+</body>
+
+</html>

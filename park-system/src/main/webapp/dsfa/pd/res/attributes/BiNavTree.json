@@ -1,0 +1,231 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "标题",
+                "showType": "text",
+                "bindControlAttr": "label"
+            },
+            {
+                "text": "是否显示节点连线",
+                "showType": "boolean",
+                "bindControlAttr": "setting.view.showLine",
+                "changeExecFunction": "initTree"
+            },
+            {
+                "text": "是否显示节点图标",
+                "showType": "boolean",
+                "bindControlAttr": "setting.view.showIcon",
+                "changeExecFunction": "initTree"
+            },
+            {
+                "text": "是否关闭搜索功能",
+                "showType": "boolean",
+                "bindControlAttr": "closeSearch",
+                "changeExecFunction": "renderSearchDom"
+            },
+
+            {
+                "text": "是否启用虚拟根目录",
+                "showType": "boolean",
+                "bindControlAttr": "open_webRoot",
+                "hiddenKeyClass": "webRoot_name",
+                "changeExecFunction": "initTree"
+            },
+            {
+                "text": "虚拟根目录名称",
+                "bindControlAttr": "webRoot_name",
+                "showType": "text",
+                "class": "webRoot_name",
+                "hidden":"!open_webRoot",
+                "changeExecFunction": "initTree"
+            },
+
+            {
+                "text": "配置跳转iframe的NAME标识",
+                "bindControlAttr": "targetIframe.name",
+                "showType": "text"
+            },
+            {
+                "text": "配置跳转iframe地址",
+                "bindControlAttr": "targetIframe.src",
+                "showType": "text"
+            },{
+                "text": "按钮栏设置",
+                "showType": "dialog",
+                "bindControlAttr": "$buttonBar",
+                "changeExecFunction": "renderButtonBar",
+                "config": {
+                    "title": "按钮栏设置",
+                    "url": "/dsfa/pd/views/buttonsEdit.html?HideButton=1",
+                    "width": "1400px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            },{
+                "text": "树右击菜单设置",
+                "showType": "dialog",
+                "bindControlAttr": "$MenuButtonBar",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "title": "树右击菜单设置",
+                    "url": "/dsfa/pd/views/buttonsEdit.html?HideButton=1",
+                    "width": "1400px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            }
+        ]
+    },
+    {
+        "name": "数据设置",
+        "attributes": [
+			{
+			    "text": "默认排序",
+			    "showType": "text",
+			    "bindControlAttr": "$defaultOrder"
+			},
+            {
+                "text": "查询条件设置",
+                "showType": "dialog",
+                "bindControlAttr": "$searchInfo",
+                "config": {
+                    "title": "查询条件设置",
+                    "url": "/dsfa/pd/views/searchEdit.html",
+                    "width": "900px",
+                    "height": "600px",
+                    "buttonText": "设置"
+                }
+            },
+            {
+                "text": "数据源类型",
+                "bindControlAttr":"metaDataType",
+                "showType": "select",
+                "showKeyClass":"metaDataDialog,2",
+                "dictionary": [
+                    {
+                        "text": "默认",
+                        "value": "1"
+                    },
+                    {
+                        "text": "元数据组",
+                        "value": "2"
+                    }
+                ],
+                "helper":{
+                    "title":"数据规范",
+                    "url":""
+                }
+            },
+            {
+                "text": "元数据或数据源选择",
+                "bindControlAttr": "chooseMetaData",
+                "showType": "dialog",
+                "changeExecFunction": "changeMetaDataType",
+                "config": {
+                    "url": "/dsfa/pd/views/treeSelector_nav.html",
+                    "width": "1000px",
+                    "height": "550px",
+                    "buttonText": "选择",
+                    "title": "选择元数据组"
+                },
+                "class":"metaDataDialog",
+                "hidden":"metaDataType!=2"
+            },
+            {
+                "text": "最大层级",
+                "bindControlAttr": "maxLevel",
+                "showType": "text",
+                "type":"number"
+            },
+            {
+                "text": "默认展开至第几级",
+                "bindControlAttr": "defaultOpenSeries",
+                "showType": "text",
+                "type":"number"
+            },
+            {
+                "text": "根节点数据",
+                "bindControlAttr": "pId",
+                "showType": "text"
+            },
+            {
+                "text": "配置全局ID",
+                "bindControlAttr": "globalId",
+                "showType": "text"
+            },
+            
+            {
+                "text": "是否启用异步加载",
+                "showType": "boolean",
+                "bindControlAttr": "setting.async.enable",
+                "hiddenKeyClass": "async_metaDataType"
+            },
+            {
+                "text": "异步数据源类型",
+                "class": "async_metaDataType",
+                "hidden": "setting.async.enable",
+                "bindControlAttr":"async_metaDataType",
+                "showType": "select",
+                "showKeyClass":"async_metaDataDialog",
+                "dictionary": [
+                    {
+                        "text": "默认",
+                        "value": "0"
+                    },
+                    {
+                        "text": "元数据组",
+                        "value": "1"
+                    }
+                ]
+            },
+            {
+                "text": "异步元数据组选择",
+                "bindControlAttr": "async_chooseMetaData",
+                "showType": "dialog",
+                "changeExecFunction": "changeMetaDataType",
+                "config": {
+                    "url": "/dsfa/pd/views/treeSelector.html",
+                    "width": "1000px",
+                    "height": "550px",
+                    "buttonText": "选择",
+                    "title": "选择异步元数据组"
+                },
+                "class":"async_metaDataDialog",
+                "hidden":"async_metaDataType!=1"
+            }
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [{
+            "text": "元数据设置",
+            "showType": "dialog",
+            "bindControlAttr": "$metadata.valueAttributes",
+            "changeExecFunction": "render",
+            "config": {
+                "title": "元数据设置",
+                "url": "/dsfa/pd/views/navTreeEdit.html",
+                "width": "900px",
+                "height": "600px",
+                "buttonText": "设置"
+            }
+        }, 
+        {
+            "text": "浏览范围",
+            "showType": "dataScopeEditor",
+            "bindControlAttr": "$browseScope",
+            "config": {
+                "title": "范围设置",
+                "width": "600px",
+                "height": "600px",
+                "buttonText": "设置"
+            }
+        }]
+    }
+]

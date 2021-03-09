@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="treeImgSetController">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>树图标配置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+
+        th,
+        td {
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        td a {
+            line-height: 34px;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid dialog_container" style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+        <div class="row">
+            <div class="col-xs-12">
+                <a class="ds_button" style="float: right" ng-click="addNew()">新增</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid dialog_container;" style="margin-top:68px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="150px">节点类型</th>
+                            <th width="150px">图标类型</th>
+                            <th>节点图标</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in lists track by $index" ng-if='!item.hide'>
+                            <td style="width:150px">
+                                <input name="typeName_{{$index}}" class="form-control" type="text" ng-model="item.typeName"
+                                    placeholder="请输入">
+                            </td>
+                            <td style="width:150px">
+                                <select name="imgType_{{$index}}" ng-change="changeType" class="form-control" ng-model="item.imgType"
+                                    ng-options="type.value as type.name for type in config.imgType"></select>
+                            </td>
+                            <td>
+                                <a name="icon_{{$index}}" ng-click="openChooseImg(item,false,$index)" ng-bind='item.icon || "选择图标"'></a>
+                            </td>
+                            <td>
+                                <a ng-click="deleteItem($index)">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('treeImgSetController', function ($scope) {
+            $scope.config = {
+                imgType: [
+                    { name: "请选择类型", value: "" },
+                    { name: "文件类型", value: "file" },
+                    { name: "用户类型", value: "user" },
+                    { name: "数据类型", value: "data" },
+                    { name: "组织类型", value: "unit" },
+                ],
+                path: "../../../res/dsf_styles/themes/img/tree_img/"
+            }
+
+            window.dialogInit = function (args) {
+                $scope.lists = $.extend(true, {}, args.value);
+
+                let lists = [];
+                let pathL = $scope.config.path.length;
+                for (let key in $scope.lists) {
+                    let obj = $scope.lists[key];
+                    if (obj.icon) {
+                        obj.icon = obj.icon.slice(pathL, obj.icon.length);
+                    }
+                    lists.push($.extend({ typeName: key }, obj));
+                }
+                $scope.lists = lists;
+
+                $scope.$apply();
+            }
+            $scope.addNew = function () {
+                $scope.lists.push({
+                    typeName: "",
+                    imgType: "",
+                    icon: ""
+                })
+            }
+            $scope.openChooseImg = function (item, isCloseImg, i) {
+                if (item.imgType == "") {
+                    showError('imgType', i, "请先选择图标类型");
+                    return;
+                }
+                window.parent.dsf.layer.openDialog({
+                    title: "请选择",
+                    content: '../views/treeImgList.html',
+                    area: ['500px', '550px'],
+                    args: { type: item.imgType, icon: item.icon },
+                    btn: [{
+                        text: "确定",
+                        handler: function (index, layero) {
+                            let frame = layero.find("iframe");
+                            let win = frame.get(0).contentWindow;
+                            let result = win.getDialogResult();
+                            item.icon = result.icon || "";
+                            $scope.$apply();
+                        }
+                    }, {
+                        text: "取消",
+                        handler: function (index, layero) {
+
+                        }
+                    }]
+                });
+            }
+
+            $scope.deleteItem = function (index) {
+                $scope.lists.splice(index, 1);
+            }
+
+            window.getDialogResult = function () {
+                let lists = {};
+                let path = $scope.config.path;
+                for (let i in $scope.lists) {
+                    let obj = $scope.lists[i];
+
+                    // 验证数据
+                    if (!vaildate(obj, "typeName", i, "required", "请输入节点类型")) {
+                        return false;
+                    }
+                    if (!vaildate(obj, "typeName", i, "repeat", "一种类型只能配置一次", lists)) {
+                        return false;
+                    }
+
+                    // 拼接数据
+                    lists[obj.typeName] = {
+                        imgType: obj.imgType,
+                        icon: obj.icon ? path + obj.icon + '.png' : ""
+                    };
+                }
+                console.dir(lists)
+                return lists;
+            }
+
+            function vaildate(r, key, index, vaildateType, message, lists) {
+                var result = true;
+                if (vaildateType == "required") {
+                    if (!$.trim(r[key])) {
+                        result = false;
+                    }
+                } else if (vaildateType == "repeat") {
+                    // 验证类型不能重复
+                    if (lists[r[key]]) {
+                        result = false;
+                    }
+                }
+                if (!result) {
+                    showError(key, index, message);
+                    return false;
+                }
+                return true;
+            }
+            function showError(key, index, message) {
+                if (key == 'iconClose') key = "icon";
+                let control = $("[name='" + key + "_" + index + "']");
+                control.addClass("error");
+                control.one("click", function (evt) {
+                    control.removeClass("error");
+                    return false;
+                });
+                dsf.Dom.scrollToElement(control, -78);
+                dsf.layer.message(message, false);
+            }
+        });
+    </script>
+</body>
+
+</html>

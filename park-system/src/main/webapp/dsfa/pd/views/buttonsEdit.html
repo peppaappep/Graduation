@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>按钮编辑</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" /> -->
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+        
+        .form-control {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 30px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        
+        table>tbody td {
+            padding: 5px !important;
+        }
+    </style>
+</head>
+
+<body ng-controller="dataGridColumnEdit">
+    <div style="width:100%;position:fixed;top:0px;background-color:#fff;z-index:10">
+        <div class="layui-row">
+            <div class="layui-col-xs12" style="padding:10px;text-align: right">
+                <a class="ds_button" ng-click="openSytemButtons()" ng-if="HideButton!=1" ><i class="iconfont icon-sousuofangda layui-icon"></i>选择系统按钮</a>
+                <a class="ds_button" ng-click="addNew()"><i class="iconfont icon-zidingyi layui-icon"></i>新增自定义按钮</a>
+                <a class="ds_button  ds_button_auxiliary" target="_blank" href="../../../res/dsf_styles/font/demo_index.html">
+                    <i class="iconfont icon-Magnifier layui-icon"></i>查看图标</a>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:58px;padding:10px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="layui-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;width:32px;">序号</th>
+                            <th style="text-align: center;width:80px">按钮名称</th>
+                            <th style="text-align: center;width:80px">别名</th>
+                            <th style="text-align: center;width:100px">按钮图标</th>
+                            <th style="text-align: center;width:80px">按钮风格</th>
+                            <th style="text-align: center;width:80px">按钮类型</th>
+                            <th style="text-align: center;width:80px">显示方式</th>
+                            <th style="text-align: center;width:100px">按钮动作</th>
+                            <th style="text-align: center;width:80px">只读影响</th>
+                            <th style="text-align: center;width:100px">显示条件</th>
+                            <th style="text-align: center;">参数配置</th>
+                            <th style="text-align: center;width:60px;" ng-if="isDataGrid==1">双击绑定</th>
+                            <th style="text-align: center;width:60px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="button in args.value.buttons track by $index">
+                            <td style="text-align:center">{{$index+1}}</td>
+                            <td>
+                                <input name="text_{{$index}}" class="form-control" type="text" ng-model="button.text">
+                            </td>
+                            <td>
+                                <input name="alias_{{$index}}" class="form-control" type="text" ng-model="button.alias">
+                            </td>
+                            <td>
+                                <input name="icon_{{$index}}" class="form-control" type="text" ng-model="button.icon">
+                            </td>
+                            <td>
+                                <select name="style_{{$index}}" class="form-control" ng-model="button.style">
+                                    <option value="0">普通按钮</option>
+                                    <option value="2">仅图标</option>
+                                    <option value="4">图标文字</option>
+                                    <option value="5">小图标</option>
+
+                                </select>
+                            </td>
+                            <td>
+                                <select name="style_{{$index}}" class="form-control" ng-model="button.buttonType">
+                                    <option value="">主要</option>
+                                    <option value="auxiliary">次要</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="show_{{$index}}" class="form-control" ng-model="button.show" ng-change="changeShow(button)">
+                                    <option value="default">默认显示</option>
+                                    <option value="more">被折叠的</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div ng-if="button.isSystem" title="{{button.actionName}}" style="width:100px" class="ellipsis">
+                                    {{button.actionName}}
+                                </div>
+                                <div ng-if="!button.isSystem">
+                                    <input name="event_{{$index}}" class="form-control" type="text" ng-model="button.actionName">
+                                </div>
+                            </td>
+                            <td style="text-align:center">
+                                <input name="isview_{{$index}}" type="checkbox" ng-model="button.isView">
+                            </td>
+                            <td>
+                                <input name="if_{{$index}}" class="form-control" type="text" ng-model="button.if">
+                            </td>
+                            <td>
+                                <input title="{{button.actionArgsHelper}}" name="arg_{{$index}}" placeholder="多个参数以;分隔" class="form-control" type="text" ng-model="button.actionArgs">
+                            </td>
+                            <td style="text-align:center" ng-if="isDataGrid==1">
+                                <input name="chk_{{$index}}" type="checkbox" ng-disabled="button.show=='more'" ng-click="singleChecked(button)" ng-model="button.isDblClick">
+                            </td>
+                            <td style="vertical-align: middle;text-align: center">
+                                <a ng-click="sort(button,'up')" title="上移"><i class="iconfont icon-shuangjiantoushang"></i></a>
+                                <a ng-click="sort(button,'down')" title="下移"><i class="iconfont icon-shuangjiantouxia"></i></a>
+                                <a ng-click="deleteItem(button)" title="删除"><i class="iconfont icon-shanchu"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {};
+        var isDataGrid = dsf.url.queryString("dg");
+        var HideButton = dsf.url.queryString("HideButton");
+        app.controller('dataGridColumnEdit', function($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.isDataGrid = isDataGrid;
+            $scope.HideButton = HideButton;
+            $scope.addNew = function() {
+                $scope.args.value.buttons.push({
+                    "text": "",
+                    "actionName": "",
+                    "buttonType": "",
+                    "icon": "",
+                    "style": "0",
+                    "show": "default",
+                    "isSystem": false,
+                    "actionArgs": "",
+                    "if": "",
+                    "showButton": true
+                });
+            }
+
+            $scope.deleteItem = function(item) {
+                var index = $scope.args.value.buttons.indexOf(item);
+                if (index >= 0) {
+                    $scope.args.value.buttons.splice(index, 1);
+                }
+            }
+
+            $scope.sort = function(item, type) {
+                var index = $scope.args.value.buttons.indexOf(item);
+                if (index >= 0) {
+                    if (type == "up") {
+                        if (index > 0) {
+                            var prev = $scope.args.value.buttons[index - 1];
+                            $scope.args.value.buttons[index - 1] = item;
+                            $scope.args.value.buttons[index] = prev;
+                        }
+                    } else {
+                        if (index < $scope.args.value.buttons.length - 1) {
+                            var next = $scope.args.value.buttons[index + 1];
+                            $scope.args.value.buttons[index + 1] = item;
+                            $scope.args.value.buttons[index] = next;
+                        }
+                    }
+                }
+            }
+
+            $scope.changeShow = function(item) {
+                if (item.show == "more") {
+                    item.isDblClick = false;
+                    delete item.isDblClick
+                }
+            }
+
+            $scope.singleChecked = function(item) {
+                if (item.isDblClick == true) {
+                    for (var i = 0; i < $scope.args.value.buttons.length; i++) {
+                        var btn = $scope.args.value.buttons[i];
+                        if (btn != item) {
+                            if (btn.isDblClick != undefined) {
+                                btn.isDblClick = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $scope.openSytemButtons = function() {
+                window.parent.dsf.layer.openDialog({
+                    title: "请选择",
+                    content: '../views/systemButtons.html',
+                    area: ['400px', '500px'],
+                    btn: [{
+                        text: "确定",
+                        handler: function(index, layero) {
+                            var frame = layero.find("iframe");
+                            var win = frame.get(0).contentWindow;
+                            var result = win.getDialogResult();
+                            $scope.args.value.buttons = $scope.args.value.buttons.concat(result);
+                            $scope.$apply();
+                        }
+                    }, {
+                        text: "取消",
+                        handler: function(index, layero) {
+
+                        }
+                    }]
+                });
+            }
+
+            window.dialogInit = function(args) {
+                $scope.args = $.extend(true, {}, args);
+                console.log($scope.args.value)
+                $scope.$apply();
+            }
+            //返回值
+            window.getDialogResult = function() {
+                return $scope.args.value;
+            }
+
+
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>父窗口</title>
+    <style>
+        .main{
+            background: #f0efee;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            line-height: 10em;
+        }
+    </style>
+    <script>
+        let editWin;
+        function openEdit(){
+            editWin =window.open("../codeEditor.html?t="+new Date().getTime(),'','width=500,height=500,top=100,left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+            window.setTimeout(function(){
+                editWin.initEditor({
+                    data:{
+                        "dsfa_wenjin.wenjin": "qwe"
+                    }
+                });
+            },500);
+
+        }
+
+        function getExp(){
+            let template = editWin.getExp();
+            console.log(template);
+        }
+    </script>
+</head>
+<body>
+    <div class="main">
+        <p>
+            <button onclick="openEdit();">打开编辑器</button>
+        </p>
+        <p>
+            <button onclick="getExp();">获取表达式</button>
+        </p>
+    </div>
+</body>
+</html>

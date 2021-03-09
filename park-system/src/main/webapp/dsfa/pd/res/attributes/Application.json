@@ -1,0 +1,30 @@
+[{
+   "name": "基础属性",
+   "attributes": [{
+         "text": "组件标识",
+         "bindControlAttr": "caption",
+         "showType": "text"
+      },
+      {
+         "text": "标题",
+         "bindControlAttr": "title",
+         "showType": "text",
+         "changeExecFunction": "renderContext"
+      },
+      {
+         "text": "接口地址",
+         "bindControlAttr": "sourceUrl",
+         "showType": "text"
+      },
+      {
+         "text": "显示列数",
+         "bindControlAttr": "columns",
+         "showType": "text"
+      },
+      {
+         "text": "ROID",
+         "bindControlAttr": "roleID",
+         "showType": "text"
+      }
+   ]
+}]

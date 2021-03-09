@@ -1,0 +1,9 @@
+{
+    "data":[
+        { "imgUrl": "/dsfa/res/dsf_styles/themes/nc/defaultImg.png", "isNew": true, "title": "协调是持续健康发展的内在要求-1", "type": "video", "author": "田新", "position": "上海市松江区公安分局局长", "studytime": "0.5", "lll": "10254" },
+        { "imgUrl": "/dsfa/res/dsf_styles/themes/nc/defaultImg.png", "isNew": true, "title": "协调是持续健康发展的内在要求-2", "type": "test", "author": "", "position": "", "studytime": "1", "lll": "10254" },
+        { "imgUrl": "/dsfa/res/dsf_styles/themes/nc/defaultImg.png", "isNew": false, "title": "协调是持续健康发展的内在要求-3", "type": "question", "author": "", "position": "", "studytime": "1.5", "lll": "10254" },
+        { "imgUrl": "/dsfa/res/dsf_styles/themes/nc/defaultImg.png", "isNew": false, "title": "协调是持续健康发展的内在要求-4", "type": "writing", "author": "", "position": "", "studytime": "", "lll": "10254" }
+    ],
+    "success": true
+}

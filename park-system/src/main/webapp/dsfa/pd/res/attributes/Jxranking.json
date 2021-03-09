@@ -1,0 +1,60 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "标题名称",
+        "bindControlAttr": "headerName",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "更多跳转页",
+        "bindControlAttr": "moreUrl",
+        "showType": "text"
+      },
+      {
+        "text": "字体颜色",
+        "bindControlAttr": "fontColor",
+        "showType": "text"
+      },
+      {
+        "text": "接口请求地址",
+        "bindControlAttr": "_httpUrl",
+        "showType": "text"
+      },
+      {
+        "text": "数据列设置",
+        "showType": "dialog",
+        "bindControlAttr": "_columns",
+        "config": {
+          "title": "数据列设置",
+          "url": "/dsfa/pd/views/jxranking.html",
+          "width": "800px",
+          "height": "400px",
+          "buttonText": "设置"
+        }
+      },
+      {
+        "text": "标号背景",
+        "bindControlAttr": "_numIcon",
+        "showType": "select",
+        "dictionary": [
+          {
+            "text": "圆",
+            "value": "1"
+          },
+          {
+            "text": "奖杯",
+            "value": "2"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>流程设计器</title>
+    <link href="../res/css/flow.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/systemskins/dsfa/themes/gray/DSSkin.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/easyui1.4.1/themes/gray/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/easyui1.4.1/icon.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="../../../res/libs/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" /> -->
+    <script src="../../../res/libs/jquery-1.12.4.min.js" type="text/javascript"></script>
+    <script src="../script/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../script/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../script/common.js" type="text/javascript"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js" type="text/javascript"></script>
+    <script src="../../../app.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_config.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_common.js" type="text/javascript"></script>
+    <script src="../script/raphael-min.js" type="text/javascript"></script>
+    <script src="../script/ds_flow.3.0.js" type="text/javascript"></script>
+    <script src="../script/propertySource.3.0.js" type="text/javascript"></script>
+    <script src="../script/property_3.0.js?v=1" type="text/javascript"></script>
+    <script src="../script/jquery-ui.min.dragdrop.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        body {
+            background: #fff;
+        }
+        
+        body * {
+            box-sizing: content-box;
+        }
+        
+        .datagrid-group-title {
+            font-size: 12px !important;
+        }
+    </style>
+    <script>
+        var flow = null;
+        var AppInfo = null;
+        var flowInfo = null;
+        var nodePro = NodeProperties();
+        var linePro = LineProperties();
+        var flowPro = BaseInfoProperties();
+        var lanePro = CorridorProperties();
+        var judgementNodePro = JudgementNodeProperties();
+        var xmlId = dsf.url.queryString("id"); // getUrlParam("id");
+        function getUrlParam(key) {
+            return dsf.url.queryString(key);
+        }
+        $(document).ready(function() {
+            //加载流程数据
+            var queue = dsf.queue();
+            queue.step(function(def) {
+                var url = dsf.url.getWebPath("wfm/getWFDefinition");
+                dsf.http.request(url, {
+                        "sID": xmlId
+                    }, "GET")
+                    .done(function(response) {
+                        if (response.success) {
+                            flowInfo = response.data.WorkFlow;
+                            def.resolve();
+                        } else {
+                            def.reject();
+                        }
+                    })
+                    .error(function() {
+                        def.reject();
+                    }).exec();
+
+            }).catch(function() {
+                alert("流程参数信息不完整!");
+            }).finally(function() {
+                flowInit();
+            }).exec();
+        });
+
+        //流程插件初始化
+        function flowInit() {
+            //初始化流程画布
+            var fp = getAttributes(flowPro);
+            fp = $.extend(fp, flowInfo.BaseInfo);
+            flow = new DSFA.Flow({
+                configPath: "dsfa/wf/res/flow.json",
+                container: document.getElementById("flow_box"),
+                attributes: fp
+            });
+            flow.init();
+            flow.on("node.selected line.selected", function(evt, ui) {
+                loadPropertyWindow(ui);
+            });
+            //节点名字修改后
+            flow.on("node.editNameAfter", function(evt, ui) {
+                ui.attributes.Name = ui.name;
+                ui.attributes.ID = ui.id;
+                ui.attributes.Type = ui.type;
+                for (var i = 0; i < ui["out"].length; i++) {
+                    var line = flow.getObjectById(ui["out"][i]);
+                    if (line) {
+                        var fnode = flow.getObjectById(line.from);
+                        var tnode = flow.getObjectById(line.to);
+                        line.name = fnode.name + "→" + tnode.name;
+                        line.attributes.Name = line.name;
+                    }
+                }
+                for (var i = 0; i < ui["in"].length; i++) {
+                    var line = flow.getObjectById(ui["in"][i]);
+                    if (line) {
+                        var fnode = flow.getObjectById(line.from);
+                        var tnode = flow.getObjectById(line.to);
+                        line.name = fnode.name + "→" + tnode.name;
+                        line.attributes.Name = line.name;
+                    }
+                }
+                loadPropertyWindow(ui);
+            });
+            //泳道名称编辑
+            flow.on("lane.editNameAfter", function(evt, ui) {
+                ui.attributes.ID = ui.id;
+                ui.attributes.Name = ui.name;
+                loadPropertyWindow(ui);
+            });
+            //节点渲染事件
+            flow.on("node.render", function(evt, ui) {
+                if ($.isEmptyObject(ui.attributes)) {
+                    ui.attributes = ui.type == "6" ? getAttributes(judgementNodePro) : getAttributes(nodePro);
+                }
+                ui.attributes.Name = ui.name;
+                ui.attributes.ID = ui.id;
+                ui.attributes.Type = ui.type;
+            });
+            //线段链接完毕
+            flow.on("line.joined", function(evt, ui) {
+                if ($.isEmptyObject(ui.attributes)) {
+                    ui.attributes = getAttributes(linePro);
+                }
+                var fnode = flow.getObjectById(ui.from);
+                var tnode = flow.getObjectById(ui.to);
+                ui.attributes.StartNodeID = ui.from;
+                ui.attributes.EndNodeID = ui.to;
+                ui.name = fnode.name + "→" + tnode.name;
+                ui.attributes.Name = ui.name;
+                ui.attributes.ID = ui.id;
+                if (fnode.type == "6") {
+                    var attributes = fnode.attributes;
+                    //如果有发送条件
+                    if (attributes.OutLine.SendConditions && attributes.OutLine.SendConditions.Condition) {
+                        var lines = null;
+                        try {
+                            lines = attributes.OutLine.SendConditions.Condition.Switch.ItemValue;
+                        } catch (ex) {
+                            lines = null;
+                        }
+                        if (lines) {
+                            var isExist = false;
+                            for (var n = 0; n < lines.length; n++) {
+                                var l = lines[n];
+                                if (l.LineList.Line[0].ID == ui.id) {
+                                    isExist = true;
+                                    break;
+                                }
+                            }
+                            if (!isExist) {
+                                var lineValue = {
+                                    Value: "",
+                                    Level: "条件",
+                                    LineList: {
+                                        "Line": [{
+                                            "ID": ui.id,
+                                            "NAME": ui.name
+                                        }]
+                                    }
+                                }
+                                lines.push(lineValue);
+                            }
+                        }
+                    }
+                }
+            });
+            flow.on("lane.render", function(evt, ui) {
+                if ($.isEmptyObject(ui.attributes)) {
+                    ui.attributes = getAttributes(lanePro);
+                }
+                ui.attributes.Name = ui.name;
+                ui.attributes.ID = ui.id;
+            })
+
+            flow.on("panel.selected", function(evt, ui) {
+                loadPropertyWindow(ui);
+            })
+            flow.on("lane.selected", function(evt, ui) {
+                loadPropertyWindow(ui);
+            });
+            flow.on("line.removeBefore", function(evt, ui) {
+                console.log("移除线:" + ui.name)
+            });
+            flow.on("node.dblclick", function(evt, ui) {
+                var attrs = null,
+                    defaultAttr = null;
+                if (ui.type == "6") {
+                    attrs = getProptyRows();
+                }
+                if (attrs) {
+                    for (var i = 0; i < attrs.length; i++) {
+                        if (attrs[i].isDefault) {
+                            defaultAttr = attrs[i];
+                            break;
+                        }
+                    }
+                    if (defaultAttr) {
+                        var index = getProptyRowIndex(defaultAttr);
+                        beginEditPropty(defaultAttr);
+                    }
+                }
+
+            })
+            flow.on("node.removeBefore", function(evt, ui) {
+                if (ui.type == "6") {
+                    //删除判断节点后自动取消掉上一步骤节点中的发送条件将是否启用发送条件设置成否
+                    var fromNodes = flow.getFromNodes(ui);
+                    if (fromNodes) {
+                        for (var i = 0; i < fromNodes.length; i++) {
+                            var node = fromNodes[i];
+                            node.attributes.OutLine.SendConditions = {
+                                "IsEnabled": "0"
+                            };
+                        }
+                    }
+                }
+            });
+            //线删除
+            flow.on("line.removeAfter", function(evt, ui) {
+                if (ui.from) {
+                    var node = flow.getObjectById(ui.from);
+                    var attributes = node.attributes;
+                    //如果是判断节点
+                    if (node && node.type == "6") {
+                        //如果有发送条件
+                        if (attributes.OutLine.SendConditions && attributes.OutLine.SendConditions.Condition) {
+                            var lines = null;
+                            try {
+                                lines = attributes.OutLine.SendConditions.Condition.Switch.ItemValue;
+                            } catch (ex) {
+                                lines = null;
+                            }
+                            if (lines) {
+                                var _index = -1;
+                                for (var n = 0; n < lines.length; n++) {
+                                    var l = lines[n];
+                                    if (l.LineList.Line[0].ID == ui.id) {
+                                        _index = n;
+                                        break;
+                                    }
+                                }
+                                if (_index >= 0) {
+                                    lines.splice(_index, 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+            //加载元素
+            if (flowInfo.ElementList && flowInfo.ElementList.Element) {
+                var nodes = [],
+                    lines = [],
+                    lanes = [],
+                    Nodes = [],
+                    Lines = [];
+                if (flowInfo.NodeList && flowInfo.NodeList.Node) {
+                    Nodes = $.isArray(flowInfo.NodeList.Node) ? flowInfo.NodeList.Node : [flowInfo.NodeList.Node];
+                }
+                if (flowInfo.LineList && flowInfo.LineList.Line) {
+                    Lines = $.isArray(flowInfo.LineList.Line) ? flowInfo.LineList.Line : [flowInfo.LineList.Line];
+                }
+                var dataMap = {};
+                for (var i = 0; i < Nodes.length; i++) {
+                    dataMap[Nodes[i].ID] = Nodes[i];
+                }
+                for (var i = 0; i < Lines.length; i++) {
+                    dataMap[Lines[i].ID] = Lines[i];
+                }
+                flowInfo.ElementList.Element = $.isArray(flowInfo.ElementList.Element) ? flowInfo.ElementList.Element : [flowInfo.ElementList.Element];
+                for (var i = 0; i < flowInfo.ElementList.Element.length; i++) {
+                    var element = flowInfo.ElementList.Element[i];
+                    //节点
+                    if (element.nodeType == "node") {
+                        nodes.push(element);
+                    }
+                    //线
+                    else if (element.nodeType == "line") {
+                        lines.push(element);
+                    }
+                    //泳道
+                    else if (element.nodeType == "lane") {
+                        lanes.push(element);
+                    }
+                }
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    var attributes = {};
+                    node["in"] = $.isArray(node["in"]) ? node["in"] : (node["in"] ? [node["in"]] : []);
+                    node["out"] = $.isArray(node["out"]) ? node["out"] : (node["out"] ? [node["out"]] : []);
+                    node.point.x = parseFloat(node.point.x);
+                    node.point.y = parseFloat(node.point.y);
+
+                    node = flow.execCommand("addNode", {
+                        "id": node.id,
+                        "name": node.name,
+                        "type": node.type,
+                        "x": node.point.x,
+                        "y": node.point.y,
+                        "attributes": node.attributes
+                    });
+                }
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
+                    var attributes = {};
+                    if (dataMap[node.id]) {
+                        attributes = dataMap[line.id];
+                    }
+                    if (line.linkInfo) {
+                        line.linkInfo.fromOffset = parseFloat(line.linkInfo.fromOffset);
+                        line.linkInfo.toOffset = parseFloat(line.linkInfo.toOffset);
+                    }
+                    //var fn=dataMap[line.from];
+                    // var tn=dataMap[line.to];
+                    line = flow.execCommand("addLine", {
+                        id: line.id,
+                        type: line.type,
+                        name: line.name,
+                        path: line.path,
+                        from: line.from,
+                        to: line.to,
+                        linkInfo: line.linkInfo,
+                        attributes: line.attributes
+                    });
+                }
+                for (var i = 0; i < lanes.length; i++) {
+                    var lane = lanes[i];
+                    flow.execCommand("addLane", {
+                        id: lane.id,
+                        name: lane.name,
+                        size: lane.size,
+                        index: lane.index,
+                        direction: lane.direction,
+                        attributes: lane.attributes
+                    });
+                }
+            }
+
+            //flow.loadData();
+            //左侧节点拖拽
+            $(".dragabled").draggable({
+                'helper': "clone",
+                'appendTo': "body",
+                'revert': function(dropUi) {
+                    if (dropUi) {
+                        if (dropUi.hasClass("svgRoot")) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
+                'drag': function(evt, ui) {
+                    //console.log("a")
+                },
+                'zIndex': 99999,
+                'accept': function(a, b, c) {
+                    console.log();
+                    return false;
+                },
+                'cursorAt': {
+                    left: -10,
+                    top: -10
+                },
+                'containment': 'window'
+            });
+            $(".svgRoot").droppable({
+                'accept': '.nodeIcon',
+                // "over":function(evt, ui){
+                //     if(ui.helper){
+                //         ui.helper.appendTo(".flow .root");
+                //     }
+                // },
+                'drop': function(evt, ui) {
+                    var type = ui.draggable.attr("flowNodeType");
+                    flow.execCommand("addNode", {
+                        type: type,
+                        x: evt.pageX,
+                        y: evt.pageY,
+                        mouseConvert: true
+                    })
+                }
+            });
+            loadPropertyWindow(flow);
+        }
+
+        function addLane(direction) {
+            flow.execCommand("addLane", {
+                "direction": direction
+            })
+        }
+
+        function setState(state, evt) {
+            clearSelectedButton();
+            if (flow.state != state) {
+                flow.execCommand("setState", state);
+                selectedButton(evt.currentTarget);
+            } else {
+                flow.execCommand("clearState");
+            }
+        }
+
+        function selectedButton(button) {
+            $(button).addClass("selected");
+        }
+
+        function clearSelectedButton() {
+            $(".tool-bar a").each(function(i) {
+                $(this).removeClass("selected");
+            });
+        }
+
+        function getFlowInfo() {
+            flow.getPanelInfo()
+        }
+
+        function showLoading(message) {
+            var target = $('<div class="panel-loading"></div>').html(message)
+            $("body").append(target);
+        }
+
+        function hideLoading() {
+            $(".panel-loading").remove();
+        }
+
+        function doSave() {
+            var postData = {
+                "ID": getUrlParam("id"),
+                "WorkFlow": {
+                    "BaseInfo": flow.attributes,
+                    "NodeList": {
+                        "Node": []
+                    },
+                    "LineList": {
+                        "Line": []
+                    },
+                    "Corridor": {
+                        "CorridorList": {
+                            "Corridor": []
+                        },
+                        "StageList": {
+                            "Stage": []
+                        }
+                    },
+                    "ElementList": {
+                        "Element": []
+                    }
+                }
+            }
+            var info = flow.getPanelInfo();
+            //转义带有后台变量的属性
+            // for (var i = 0; i < info.nodes.length; i++) {
+            //     convertExpress(info.nodes[i],"attributes");
+            // }
+            // for (var i = 0; i < info.lines.length; i++) {
+            //     convertExpress(info.lines[i],"attributes");
+            // }
+
+            //深度复制对象作为流程引擎使用
+            var infoCopy = JSON.parse(JSON.stringify(info));
+            var copyMap = getFlowAllObjectMap(infoCopy);
+
+            var temp = [],
+                deleteLines = [];
+            //判断节点特殊操作
+            for (var i = 0; i < infoCopy.nodes.length; i++) {
+                var node = infoCopy.nodes[i];
+                //如果为判断节点 开始
+                if (node.type == "6") {
+                    //获取该节点的上一步节点
+                    var fromNodearr = [],
+                        toNodearr = [];
+                    var arr = flow.getFromNodes(node);
+                    if (arr) {
+                        for (var n = 0; n < arr.length; n++) {
+                            var nc = arr[n];
+                            fromNodearr.push(copyMap[nc.id]);
+                        }
+                    }
+                    //获取该节点的下一步个节点
+                    arr = flow.getToNodes(node);
+                    if (arr) {
+                        for (var n = 0; n < arr.length; n++) {
+                            var nc = arr[n];
+                            toNodearr.push(copyMap[nc.id]);
+                        }
+                    }
+                    var obj = {
+                        "node": node,
+                        "from": fromNodearr,
+                        "to": toNodearr
+                    };
+                    temp.push(obj);
+                }
+            }
+            for (var i = 0; i < temp.length; i++) {
+                var obj = temp[i];
+                var node = obj.node;
+                //判断有没有下一步节点
+                if (obj.node["out"].length > 0) {
+                    //将判断节点的的出线全部复制给上一步的节点
+                    for (var c = 0; c < obj.from.length; c++) {
+                        var fn = obj.from[c];
+                        for (var n = 0; n < obj.node["out"].length; n++) {
+                            var lineId = obj.node["out"][n];
+                            var line_copy = $.extend(true, {}, copyMap[lineId]);
+                            line_copy.attributes.ID = line_copy.id + "_" + fn.id;
+                            line_copy.attributes.StartNodeID = fn.id;
+                            infoCopy.lines.push(line_copy);
+                            deleteLines.push(lineId);
+                        }
+                        fn.attributes.OutLine.SendConditions = obj.node.attributes.OutLine.SendConditions;
+                        var rfn = flow.getObjectById(fn.id);
+                        if (rfn) {
+                            rfn.attributes.OutLine.SendConditions = obj.node.attributes.OutLine.SendConditions;
+                        }
+                    }
+                    //删除判断节点入线
+                    for (var c = 0; c < obj.node["in"].length; c++) {
+                        deleteLines.push(obj.node["in"][c]);
+                    }
+                } else {
+                    for (var c = 0; c < obj.from.length; c++) {
+                        var fn = obj.from[c];
+                        fn.attributes.OutLine.SendConditions = {
+                            "IsEnabled": "0"
+                        };
+                        var rfn = flow.getObjectById(fn.id);
+                        if (rfn) {
+                            rfn.attributes.OutLine.SendConditions = {
+                                "IsEnabled": "0"
+                            };
+                        }
+                    }
+                }
+            }
+            //删除多余的线
+            for (var i = 0; i < deleteLines.length; i++) {
+                for (var n = infoCopy.lines.length - 1; n >= 0; n--) {
+                    if (infoCopy.lines[n].attributes.ID == deleteLines[i]) {
+                        infoCopy.lines.splice(n, 1);
+                    }
+                }
+            }
+            //判断节点特殊操作 结束
+            for (var i = 0; i < infoCopy.nodes.length; i++) {
+                var node = infoCopy.nodes[i];
+                postData.WorkFlow.NodeList.Node.push(node.attributes);
+            }
+            for (var i = 0; i < infoCopy.lines.length; i++) {
+                var line = infoCopy.lines[i];
+                postData.WorkFlow.LineList.Line.push(line.attributes);
+            }
+
+            //整理传递给后台的保存参数
+            for (var i = 0; i < info.nodes.length; i++) {
+                var node = info.nodes[i];
+                var n = $.extend({}, node);
+                //delete n.attributes;
+                delete n.isRender;
+                delete n.width;
+                delete n.height;
+                n.nodeType = "node";
+                postData.WorkFlow.ElementList.Element.push(n);
+            }
+            for (var i = 0; i < info.lines.length; i++) {
+                var line = info.lines[i];
+                var n = $.extend({}, line);
+                //delete n.attributes;
+                delete n.strokeWidth;
+                delete n.stroke;
+                delete n.arrowEnd;
+                delete n.isRender;
+                n.nodeType = "line";
+                postData.WorkFlow.ElementList.Element.push(n);
+            }
+
+            for (var i = 0; i < info.lanes.horizontal.length; i++) {
+                var lane = info.lanes.horizontal[i];
+                var n = $.extend({}, lane);
+                delete n.isRender;
+                postData.WorkFlow.Corridor.CorridorList.Corridor.push(lane.attributes);
+                n.nodeType = "lane";
+                postData.WorkFlow.ElementList.Element.push(n);
+            }
+            for (var i = 0; i < info.lanes.vertical.length; i++) {
+                var lane = info.lanes.vertical[i];
+                var n = $.extend({}, lane);
+                delete n.isRender;
+                postData.WorkFlow.Corridor.StageList.Stage.push(lane.attributes);
+                n.nodeType = "lane";
+                postData.WorkFlow.ElementList.Element.push(n);
+            }
+            var url=dsf.url.getWebPath("wfm/saveWFDefinition");
+            let d={"sData":JSON.stringify(postData)}
+            dsf.http.request(url,d,"POST")
+            .done(function(result){
+                if(result.success){
+                    alert("保存成功")
+                }
+            })
+            .error(function(){
+                alert("保存失败")
+            }).exec();
+
+            // DSFA.$dataService.setting(postData, "admin_client/workflow/interface/saveWorkFlow.xml")
+            //     .done(function(result) {
+            //         alert("保存成功")
+            //     })
+            //     .error(function() {
+            //         alert("保存失败")
+            //     })
+            //     .request();
+        }
+
+        function getFlowAllObjectMap(info) {
+            var dm = {};
+            for (var i = 0; i < info.nodes.length; i++) {
+                var node = info.nodes[i];
+                dm[node.id] = node;
+            }
+            for (var i = 0; i < info.lines.length; i++) {
+                var line = info.lines[i];
+                dm[line.id] = line;
+            }
+            for (var i = 0; i < info.lanes.horizontal.length; i++) {
+                var lane = info.lanes.horizontal[i];
+                dm[lane.id] = lane;
+            }
+            for (var i = 0; i < info.lanes.vertical.length; i++) {
+                var lane = info.lanes.vertical[i];
+                dm[lane.id] = lane;
+            }
+            return dm;
+        }
+
+        function monitorFlow(tpid) {
+            var url = __GlobalInfo.webroot + "/admin_client/workflow/views/showProcess.htm?s=1&" +
+                "wid=" + xmlId + "&" +
+                "tpid=" + (tpid || "");
+            OpenDialog({
+                "maximized": true,
+                "title": "流程模拟发送测试",
+                "cancelButton": true,
+                "isFrame": true,
+                "dialogArgs": {},
+                "url": url,
+                "buttons": []
+            });
+        }
+
+        function startTestFlow() {
+            var currentWFID = xmlId;
+            var url = __GlobalInfo.webroot + "/admin_client/workflow/views/selectSendUser.htm?wfid=" + currentWFID;
+
+            var selectUserDialog = OpenDialog({
+                "resizable": false,
+                "width": 300,
+                "height": 450,
+                "title": "选择拟稿人",
+                "cancelButton": false,
+                "isFrame": true,
+                "dialogArgs": {},
+                "url": url,
+                "buttons": [{
+                    "text": "确定",
+                    "iconCls": "icon-ok",
+                    "handler": function() {
+                        var iframe = selectUserDialog.find("iframe");
+                        var win = iframe.get(0).contentWindow;
+                        var selectUser = win.getReturnValue();
+                        if (!selectUser) return;
+
+                        var wfid = currentWFID;
+                        var userId = selectUser.id;;
+                        var userName = selectUser.text;
+                        var deptId = selectUser.attributes.DeptID;
+                        var deptName = selectUser.attributes.DeptName;
+                        var sendRequest = [];
+                        var objectid = new Date().format("yyyymmddHHmmss");
+                        var objecttitle = new Date().format("yyyymmddHHmmss");
+
+                        var tpId = "";
+                        var linkId = "";
+                        sendRequest.push({
+                            "objectid": objectid,
+                            "objecttitle": objecttitle,
+                            "tpId": tpId,
+                            "linkId": linkId,
+                            "exInfo": {
+                                "test1": "1",
+                                "test2": "2",
+                                "NODE_COMMENT": {
+                                    "text": "同意意见测试2017年7月19日14:52:55",
+                                    "time": "",
+                                    "Sender": {
+                                        "UserName": ""
+                                    },
+                                    "fileList": [
+
+                                    ]
+                                }
+                            }
+                        });
+                        var sendParameter = {
+                            "wfid": wfid,
+                            "type": "SR_SEND",
+                            "userId": userId,
+                            "userName": userName,
+                            "deptId": deptId,
+                            "deptName": deptName,
+                            "links": sendRequest
+                        };
+
+                        var token = getServerData({
+                            "SendRequest": sendParameter
+                        }, "admin_client/workflow/interface/getSendToken.xml").Result.token;;
+
+                        var url = __GlobalInfo.webroot + "/admin_client/workflow/views/sendbytoken.htm?token=" + token;
+                        sendDialog = parent.OpenDialog({
+                            "maximized": true,
+                            "title": "",
+                            "cancelButton": true,
+                            "isFrame": true,
+                            "dialogArgs": {},
+                            "url": url,
+                            "buttons": []
+                        });
+                        selectUserDialog.dialog("close");
+                    }
+                }]
+            });
+        }
+
+        function showOrgInfo() {
+            alert("人员组织机构较大，耐心等待!");
+            var vendorId = params.sVendorID;
+            var appId = params.sAPPID;
+            var url = __GlobalInfo.webroot + "/admin_client/workflow/Vendor/" + vendorId + "/" + appId + "/appinfo/OrgTree.xml";
+            window.open(url);
+        }
+
+        function exportFlow() {
+            var vendorId = params.sVendorID;
+            var appId = params.sAPPID;
+            downLoadFile("admin_client/workflow/Vendor/" + vendorId + "/" + appId + "/config/" + xmlId + ".xml", "流程定义.xml");
+        }
+
+        function openFlow() {
+            var vendorId = params.sVendorID;
+            var appId = params.sAPPID;
+            var url = __GlobalInfo.webroot + "/admin_client/workflow/Vendor/" + vendorId + "/" + appId + "/config/" + xmlId + ".xml";
+            window.open(url);
+        }
+
+        function importFlow() {
+            //var fileUploadPath=
+            document.getElementById("batchUploadFileForm").action = __GlobalInfo.webroot + "/FileUploadServlet?callback=fileUploadComplete&isMore=true&fileUploadPath=admin_client/etl/upload/";
+            document.getElementById("batchUploadFileForm").submit();
+        }
+
+        function onLayoutResize(w, h) {
+            if (flow) {
+                window.setTimeout(function() {
+                    flow.resize({
+                        width: w,
+                        height: h
+                    });
+                }, 500)
+
+            }
+
+        }
+
+        function convertExpress(obj, key) {
+            var checkList = ["sql", "code"];
+            if (typeof(obj[key]) == "object") {
+                for (var k in obj[key]) {
+                    convertExpress(obj[key], k);
+                }
+            } else if (typeof(obj[key]) == "string" && $.inArray(key, checkList) >= 0) {
+                obj[key] = $.trim(obj[key]);
+                var serverVar = false;
+                //替换服务器相关占位符
+                var reg = /\{%/g;
+                if (reg.test(obj[key])) {
+                    obj[key] = obj[key].replace(/\{%/g, "\\{\\%");
+                }
+                var reg = /\{@/g;
+                if (reg.test(obj[key])) {
+                    obj[key] = obj[key].replace(/\{@/g, "\\{\\@");
+                }
+                var reg = /\{#/g;
+                if (reg.test(obj[key])) {
+                    obj[key] = obj[key].replace(/\{#/g, "\\{\\#");
+                }
+            }
+        }
+    </script>
+    <style>
+        .l-btn.selected {
+            background-color: #CCEEFF !important;
+        }
+    </style>
+</head>
+
+<body class="easyui-layout" fit="true" style="overflow:hidden;margin:0px;padding:0px;">
+    <div data-options="region:'north',title:'',split:false" style="overflow: hidden">
+        <div class="tool-bar" style="padding: 2px 5px 2px 5px;overflow: hidden">
+            <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="doSave()">保存</a>
+            <!-- <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="getFlowInfo()">获取所有对象</a> -->
+            <img src="../res/imgs/separator.png" align="absmiddle" />
+            <!-- <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-nstart'" id="btn_drawNode" onclick="setState('drawNode',event)">环节</a> -->
+            <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-nstart'" id="btn_Path" onclick="setState('drawLine',event)">连线</a>
+            <img src="../res/imgs/separator.png" align="absmiddle" />
+            <a href="#" class="easyui-menubutton" data-options="menu:'#mm1',plain:true,iconCls:'icon-setting'" id="btn_lane">泳道</a>
+            <img src="../res/imgs/separator.png" align="absmiddle" />
+            <a href="#" class="easyui-menubutton" data-options="menu:'#mm2',plain:true,iconCls:'icon-version_download'">查看结构</a>
+            <img src="../res/imgs/separator.png" align="absmiddle" />
+            <a href="#" class="easyui-menubutton" data-options="menu:'#mm3',plain:true,iconCls:'icon-setting'" id="btn_stack">模拟运行</a>
+        </div>
+    </div>
+    <div data-options="region:'west',title:'',split:false,onResize:onLayoutResize" style="width:200px;">
+        <div id="aa" class="easyui-accordion" data-options="multiple:true" fit="true">
+            <div title="环节类型" data-options="iconCls:'icon-chooseclass',selected:true" style="overflow:auto;padding:10px;">
+                <div style="text-align:center">
+                    <a class="nodeIcon dragabled" title="开始节点" flowNodeType="0">
+                        <img src="../res/imgs/1.png" />
+                    </a>
+                    <div>开始节点</div>
+                    <a class="nodeIcon dragabled" title="一般节点" flowNodeType="1">
+                        <img src="../res/imgs/3.png" />
+                    </a>
+                    <div>一般节点</div>
+                    <a class="nodeIcon dragabled" title="判断节点" flowNodeType="6">
+                        <img src="../res/imgs/9.png" />
+                    </a>
+                    <div>判断节点</div>
+                    <a class="nodeIcon dragabled" title="结束节点" flowNodeType="2">
+                        <img src="../res/imgs/2.png" />
+                    </a>
+                    <div>结束节点</div>
+                    <a class="nodeIcon dragabled" title="跳转节点" flowNodeType="3">
+                        <img src="../res/imgs/4.png" />
+                    </a>
+                    <div>跳转节点</div>
+                    <a class="nodeIcon dragabled" title="子流程" flowNodeType="4">
+                        <img src="../res/imgs/7.png" />
+                    </a>
+                    <div>子流程</div>
+                    <a class="nodeIcon dragabled" title="自动流" flowNodeType="5">
+                        <img src="../res/imgs/8.png" />
+                    </a>
+                    <div>自动流</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="flowContent" data-options="region:'center',title:''">
+        <div id="flow_box"></div>
+    </div>
+    <div id="property" data-options="region:'east',title:'属性',split:true" style="width:350px;overflow:hidden">
+        <div class="easyui-layout" fit="true" border="false">
+            <div data-options="region:'center',title:'',border:false" id="center" border="false" fit="true">
+                <table id="pg" border="false" style="font-size:12px"></table>
+            </div>
+            <div class="propertyDiscription" border="true" split="false" region="south" style="overflow: hidden; height: 80px; padding: 10px;background:#fafafa;">
+                <b>说明:</b> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="desc"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="mm1" style="width:150px;">
+        <!--<div data-options="iconCls:'icon-fit'">
+            <span>模式</span>
+            <div>
+                <div data-options="iconCls:'icon-alignleft'" onclick="setStackModule('horizontal')">横向</div>
+                <div data-options="iconCls:'icon-aligntop'" onclick="setStackModule('vertical')">纵向</div>
+            </div>
+        </div>-->
+        <div data-options="iconCls:'icon-horizontalsplit'" onclick="addLane('vertical')">泳道(垂直)</div>
+        <div data-options="iconCls:'icon-verticalsplit'" onclick="addLane('horizontal')">泳道(水平)</div>
+    </div>
+    <div id="mm2" style="width:150px;">
+        <div data-options="iconCls:'icon-version_download'" onclick="exportFlow()">导出XML</div>
+        <div data-options="iconCls:'icon-version_download'" onclick="openFlow()">在线浏览XML</div>
+    </div>
+    <span title=""></span>
+    <div id="mm3" style="width:150px;">
+        <div data-options="iconCls:'icon-add'" onclick="startTestFlow()">模拟测试</div>
+        <div data-options="iconCls:'icon-nstart'" onclick="monitorFlow()">监控</div>
+        <div data-options="iconCls:'icon-nstart'" onclick="showOrgInfo()">查看人员组织机构</div>
+    </div>
+</body>
+
+</html>

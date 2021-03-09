@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Title</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/libs/layui/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/dsf_style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/font/iconfont.css"
+    />
+
+    <style>
+      .error {
+        border: 1px solid red;
+      }
+
+      .form-control {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 30px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+
+      .tips {
+        color: #777;
+        font-size: 12px;
+        line-height: 2;
+      }
+
+      table > tbody td {
+        padding: 5px !important;
+      }
+    </style>
+  </head>
+
+  <body ng-controller="dataGridColumnEdit">
+    <div style="padding:10px;">
+      <div class="tips">
+        “标识ID”用于请求数据时传递给后端的对应选项卡的标识参数
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <table id="table" class="layui-table">
+            <thead>
+              <tr>
+                <th style="text-align: center;width:150px;">标识ID</th>
+                <th style="text-align: center;width:150px;">跳转链接</th>
+                <th style="text-align: center;">专题元数据</th>
+                <th style="text-align: center;">次数元数据</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="tabData in args.value track by $index">
+                <td>
+                  <input
+                    class="layui-input"
+                    type="text"
+                    ng-model="tabData.id"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="layui-input"
+                    type="text"
+                    ng-model="tabData.link"
+                  />
+                </td>
+
+                <td>
+                  <input
+                    class="layui-input"
+                    type="text"
+                    ng-model="tabData.param1"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="layui-input"
+                    type="text"
+                    ng-model="tabData.param2"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var app = angular.module("myApp", []);
+      var dialogArgs = {};
+      var isDataGrid = dsf.url.queryString("dg");
+      app.controller("dataGridColumnEdit", function($scope) {
+        $scope.args = null;
+        $scope.last = null;
+
+        // $scope.deleteItem = function(item) {
+        //   var index = $scope.args.value.indexOf(item);
+        //   if (index >= 0) {
+        //     $scope.args.value.splice(index, 1);
+        //   }
+        // };
+
+        // $scope.addItem = function() {
+        //   console.log(111);
+        //   var obj = {
+        //     name: "",
+        //     link: "",
+        //     id: "",
+        //   };
+        //   $scope.args.value.push(obj);
+        // };
+
+        window.setData = function(data) {
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            if (!$scope.args.value) {
+              $scope.args.value = [];
+            }
+            let result = $scope.args.value.filter(function(v, i) {
+              return v["roldid"] == d["_id"];
+            });
+            if (result.length > 0) {
+              result.priid = d["_id"];
+              result.name = d["_name"];
+            } else {
+              addItem();
+            }
+            $scope.$apply();
+          }
+        };
+
+        window.dialogInit = function(args) {
+          $scope.args = $.extend(true, {}, args);
+          if (dsf.isUnDef($scope.args.value)) {
+            $scope.args.value = [];
+          }
+          $scope.$apply();
+        };
+
+        window.getDialogResult = function() {
+          console.dir(JSON.stringify($scope.args.value));
+          return $scope.args.value;
+        };
+      });
+    </script>
+  </body>
+</html>

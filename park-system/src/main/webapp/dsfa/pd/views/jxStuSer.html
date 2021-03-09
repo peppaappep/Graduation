@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>按钮编辑</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/libs/layui/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/dsf_style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/font/iconfont.css"
+    />
+
+    <style>
+      .error {
+        border: 1px solid red;
+      }
+
+      .form-control {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 30px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+
+      table > tbody td {
+        padding: 5px !important;
+      }
+    </style>
+  </head>
+
+  <body ng-controller="jxranking">
+    <div style="padding:10px;">
+      <div class="row">
+        <div class="col-xs-12">
+          <table id="table" class="layui-table">
+            <thead>
+              <tr>
+                <th style="text-align: center;width:50%">标题</th>
+                <th style="text-align: center;width:50%">跳转地址</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in list track by $index">
+                <td style="text-align:center">{{item.text}}</td>
+                <td>
+                  <input
+                    name=""
+                    class="form-control"
+                    type="text"
+                    ng-model="item.value"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var app = angular.module("myApp", []);
+      var dialogArgs = {};
+      // var isDataGrid = dsf.url.queryString("dg");
+      app.controller("jxranking", function($scope) {
+        $scope.args = null;
+        $scope.list = [];
+        window.dialogInit = function(args) {
+          $scope.args = $.extend(true, {}, args);
+          var config = $scope.args.attr.config;
+          $scope.list = config.value;
+          for (var i = 0; i < $scope.list.length; i++) {
+            let item = $scope.list[i];
+            if ($scope.args.value && $scope.args.value[item.code]) {
+              item.value = $scope.args.value[item.code];
+            }
+          }
+          $scope.$apply();
+        };
+
+        window.getDialogResult = function() {
+          let result = {};
+          for (var i = 0; i < $scope.list.length; i++) {
+            var v = $scope.list[i];
+            if (v.value) {
+              result[v.code] = v.value;
+            }
+          }
+          if (!$.isEmptyObject(result)) {
+            return result;
+          } else {
+            return null;
+          }
+        };
+      });
+    </script>
+  </body>
+</html>

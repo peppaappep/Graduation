@@ -1,0 +1,89 @@
+ref:
+  eureka:
+    hostname: 10.128.2.103:7100
+    port: 7100
+  redis:
+    hostname: localhost
+    port: 6379
+
+
+server:
+  servlet:
+    context-path: /dsfa
+  port: 8081
+spring:
+  application: dream-dsfa-school-situation
+  #使用CGLIB来实现AOP
+  aop:
+    proxy-target-class: true
+  #开启druid监控
+  datasource:
+    druid:
+      monitor: true
+      loginUsername: _admin
+      loginPassword: dreamsoft
+  #调试模式 可实现热加载sql文件
+    devMode: true
+  #数据库连接
+  druids[0]:
+    host: 223.4.64.150
+    port: 33068
+    url: jdbc:mysql://${spring.druids[0].host}:${spring.druids[0].port}/dsfa0611?useUnicode=true&characterEncoding=utf-8&useOldAliasMetadataBehavior=true&useSSL=false
+    username: wenjin
+    password: DreamSoft@1234
+    initialSize: 3
+    minIdle: 1
+    maxActive: 1
+  #配置redis
+  redis:
+    database: 2
+    host: ${ref.redis.hostname}
+    port: ${ref.redis.port}
+    jedis:
+      pool:
+        max-idle: 200
+        max-wait: 10
+        min-idle: 10
+#定时任务通过数据库配置
+  quartz:
+    job-store-type: jdbc  #定时任务通过数据库配置
+    properties:
+     org:
+       quartz:
+        scheduler:
+          instanceName: clusteredScheduler  #默认或是自己改名字都行
+          instanceId: AUTO  #如果使用集群，instanceId必须唯一，设置成AUTO
+         #线程池
+        threadPool:
+          class: org.quartz.simpl.SimpleThreadPool
+          threadCount: 10
+          threadPriority: 5
+          threadsInheritContextClassLoaderOfInitializingThread: true
+
+          #配置数据源
+          #数据库中quartz表的表名前缀
+        dataSource:
+          quartzDs:
+              driver: com.mysql.jdbc.Driver
+              URL: mysql://223.4.64.150:33068/dsfa?useUnicode=true&characterEncoding=utf-8&useOldAliasMetadataBehavior=true&useSSL=true
+              user: wenjin
+              password: DreamSoft@1234
+              maxConnections: 5
+         #存储方式使用JobStoreTX，也就是数据库
+        jobStore:
+          class: org.quartz.impl.jdbcjobstore.JobStoreTX
+          driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 10
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    hostname: ${ref.eureka.hostname}
+    metadata-map:
+      cluster: default
+  client:
+    serviceUrl:
+      defaultZone: http://${ref.eureka.hostname}:${ref.eureka.port}/eureka/
+    register-with-eureka: false
+    fetch-registry: false

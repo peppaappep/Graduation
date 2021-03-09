@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+ 
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<link type="text/css" rel="stylesheet" href="lib/codemirror.css" />
+	<link type="text/css" rel="stylesheet" href="addon/hint/show-hint.css" />
+	<link rel='stylesheet' href='theme/darcula.css'>
+	<script type="text/javascript" src="lib/codemirror.js"></script>
+	<script type="text/javascript" src="mode/javascript/javascript.js"></script>
+	<script type="text/javascript" src="addon/hint/show-hint.js"></script>
+	<script type="text/javascript" src="addon/hint/javascript-hint.js"></script>
+ 	<script>
+ 		(function(mod) {
+			if (typeof exports == "object" && typeof module == "object") // CommonJS
+				mod(require("../../lib/codemirror"));
+			else if (typeof define == "function" && define.amd) // AMD
+				define(["../../lib/codemirror"], mod);
+		  	else // Plain browser env
+				mod(CodeMirror);
+		})(function(CodeMirror) {
+			"use strict";
+			var Pos = CodeMirror.Pos;
+		    /**
+		     * 从sql.js里获取keyword数组
+		     * @param {Object} editor
+		     */
+			function getKeywords(editor) {
+				var mode = editor.doc.modeOption;
+				if (mode === "javascript") mode = "javascript";
+				return 'break case catch class const continue debugger default delete do else export extends false finally for function length concat join splice push pop shift unshift slice reverse sort indexOf if in import instanceof new null return super switch this throw true try typeof var void while with yield '//CodeMirror.resolveMode(mode).keywords;
+			};
+		    /**
+		     * 判断元素item是否存在数组arr中  
+		     * @param {Object} arr
+		     * @param {Object} item
+		     */
+			function arrayContains(arr, item) { // 判断元素item是否存在数组arr中  
+				if (!Array.prototype.indexOf) {
+					var i = arr.length;
+					while (i--) {
+						if (arr[i] === item) {
+							return true;
+						}
+					}
+					return false;
+				}
+				return arr.indexOf(item) != -1;
+			};
+		    
+			function hintSql(editor, keywords, tableKeywords, getToken, options) { // 处理hint的核心函数，改名为velocityHint(也可以不做修改)  
+				// Find the token at the cursor，获取当前光标指定的字符串  
+				var cur = editor.getCursor(),
+					token = getToken(editor, cur),
+					tprop = token;
+				return {
+					list: getCompletions(token, keywords, tableKeywords, options),
+					from: Pos(cur.line, fetchStartPoint(token)), // 字符串拼接的初始位置，这个很重要  
+					to: Pos(cur.line, token.end)
+				};
+			};
+		    /**
+		     * 字符拼接位置
+		     * @param {Object} token
+		     */
+			function fetchStartPoint(token) {
+				var index = token.string.lastIndexOf("\.");
+				if (index < 0) {
+					return token.start;
+				} else {
+					return token.start + index + 1;
+				}
+				//		return token.start;
+			};
+		 
+			function sqlHint(editor, options) {
+				var keywords = wordToString(getKeywords(editor)) + CodeMirror.keywords;
+				return hintSql(editor, keywords, CodeMirror.tableKeywords, function(e, cur) {
+					return e.getTokenAt(cur);
+				}, options);
+			};
+			CodeMirror.registerHelper("hint", "javascript", sqlHint);
+		    /**
+		     * 得到匹配的关键字数组
+		     * @param {Object} token
+		     * @param {Object} keywords
+		     * @param {Object} tableKeywords
+		     * @param {Object} options
+		     */
+			function getCompletions(token, keywords, tableKeywords, options) {
+				var found = [],
+					start, pointCount, content = getWord(token.string, token.end); // found为匹配的数组  
+				if (content && content.length) {
+					start = token.string.charAt(0); //字符串首字母
+					content = content.trim().substring(0, content.lenght); //除首字母外的截取
+					pointCount = (start == '\.') ? true : false; //判断最后一个字符是否是.
+				}
+				var result = null;
+				if (start && start.trim() != '') { // 必须以$开头，这里暂时不解析${}
+					let ws = /\W*(\w*)[\.,\w]*$/ig.exec(editor.getDoc().children[0].lines[editor.getCursor().line].text.substr(0, editor.getCursor().ch))
+					if (ws) {
+						let wa = tableKeywords[ws[ws.length - 1]];						
+						if (wa)
+							keywords = wa.join(' ');
+					}
+					if (pointCount && tableKeywords) {
+						if (ws)
+							result = tableKeywords[content = ws[ws.length - 1]];
+					} else {
+						result = keywords.match(new RegExp("\\b" + content + "\\w+\\.?\\b", "gi"));
+					}
+					console.log('result = ' + result);
+				}
+				if (result && result.length) {
+					for (var i = 0; i < result.length; i++) {
+						if (!arrayContains(found, result[i]) && content.length <= result[i].length && pointCount) {
+							if (result[i].charAt(result[i].length-1) == '.') { //如果最后一位是'.'
+								found.push(result[i].substring(content.lastIndexOf("\.") + 1, result[i].length - 1));
+							} else {
+								found.push(result[i].substring(content.lastIndexOf("\.") + 1, result[i].length));
+							}
+						} else {
+							found.push(result[i]);
+						}
+					}
+				}
+				return found;
+			};
+			/**
+			 * 获取当前字符串
+			 * @param {Object} str 当前行字符串
+			 * @param {Object} end 结束位置
+			 */
+			function getWord(str, end) {
+				return str.substring(str.lastIndexOf(' '), end);
+			};
+		    /**
+		     * 将wordlist拼成字符串
+		     * @param {Object} wordlist
+		     */
+			function wordToString(wordlist) {
+				var str = '';
+				for (var word in wordlist) {
+					str += word + ' ';
+				}
+				return wordlist;
+			};
+		});
+
+ 	</script>
+	<style>
+		.CodeMirror {
+			border: 1px solid black;
+			height: 800px;
+		}
+	</style>
+ 
+	<body>
+		<form>
+			<textarea id="code" name="code"></textarea>
+		</form>
+		<script>
+			var object = {
+			    "dsfa_mm.id": "qwe",
+			    "dsfa_mm.name": "we",
+			    "dsfa_mm.code": "we",
+			    "dsfa_mm.type": {
+			        "text": "系统对象",
+			        "value": "2"
+			    },
+			    "dsfa_mm.at": "wewewe",
+			    "dsfa_mm.controls": [{
+			            "text": "文本框",
+			            "value": "dsf.textbox"
+			        },
+			        {
+			            "text": "下拉框",
+			            "value": "dsf.select"
+			        }
+			    ],
+			    "dsfa_mm_vatt": [{
+			            "dsfa_mm_vatt.name": "测试1",
+			            "dsfa_mm_vatt.code": "测试1",
+			            "dsfa_mm_vatt.type": {
+			                "text": "数字",
+			                "value": "number"
+			            },
+			            "dsfa_mm_vatt.length": "1",
+			            "dsfa_mm_vatt.min": "1",
+			            "dsfa_mm_vatt.max": "1",
+			            "dsfa_mm_vatt.dv": "12"
+			        },
+			        {
+			            "dsfa_mm_vatt.name": "测试2",
+			            "dsfa_mm_vatt.code": "测试2",
+			            "dsfa_mm_vatt.type": {
+			                "text": "数字",
+			                "value": "number"
+			            },
+			            "dsfa_mm_vatt.length": "测试2",
+			            "dsfa_mm_vatt.min": "1",
+			            "dsfa_mm_vatt.max": "12",
+			            "dsfa_mm_vatt.dv": "12"
+			        }
+			    ]
+			},
+			variable = {};
+	        
+	        var kvm = (k, p) => {
+	        	if (typeof(k) == 'string' && k.includes('.')) {
+	        		var km = k.split('.');
+	    			variable[km[0]] = (variable[km[0]] || []).concat(km[1]);
+	        	} else {
+	        		let t = (typeof(k) == 'string' ? object[k] : k);
+	        		(Array.isArray(t) ? t : Object.keys(t)).forEach(e => kvm(e, k));
+	        	}
+	        }
+			Object.keys(object).forEach(kvm);
+		
+			CodeMirror.keywords = Object.keys(variable).join(' ');
+			CodeMirror.tableKeywords = variable;
+			var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+				lineNumbers: true,
+				extraKeys: {
+					"Ctrl": "autocomplete"
+				}, //输入s然后ctrl就可以弹出选择项  
+				mode: {
+					name: "javascript"
+				},
+				theme: "darcula" //主题  
+			});
+			editor.on('keyup', function(e, f) {
+				if (f.code.startsWith('Key') || ['Period'].includes(f.code))
+					editor.showHint();
+			});
+		</script>
+	</body>
+ 
+</html>

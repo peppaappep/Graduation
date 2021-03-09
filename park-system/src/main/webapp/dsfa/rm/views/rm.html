@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>资源管理</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/rm.css" />
+    <style>
+        #desginer {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+    </style>
+</head>
+
+<body ng-controller="resourceManageController">
+    <div class="ds_contianer ds_panel no_padding">
+        <div class="content>
+            <div class="header">
+                <div class="layui-tab layui-tab-brief" lay-filter="rm">
+                    <ul class="layui-tab-title">
+                        <li ng-repeat="item in tabs" ng-class="{'layui-this':item.checked==tabNum}" lay-id="{{item.id}}" data-content ="{{item.url}}"
+                            ng-bind="item.text"></li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <iframe ng-src="{{tabsContent}}" frameborder="0" class="rm_iframe" name="rm_iframe"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../../pd/res/libs/angular/angular.min.js"></script>
+    <script src="../hc/rm.js"></script>
+
+</html>

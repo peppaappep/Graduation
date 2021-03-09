@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "teas_ikt_iktgl.scfm": "themes/img/coverdefault1.png",
+      "teas_ikt_iktgl.skls": "杨雪萍111",
+      "teas_ikt_iktgl.sksj": "09-10 09:00",
+      "status": "1",
+      "dxzl": [
+        {
+          "teas_ikt_dxzl.bt": "课堂讨论题一: 学院的那个为中心组开展第二次集体学习",
+          "teas_ikt_dxzl.lll": "23",
+          "MSG": "13",
+          "teas_ikt_ytwt.fbsj": "09-11"
+        },
+        {
+          "teas_ikt_dxzl.bt": "课堂讨论题一: 学院的那个为中心组开展第二次集体学习",
+          "teas_ikt_dxzl.lll": "40",
+          "MSG": "93",
+          "teas_ikt_ytwt.fbsj": "09-12"
+        }
+      ],
+      "ytwt": [
+        {
+          "teas_ikt_ytwt.ytwtbjbt": "课堂讨论题一: 学院的那个为中心组开展第二次集体学习",
+          "teas_ikt_ytwt.lll": "23",
+          "teas_ikt_ytwt.ytwtplnum": "13",
+          "teas_ikt_ytwt.fbsj": "09-11"
+        },
+        {
+          "teas_ikt_ytwt.ytwtbjbt": "课堂讨论题一: 学院的那个为中心组开展第二次集体学习",
+          "teas_ikt_ytwt.lll": "40",
+          "teas_ikt_ytwt.ytwtplnum": "93",
+          "teas_ikt_ytwt.fbsj": "09-12"
+        },
+        {
+          "teas_ikt_ytwt.ytwtbjbt": "课堂讨论题一: 学院的那个为中心组开展第二次集体学习",
+          "teas_ikt_ytwt.lll": "40",
+          "teas_ikt_ytwt.ytwtplnum": "93",
+          "teas_ikt_ytwt.fbsj": "09-12"
+        }
+      ]
+    }
+  ]
+}

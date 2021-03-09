@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>元数据组选择</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+</head>
+
+<body>
+    <div style="padding:1px;height:100%">
+        <div class="layui-tab layui-tab-brief" lay-filter="mgtab">
+            <ul id="tab" class="layui-tab-title">
+            </ul>
+            <div id="tab_content" class="layui-tab-content">
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../../../dsfa/bhc/hc/bhc.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="../res/libs/bootstrap.js"></script>
+    <script>
+        // var tree = null;
+        var dialogArgs = null;
+        var tempMap = {},
+            checkedNodes = [];
+        useMetaGroupId = "";
+        window.dialogInit = function(args) {
+            dialogArgs = args;
+            var last = dialogArgs.value[dialogArgs.value.length - 1];
+            for (var i = 0; i < last.length; i++) {
+                var col = last[i];
+                var code = col.code;
+                tempMap[code] = col;
+                var temp = code.split(".");
+                useMetaGroupId = temp.slice(0, temp.length - 1).join(".")
+            }
+
+            var useMetaGroup = args.owner.root.$useMetaGroup;
+            for (var i = 0; i < useMetaGroup.length; i++) {
+                var mg = useMetaGroup[i];
+                var mgName = mg.replace(/\./g, "_")
+                var li = $("<li id='item_" + mgName + "'>" + mg.name + "</li>");
+                $("#tab").append(li);
+                var content = $("<div  class='layui-tab-item' id='" + mgName + "'>");
+                $("#tab_content").append(content);
+                if (i == 0) {
+                    li.addClass("layui-this");
+                    content.addClass("layui-show")
+                }
+                var treeEl = $("<ul id='tree_" + mgName + "' class='ztree'></ul>");
+                content.append(treeEl);
+                createTree(mg, "item_" + mgName, "tree_" + mgName);
+            }
+
+            layui.element.render("tab", "tools_tabs");
+        }
+
+        function createTree(nameSpace, itemId, treeId) {
+            dsf.http.request(dsf.UrlSetting.design_metadata, {
+                    namespace: nameSpace
+                }, "GET")
+                .done(function(response) {
+                    if (response.success) {
+                        var li = $("#" + itemId);
+                        var tree = $("#" + treeId);
+                        var treeobj = $.fn.zTree.init(tree, {
+                            view: {
+                                selectedMulti: false
+                            },
+                            "check": {
+                                "enable": true
+                            }
+                        });
+                        tree.data("ztree", treeobj);
+                        var nodes = response.data.slice(0, 1);
+                        var m = nodes[0]
+                        li.html(m.name)
+                        fn(nodes)
+                        treeobj.addNodes(null, nodes);
+                        treeobj.expandAll(true);
+                        if (m.ID == useMetaGroupId) {
+                            $("#tab").find("li").removeClass("layui-this");
+                            $(".layui-tab-item").removeClass("layui-show");
+                            li.addClass("layui-this");
+                            tree.parent().addClass("layui-show")
+                        }
+                    }
+                })
+                .error(function(response) {})
+                .exec();
+
+        }
+
+        function fn(nodes) {
+            for (let i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                if (node.type_value != undefined) {
+                    if (node.type_value != "3") {
+                        node.nocheck = true;
+                        node.isParent = true;
+                        node.open = true;
+                    }
+                }
+                if (node.metadata) {
+                    node.nt = "metadatagroup";
+                    node.icon = dsf.url.getWebPath("res/libs/zTree/css/zTreeStyle/img/diy/2.png")
+                    node.children = [];
+                    node.nocheck = false;
+                    for (let k in node.metadata) {
+                        var mnode = {
+                            "name": node.metadata[k].name,
+                            "attr": node.metadata[k]
+                        }
+                        if (tempMap[mnode.attr.id]) {
+                            mnode.checked = true;
+                        }
+                        node.children.push(mnode);
+                    }
+                } else if (node.attr && node.attr.valueAttributes) {
+                    node.nt = "metadata";
+                    node.icon = dsf.url.getWebPath("res/libs/zTree/css/zTreeStyle/img/diy/9.png")
+                    if (node.attr.valueAttributes.length > 1) {
+                        var valueAttributes = node.attr.valueAttributes;
+                        var vchilds = [];
+                        for (var n = 0; n < valueAttributes.length; n++) {
+                            var vnode = {
+                                "name": valueAttributes[n].name,
+                                "attr": valueAttributes[n]
+                            }
+                            var code = node.attr.id + (valueAttributes[n].code ? ("_" + valueAttributes[n].code) : "");
+                            if (tempMap[code]) {
+                                vnode.checked = true;
+                            }
+                            // checkedNodes.push(vnode);
+                            vchilds.push(vnode);
+                        }
+                        node.children = vchilds; // node.valueAttributes
+                    }
+                    node.nocheck = false;
+                }
+                if (node.children) {
+                    fn(node.children)
+                }
+            }
+        }
+        window.getDialogResult = function() {
+            var content = $(".layui-tab-item.layui-show");
+            var tree = content.children("ul");
+            tree = tree.data("ztree");
+            var nodes = tree.getCheckedNodes();
+            var result = {
+                "metadata": [],
+                "fields": []
+            };
+            for (var i = 0; i < nodes.length; i++) {
+                var n = nodes[i];
+                if (n.nt == "metadatagroup") {
+                    continue;
+                } else if (n.nt == "metadata") {
+                    result.metadata.push(n);
+                    if (n.attr.valueAttributes.length == 1) {
+                        result.fields.push({
+                            "metadata": n.attr,
+                            "value": {
+                                "name": n.attr.name,
+                                "code": ""
+                            }
+                        });
+                    }
+                } else {
+                    var m = n.getParentNode();
+                    result.fields.push({
+                        "metadata": m.attr,
+                        "value": {
+                            "name": m.attr.name + n.attr.name,
+                            "code": n.attr.code
+                        }
+                    });
+                }
+            }
+            return result;
+        }
+    </script>
+</body>
+
+</html>

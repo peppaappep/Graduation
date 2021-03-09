@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="navTreeEditController">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>树标识设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+        
+        th {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!--<div class="container-fluid dialog_container" style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+        <div class="row">
+            <div class="col-xs-12">
+                <a class="ds_button" style="float: right" ng-click="addNew()">新增</a>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="container-fluid dialog_container;" style="margin-top:68px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="50px">序号</th>
+                            <th>菜单名称</th>
+                            <th>点"更多"时菜单的链接</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="v in list track by $index">
+                            <td style="width:100px;text-align:center;padding:0;line-height:50px" ng-bind='$index+1'></td>
+                            <td>
+                                <input name="code_{{$index}}" class="form-control" type="text" ng-model="v.code">
+                            </td>
+                            <td style="width:30%;text-align: left;vertical-align: middle">
+                                <div ng-if="!v.isAttach">{{v.name}}</div>
+                                <input ng-if="v.isAttach" class="form-control" ng-model="v.name" />
+                            </td>
+                            <!--<td style="width:30%;text-align: left;vertical-align: middle">
+                                <input class="form-control" ng-model="v.dataField" />
+                            </td>-->
+                            <td style="width:100px;text-align:center;padding:0;line-height:50px">
+                                <a ng-if="v.isAttach" ng-click="deleteItem($index)">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {};
+        app.controller('navTreeEditController', function($scope) {
+            $scope.metadata = [];
+            // $scope.codeType = [{
+            //     text: "节点名称",
+            //     value: "0"
+            // }, {
+            //     text: "附加属性标识",
+            //     value: "6"
+            // }]
+            var codeTypeText = [];
+            for (var i in $scope.codeType) {
+                $scope.codeType[i].value = i;
+                codeTypeText.push($scope.codeType[i].text);
+            }
+
+            $scope.addNew = function() {
+                $scope.list.push({
+                    "code": "",
+                    "isAttach": true,
+                    "alias":"",
+                    "name": "",
+                    "type": {"text":"文本","value":"string"},
+                    "length": "100",
+//                  "dataField":"",
+                    "defaultValue": null,
+                    "unit": null
+                })
+            }
+
+            $scope.deleteItem = function(index) {
+                $scope.list.splice(index, 1);
+            }
+
+            window.dialogInit = function(args) {
+                $scope.list = $.extend(true, [], args.value);
+                $scope.$apply();
+            }
+
+            window.getDialogResult = function() {
+               return $scope.list;
+                // var codeTypeObj = {};
+                // for (var j = 0; j < $scope.codeType.length - 1; j++) {
+                //     codeTypeObj[j] = $scope.codeType[j].text;
+                // }
+                // for (var i = 0; i < $scope.list.length; i++) {
+                    // var r = $scope.list[i];
+
+                    // if(r.codeType<$scope.codeType.length-1){
+                    //     if(codeTypeObj[r.codeType]){
+                    //         delete codeTypeObj[r.codeType];
+                    //     }else{
+                    //         return vaildateError("type",i,"只能选择一次"+codeTypeText[r.codeType]);
+                    //     }
+                    // }
+                    // if (!vaildate(r, "code", i, "required", "请填写元数据代码")) {
+                    //     return false;
+                    // }
+                    // if (!vaildate(r, "code", i, "metadatename", "元数据代码格式不正确")) {
+                    //     return false;
+                    // }
+                // }
+                // for (var k in codeTypeObj) {
+                //     if (k != 1) {
+                //         dsf.layer.message("请配置" + codeTypeObj[k], false);
+                //         return false;
+                //     }
+                // }
+               //  return $scope.list;
+            }
+
+
+        });
+    </script>
+</body>
+
+</html>

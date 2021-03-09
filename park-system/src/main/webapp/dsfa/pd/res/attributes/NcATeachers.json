@@ -1,0 +1,180 @@
+[{
+      "name": "基础属性",
+      "attributes": [{
+            "text": "组件标识",
+            "bindControlAttr": "caption",
+            "showType": "text"
+         },
+         {
+            "text": "每页条数",
+            "bindControlAttr": "pageSize",
+            "showType": "text"
+         },
+         {
+            "text": "是否可见",
+            "showType": "boolean",
+            "bindControlAttr": "visible",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "是否失效",
+            "showType": "boolean",
+            "bindControlAttr": "disabled",
+            "changeExecFunction": "renderContext"
+         },
+         {
+           "text": "边框样式",
+           "bindControlAttr": "gtitleborder",
+           "showType": "text",
+           "config":{
+             "placeholder":"示例（1px solid red）"
+           }
+         },
+         {
+           "text": "头部整栏背景",
+           "bindControlAttr": "gtitlebg",
+           "showType": "text",
+           "config":{
+             "placeholder":"示例（#fff）"
+           }
+         },
+         
+         {
+           "text": "标题文字背景颜色",
+           "bindControlAttr": "gtitletxtbgcolor",
+           "showType": "text",
+           "config":{
+             "placeholder":"示例（#da0000）"
+           }
+         },
+         {
+           "text": "标题文字背景左(左右都配置才显示)",
+           "bindControlAttr": "gtitletxtbgl",
+           "showType": "text",
+           "config":{
+             "placeholder":"示例（/res/.../tit-left.png）"
+           }
+         },
+         {
+           "text": "标题文字背景右(左右都配置才显示)",
+           "bindControlAttr": "gtitletxtbgr",
+           "showType": "text",
+           "config":{
+             "placeholder":"示例（/res/.../tit-right.png）"
+           }
+         },
+         {
+            "text": "标题图片",
+            "bindControlAttr": "sdata.titleicon",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "标题文本",
+            "bindControlAttr": "sdata.titleText",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "标题文本颜色",
+            "bindControlAttr": "sdata.titleTextcolor",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "菜单选中色",
+            "bindControlAttr": "sdata.issBarcoloract",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "标签色",
+            "bindControlAttr": "labelcolor",
+            "showType": "text"
+         },
+         {
+            "text": "鼠标移入背景图~",
+            "bindControlAttr": "plancoursedata.hoverbg",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "右边按钮背景色",
+            "bindControlAttr": "btncolor",
+            "showType": "text"
+         },
+         {
+            "text": "是否显示操作按钮",
+            "bindControlAttr": "sdata.isshowChooseBtn",
+            "showType": "boolean",
+            "changeExecFunction": "isshowChooseBtnfun"
+         },
+         {
+            "text": "操作按钮文本",
+            "class": "webRoot_name",
+            "bindControlAttr": "sdata.Btntext",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "操作按钮url",
+            "class": "webRoot_name",
+            "bindControlAttr": "sdata.Btnurl",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "是否显示更多",
+            "bindControlAttr": "sdata.ismoreBtn",
+            "showType": "boolean",
+            "changeExecFunction": "isshowMoreBtnfun"
+         },
+         {
+            "text": "更多按钮的背景",
+            "bindControlAttr": "gmorebtnbg",
+            "showType": "text",
+            "config":{
+             "placeholder":"示例（#fff,/res/.../more01.png）"
+            }
+         },
+         {
+            "text": "最右侧按钮文本",
+            "bindControlAttr": "gmoretext",
+            "showType": "text",
+            "config":{
+             "placeholder":"示例（更多）"
+            }
+         },
+         {
+            "text": "更多按钮文本颜色",
+            "class": "webRoot_name2",
+            "bindControlAttr": "sdata.moreBtnColor",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+            "text": "更多按钮链接(有菜单时优先使用第一个菜单配置的链接)",
+            "class": "webRoot_name2",
+            "bindControlAttr": "sdata.moreBtnUrl",
+            "showType": "text",
+            "changeExecFunction": "renderContext"
+         },
+         {
+                "text": "背景设置",
+                "bindControlAttr": "background",
+                "showType": "backgroundEditor"
+         },
+         {
+	        "text": "点击某一项需跳转的页面路由",
+	        "bindControlAttr": "detailurlfun",
+	        "showType": "text"
+	       },
+         {
+	        "text": "有菜单的时候让第几个菜单选中（从1开始）",
+	        "bindControlAttr": "baract",
+	        "showType": "text"
+	       }
+
+      ]
+   }
+]

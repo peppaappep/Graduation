@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="ds_workflow_dialog property_dialog_sendCondition" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>发送条件</title>
+		<link rel="stylesheet" type="text/css" href="../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/font/iconfont.css" />
+	</head>
+	<body ng-controller='myCtrl'>
+		<div class="gjSelect-box">
+			<form class="layui-form" action="" lay-filter="example">
+				<div class="gjSelect-box">
+					<div class="left-box">
+						<div class="layui-input-block">
+							<textarea rows="7" placeholder="请输入" class="layui-textarea" ng-model='config.myTextarea'></textarea>
+						</div>
+					</div>
+					<div class="right-box">
+						<ul class="ztree" id="treeUl"></ul>
+					</div>
+				</div>
+				<table id='table' lay-size="sm" class="layui-table" lay-skin="row" lay-filter="table"></table>
+			</form>
+		</div>
+		<script src="../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../res/libs/layui/layui.all.js"></script>
+		<script src="../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+		<script src="../../app.js"></script>
+		<script src="../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../res/dsf_res/dsf_common.js"></script>
+		<script src="../../dsfa/pd/res/ds_prop.js"></script>
+		<script src="../../dsfa/pd/res/libs/angular/angular.min.js"></script>
+		<script src="../scripts/common.js"></script>
+		<script type="text/javascript">
+			var dialogArgs, row, element, workFlow, nodeObj, appInfo, flow,
+				_isNewFlow = parent.document.URL.indexOf("flow_index.html") > 0 ? true : false;
+			
+			var $treeDom = $("#treeUl"),
+				$treeObj = null,
+				$treeLoaded = false;
+
+			angular.module('myApp', []).controller('myCtrl', function($scope) {
+				$scope.config = {
+					myTextarea: "",
+					tableSelectedObj: {},
+					tableInputs:{}
+				}
+				window.dialogInit = function(data) {
+					dialogArgs = data;
+					row = dialogArgs.rowData;
+					element = dialogArgs.el;
+					workFlow = dialogArgs.workFlow;
+					nodeObj = dialogArgs.nodeObj;
+					appInfo = dialogArgs.appInfo;
+					flow = dialogArgs.flowPlugin;
+
+					initTree();
+					initData();
+					$scope.$apply();
+					setTimeout(function(){
+						layui.form.render('select')
+					})
+				}
+
+				function initData() {
+					var SendPreConditions = nodeObj.OutLine.SendConditions;
+					var rows = [];
+					if (!SendPreConditions || !SendPreConditions.Condition) {
+						var nextLines = null;
+						if (_isNewFlow) {
+							nextLines = getNextLines_v3(nodeObj.ID);
+						} else {
+							nextLines = getNextLines(nodeObj.ID);
+						}
+
+						var itemValues = [];
+						$.each(nextLines, function(index, obj) {
+							itemValues.push({
+								Value: "",
+								Type: "8",
+								"LineID": obj.ID,
+								"LineName": obj.Name
+							});
+						})
+						SendPreConditions = {
+							"Condition": {
+								Expression: "",
+								Switch: {
+									ItemValue: itemValues
+								}
+							}
+						}
+					} else if (SendPreConditions.Condition) {
+						if (_isNewFlow) {
+							var tempArr = [];
+							var lines = SendPreConditions.Condition.Switch.ItemValue;
+							var nextLines = null;
+							nextLines = getNextLines_v3(nodeObj.ID);
+							_.forEach(lines,function(obj){
+								$scope.config.tableSelectedObj[obj.LineID] = obj.Type;
+								$scope.config.tableInputs[obj.LineID] = obj.Value;
+							})
+							for (var i = 0; i < nextLines.length; i++) {
+								var _line = nextLines[i];
+								var obj = {
+									Value: $scope.config.tableInputs[_line.ID] || "",
+									Type: $scope.config.tableSelectedObj[_line.ID] || "8",
+									"LineID": _line.ID,
+									"LineName": _line.Name,
+									"LAY_CHECKED":$scope.config.tableSelectedObj[_line.ID]===undefined?false:true
+								};
+								tempArr.push(obj);
+							}
+							if (!SendPreConditions.Condition.Switch) {
+								SendPreConditions.Condition.Switch = {
+									ItemValue: []
+								};
+							}
+							SendPreConditions.Condition.Switch.ItemValue = tempArr;
+						}
+					}
+					$scope.config.myTextarea = SendPreConditions.Condition.Expression;
+
+					var itemValues = SendPreConditions.Condition.Switch.ItemValue || [];
+
+					for (var i = 0; i < itemValues.length; i++) {
+						var lineList = itemValues[i];
+						var row = {
+							Value: lineList.Value,
+							Type: lineList.Type,
+							LineID: lineList.LineID,
+							LineName: flow.getObjectById(lineList.LineID).attributes.Name,
+							LAY_CHECKED: lineList.LAY_CHECKED
+						};
+						
+						if (!_isNewFlow) {
+							row.LineName = lineList.LineName;
+						}
+						rows.push(row);
+					}
+
+					layui.table.render({
+						elem: '#table',
+						id: "table",
+						size: "sm",
+						cols: [
+							[
+								{
+									field: 'LineName',
+									title: '连线名称',
+									width: "250"
+								},
+								{
+									filed: 'Type',
+									title: '条件',
+									templet: '#tableType',
+									width: "110",
+								},
+								{
+									filed: 'Value',
+									title: '值',
+									templet: '#tableValue',
+									width: "198"
+								}
+							]
+						],
+						data: rows
+					});
+
+					updateCacheOrForm('table', 'table', "form");
+					
+				}
+
+				layui.form.on('select(Type)', function(data) {
+					$scope.config.tableSelectedObj[data.elem.name] = data.value + "";
+				});
+				$("body").on("keyup", ".table-input",function(evt){
+					$scope.config.tableInputs[evt.target.name] = evt.target.value;
+				})
+				// 渲染级别的值
+				function updateCacheOrForm(tableId, tableCacheId, op) {
+					op = op || "form";
+					var divForm = $("#" + tableId).next();
+					var tableCache = layui.table.cache[tableCacheId];
+					var trJqs = divForm.find(".layui-table-body tr");
+					trJqs.each(function() {
+						var trJq = $(this);
+						var dataIndex = trJq.attr("data-index");
+						trJq.find("td").each(function() {
+							var tdJq = $(this);
+							var fieldName = "Type" || tdJq.attr("data-field");
+							var selectJq = tdJq.find("select");
+							if (selectJq.length == 1) {
+								if (op == "cache") {
+									tableCache[dataIndex][fieldName] = selectJq.eq(0).val();
+								} else if (op == "form") {
+									selectJq.eq(0).val(tableCache[dataIndex][fieldName])
+								}
+							}
+						});
+					});
+					return tableCache;
+				}
+
+				function initTree() {
+					if (!$treeLoaded) {
+						var data = getTreeData();
+						var treeSet = {
+							view: {
+								selectedMulti: false
+							},
+							data: {
+								key: {
+									children: "children",
+									name: "_name",
+									url: ""
+								},
+								simpleData: {
+									enable: true,
+									idKey: "_id",
+									pIdKey: "treeinfo_pid",
+									rootPId: ""
+								}
+							},
+							callback: {
+								onDblClick: function(event, treeId, treeNode) {
+									$scope.config.myTextarea += ("【你选择了" + treeNode._name + "节点的表达式】");
+									$scope.$apply();
+								}
+							}
+						};
+						$treeObj = $.fn.zTree.init($treeDom, treeSet, data);
+						$treeObj.expandAll(true);
+						$treeLoaded = true;
+					}
+				}
+				window.getDialogResult = function(){
+					var obj = {
+					    IsEnabled: (nodeObj.OutLine.SendConditions && nodeObj.OutLine.SendConditions.IsEnabled) ? nodeObj.OutLine.SendConditions.IsEnabled : 0,
+					    Condition: {
+					        Expression: $scope.config.myTextarea,
+					        Switch: {
+					            ItemValue: []
+					        }
+					    }
+					};
+					// var data = layui.table.checkStatus('table').data;
+					var data = layui.table.cache['table'];
+					_.forEach(data,function(row,index){
+						if($scope.config.tableSelectedObj[row.LineID]!='8' && !$scope.config.tableInputs[row.LineID]){
+							obj = false;
+							layer_message("条件的值不能为空",false);
+							return false;
+						}
+						obj.Condition.Switch.ItemValue.push({
+							Value: $scope.config.tableInputs[row.LineID] || '',
+							Type: $scope.config.tableSelectedObj[row.LineID] || '8',
+							"LineID": row.LineID, 
+							"LineName": row.LineName
+						});
+					})
+					return obj;
+				}
+			})
+			function getNextLines(nodeId) {
+			    var resultList = [];
+			    var lineList = workFlow.LineList.Line || [];
+			    $.each(lineList, function (index, obj) {
+			        if (obj.StartNodeID == nodeId) {
+			            resultList.push(obj);
+			        }
+			    })
+			    return resultList;
+			}
+			
+			function getNextLines_v3(nodeId) {
+			    var resultList = [];
+			    var node = flow.getObjectById(nodeId);
+				$.each(node["out"], function (index, obj) {
+			        var line = flow.getObjectById(obj);
+			        resultList.push(line.attributes);
+			    })
+			    return resultList;
+			}
+			function getTreeData() {
+				return [{
+					_id: 1,
+					treeinfo_pid: 0,
+					open: "true",
+					_name: "公文",
+					children: [{
+							_id: 11,
+							treeinfo_pid: 1,
+							_name: "发文"
+						},
+						{
+							_id: 12,
+							treeinfo_pid: 1,
+							_name: "收文"
+						},
+						{
+							_id: 13,
+							treeinfo_pid: 1,
+							_name: "签报"
+						},
+					]
+				}, {
+					_id: 2,
+					treeinfo_pid: 0,
+					open: "true",
+					_name: "报销",
+					children: [{
+							_id: 21,
+							treeinfo_pid: 2,
+							_name: "日常报销"
+						},
+						{
+							_id: 22,
+							treeinfo_pid: 2,
+							open: "true",
+							_name: "项目报销",
+							children: [{
+									_id: 221,
+									treeinfo_pid: 22,
+									_name: "内部项目"
+								},
+								{
+									_id: 222,
+									treeinfo_pid: 22,
+									_name: "外部项目"
+								}
+							]
+						}
+					]
+				}];
+			}
+		</script>
+		<script type="text/html" id="tableType">
+			<select lay-filter="Type" name="{{d.LineID}}">
+				<option value="0">等于</option>
+				<option value="1">包含</option>
+				<option value="2">被包含</option>
+				<option value="3">大于</option>
+				<option value="4">大于等于</option>
+				<option value="5">小于</option>
+				<option value="6">小于等于</option>
+				<option value="7">范围</option>
+				<option value="8">有效</option>
+			</select>
+		</script>
+		<script type="text/html" id="tableValue">
+			<input class="layui-input table-input" placeholder="请输入" type="text" name="{{d.LineID}}" value="{{d.Value}}">
+		</script>
+	</body>
+</html>

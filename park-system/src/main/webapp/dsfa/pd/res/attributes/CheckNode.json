@@ -1,0 +1,104 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "数量上限(不填则为无上限)",
+                "bindControlAttr": "maxLength",
+                "showType": "number"
+            },
+            {
+                "text": "显示类型",
+                "bindControlAttr": "showType",
+                "showType": "select",
+                "dictionary": [
+                    {
+                        "text": "人员",
+                        "value": "user"
+                    },
+                    {
+                        "text": "部门",
+                        "value": "dept"
+                    }
+                ]
+            },
+            {
+                "text": "数据类型",
+                "showType": "checkbox",
+                "bindControlAttr": "tabs",
+                "changeExecFunction": "renderDom",
+                "dictionary": [
+                    {
+                        "text": "常用",
+                        "value": "common",
+                        "checked": true
+                    },
+                    {
+                        "text": "本部门",
+                        "value": "unit"
+                    },
+                    {
+                        "text": "小组",
+                        "value": "group"
+                    },
+                    {
+                        "text": "本单位",
+                        "value": "department"
+                    },
+                    {
+                        "text": "组织架构",
+                        "value": "framework"
+                    }
+                ]
+            },
+            {
+                "text": "是否可排序",
+                "bindControlAttr": "sort",
+                "changeExecFunction": "uploadChooseList",
+                "showType": "boolean"
+            },
+            {
+                "text": "是否显示复选框",
+                "bindControlAttr": "showCheckbox",
+                "changeExecFunction": "rerenderTree",
+                "showType": "boolean"
+            },            
+            {
+                "text": "可选择的类型值(用逗号分隔)",
+                "bindControlAttr": "types",
+                "showType": "text"
+            },
+            {
+                "text": "组织架构仅显示子机构",
+                "bindControlAttr": "showSubDept",
+                "changeExecFunction": "renderDom",
+                "showType": "boolean"
+            },
+            {
+                "text": "组织架构显示层级<br/>(0为子机构，不填则显示全部)",
+                "bindControlAttr": "_showLevel",
+                "showType": "text",
+                "type":"number",
+                "changeExecFunction": "renderDom",
+                "hidden": "true"
+            },
+            {
+                "text": "开启单条选择(否为携带子节点)",
+                "bindControlAttr": "chkboxType",
+                "changeExecFunction": "renderDom",
+                "showType": "boolean"
+            },
+            {
+                "text": "默认展开至第几级",
+                "bindControlAttr": "defaultOpenSeries",
+                "showType": "text",
+                "type":"number"
+            }             
+        ]
+    }
+]

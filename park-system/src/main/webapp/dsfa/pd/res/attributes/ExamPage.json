@@ -1,0 +1,28 @@
+[
+
+  {
+      "name": "基础属性",
+      "attributes": [
+          {
+              "text": "业务名称",
+              "bindControlAttr": "context.B",
+              "showType": "text"
+          },
+          {
+              "text": "模块名称",
+              "bindControlAttr": "context.M",
+              "showType": "text"
+          },
+          {
+              "text": "页面名称",
+              "bindControlAttr": "$name",
+              "showType": "text"
+          },
+          {
+              "text": "页面标题",
+              "bindControlAttr": "$title",
+              "showType": "text"
+          }
+      ]
+  }
+]

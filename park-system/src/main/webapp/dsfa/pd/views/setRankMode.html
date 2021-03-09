@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="myController">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>设置评分模式</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/libs/layui/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/dsf_style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../res/dsf_styles/font/iconfont.css"
+    />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style type="text/css">
+      form {
+        padding: 16px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form class="layui-form" lay-filter="myForm">
+      <div class="layui-form-item">
+        <label class="layui-form-label">评分模式</label>
+        <div class="layui-input-block">
+          <select name="styleType" lay-filter="styleType">
+            <option value="1">混合模式</option>
+            <option value="2">滑块模式</option>
+            <option value="3">文本模式</option>
+            <option value="4">选项模式</option>
+            <option value="5">下拉模式</option>
+            <option value="6">五角星模式</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item" ng-show="styleType==3">
+        <label class="layui-form-label">选项模式</label>
+        <div class="layui-input-block">
+          <select name="chooseTypeInput" lay-filter="chooseTypeInput">
+            <option value="5">5分制</option>
+            <option value="10">10分制</option>
+            <option value="30">30分制</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item" ng-show="styleType==4">
+        <label class="layui-form-label">选项模式</label>
+        <div class="layui-input-block">
+          <select name="chooseType" lay-filter="chooseType">
+            <option value="1">5分制</option>
+            <option value="2">10分制</option>
+            <option value="3">等级制1</option>
+            <option value="4">等级制2</option>
+            <option value="5">等级制3</option>
+            <option value="6">等级制4</option>
+            <option value="7">等级制5</option>
+            <option value="8">等级制6</option>
+            <option value="9">自定义</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item" ng-show="styleType==5">
+        <label class="layui-form-label">下拉分制</label>
+        <div class="layui-input-block">
+          <input
+            type="text"
+            name="selectMaxV"
+            ng-model="selectMaxV"
+            autocomplete="off"
+            placeholder="请输入最高分数"
+            class="layui-input"
+          />
+        </div>
+      </div>
+      <div class="layui-form-item" ng-show="chooseType==9">
+        <label class="layui-form-label">自定义分制</label>
+        <div class="layui-input-block">
+          <textarea
+            id="items"
+            name="desc"
+            rows="6"
+            class="layui-textarea"
+            ng-model="desc"
+            placeholder="支持格式：'文本|值','文本|值|图片名称'两种格式，多个选项用回车符换行"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var app = angular.module('myApp', [])
+      app.controller('myController', function($scope, $location) {
+        layui.form.on('select(styleType)', function(data) {
+          $scope.styleType = data.value
+          $scope.$apply()
+        })
+
+        layui.form.on('select(chooseType)', function(data) {
+          $scope.chooseType = data.value
+          $scope.$apply()
+        })
+
+        var textarea = $('#items')
+        window.dialogInit = function(args) {
+          console.log('文本框', args)
+
+          var ctrl = $.extend({}, args.ctrl)
+          var data = $.extend({}, args.data)
+          $scope.styleType = data.styleType ? data.styleType : ctrl.styleType
+          $scope.chooseType = data.styleType ? data.chooseType : ctrl.chooseType
+          $scope.selectMaxV = data.styleType ? data.selectMaxV : ctrl.selectMaxV
+          layui.form.val('myForm', {
+            styleType: $scope.styleType,
+            chooseType: $scope.chooseType,
+            selectMaxV: $scope.selectMaxV,
+          })
+
+          if (data.scoringOptions && data.scoringOptions.length > 0) {
+            var str = []
+            data.scoringOptions.forEach(function(o, i) {
+              var v =
+                o.text == o.value
+                  ? o.text
+                  : o.text + '|' + o.value + '|' + o.icon
+              str.push(v)
+            })
+            $scope.desc = str.join('\n')
+          }
+
+          $scope.$apply()
+        }
+
+        window.getDialogResult = function() {
+          if ($scope.styleType == 3) {
+            return {
+              styleType: 3,
+              chooseTypeInput: $scope.chooseTypeInput,
+            }
+          } else if ($scope.styleType == 4) {
+            var temp = textarea.val().split('\n')
+            var val = []
+            temp.forEach(function(o, i) {
+              if ($.trim(o)) {
+                var v = o.split('|')
+                val.push({
+                  text: v[0],
+                  value: v[1] || v[0],
+                  icon: v[2],
+                })
+              }
+            })
+            return {
+              styleType: 4,
+              chooseType: $scope.chooseType,
+              scoringOptions: val,
+            }
+          } else if ($scope.styleType == 5) {
+            return {
+              styleType: 5,
+              selectMaxV: $scope.selectMaxV,
+            }
+          } else {
+            return {
+              styleType: $scope.styleType,
+            }
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

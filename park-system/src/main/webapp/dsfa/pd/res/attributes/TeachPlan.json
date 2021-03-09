@@ -1,0 +1,23 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [{
+      "text": "组件标识",
+      "bindControlAttr": "caption",
+      "showType": "text"
+    },
+      {
+        "text": "是否可见",
+        "showType": "boolean",
+        "bindControlAttr": "visible",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "是否失效",
+        "showType": "boolean",
+        "bindControlAttr": "disabled",
+        "changeExecFunction": "renderContext"
+      }
+    ]
+  }
+]

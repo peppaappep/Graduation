@@ -1,0 +1,134 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "是否可排序",
+                "bindControlAttr": "sort",
+                "changeExecFunction": "uploadChooseList",
+                "showType": "boolean"
+            },  
+            {
+                "text": "是否支持复选框",
+                "bindControlAttr": "showCheckbox",
+                "changeExecFunction": "rerenderTree",
+                "showType": "boolean"
+            },                      
+            {
+                "text": "数量上限(不填则为无上限)",
+                "bindControlAttr": "maxLength",
+                "showType": "number"
+            },
+            {
+                "text": "选择条件",
+                "bindControlAttr": "types",
+                "showType": "text"
+            },           
+            {
+                "text": "选择值展现样式",
+                "bindControlAttr":"typeStyle",
+                "changeExecFunction": "changeTypeStyle",
+                "showType": "select",
+                "showKeyClass":"chooseOneNode,list",
+                "class": "isUseTab",
+                "dictionary": [
+                    {
+                        "text": "列表式",
+                        "value": "list"
+                    },
+                    {
+                        "text": "树结构",
+                        "value": "tree"
+                    }
+                ]
+            },
+			{
+			    "text": "开启单条选择(否为携带子节点)",
+			    "bindControlAttr": "chooseOneNode",
+			    "changeExecFunction": "changeTypeStyle",
+			    "showType": "boolean",
+				"class":"chooseOneNodem",
+                "hidden":"typeStyle==tree"
+			},
+            {
+                "text": "数据源类型",
+                "bindControlAttr":"metaDataType",
+                "showType": "select",
+                "hiddenKeyClass":"sqlUrl",
+                "showKeyClass":"metaDataDialog",
+                "dictionary": [
+                    {
+                        "text": "接口",
+                        "value": "0"
+                    },
+                    {
+                        "text": "元数据组",
+                        "value": "1"
+                    }
+                ]
+            },
+            {
+                "text": "接口URL",
+                "showType": "text",
+                "class":"sqlUrl",
+                "bindControlAttr":"sqlUrl",
+                "changeExecFunction": "loadData",
+                "hidden":"metaDataType==1"
+            },
+            {
+                "text": "元数据组选择",
+                "bindControlAttr": "chooseMetaData",
+                "showType": "dialog",
+                "changeExecFunction": "loadData",
+                "config": {
+                    "url": "/dsfa/pd/views/treeSelector_nav.html",
+                    "width": "1000px",
+                    "height": "550px",
+                    "buttonText": "选择",
+                    "title": "选择元数据组"
+                },
+                "class":"metaDataDialog",
+                "hidden":"metaDataType==0"
+            },
+            {
+                "text": "默认展开至第几级",
+                "bindControlAttr": "defaultOpenSeries",
+                "showType": "text",
+                "type":"number"
+            }            
+        ]
+    },
+	{
+		"name": "高级属性",
+		"attributes": [
+			{
+			    "text": "是否启用Tab",
+			    "bindControlAttr": "useTab",
+			    "changeExecFunction": "changeUseTab",
+			    "showType": "boolean",
+			    "hiddenKeyClass": "isUseTab,0",
+			    "showKeyClass": "tabSetting"
+			},  
+            {
+                "text": "Tab设置",
+                "bindControlAttr": "tabOpts",
+                "showType": "dialog",
+                "changeExecFunction": "initTab",
+                "config": {
+                    "url": "/dsfa/pd/views/treeSelectorTabEdit.html",
+                    "width": "1000px",
+                    "height": "550px",
+                    "buttonText": "设置",
+                    "title": "Tab设置"
+                },
+                "class":"tabSetting",
+                "hidden":"!useTab"
+            }
+		]
+	}
+]

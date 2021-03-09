@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../res/components.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+  <style>
+    tr>td:first-child {
+      text-align: center;
+    }
+    
+    ._special_ico_docu {
+      margin-right: 2px !important;
+      background-position: -110px -2px;
+    }
+    
+    .ztree li span.button.chk {
+      margin-left: 3px;
+    }
+    
+    .layui-tab,
+    .layui-tab-title {
+      margin: 0;
+    }
+    
+    .layui-tab-item-tree {
+      overflow: hidden;
+      height: 398px;
+    }
+    
+    .layui-tab-item-tree>div:first-child {
+      float: left;
+      width: 40%;
+    }
+    
+    .layui-tab-item-tree>div:last-child {
+      max-height: 398px;
+      float: right;
+      width: 60%;
+      padding-right: 10px;
+      overflow: auto;
+    }
+    
+    .ds_tree_box .ds_tree {
+      height: 348px;
+      border-right: 1px solid #f2f2f2;
+    }
+    
+    .layui-tab-content {
+      padding: 0px;
+    }
+    
+    .fr {
+      padding: 10px;
+    }
+    
+    .fr table {
+      margin-top: 0;
+    }
+    
+    .layui-tab-item:not(.layui-tab-item-tree) {
+      padding: 10px;
+      height: 398px;
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body ng-controller='myController'>
+  <div style="padding:10px;padding-bottom: 0;">
+    <div class="layui-tab layui-tab-card" lay-filter="docDemoTabBrief">
+      <ul class="layui-tab-title">
+        <li ng-click='type="dict"' ng-class='{"layui-this":type=="dict"}'>数据字典</li>
+        <li ng-click='type="db"' ng-class='{"layui-this":type=="db"}' ng-show='!onlyShowDict'>数据源</li>
+        <li ng-click='type="static"' ng-class='{"layui-this":type=="static"}' ng-show='!onlyShowDict'>静态数据</li>
+        <!-- <li ng-click='type="vcode"' ng-class='{"layui-this":type=="vcode"}'>高级</li> -->
+      </ul>
+      <div class="layui-tab-content">
+        <div class="layui-tab-item layui-tab-item-tree" ng-class='{"layui-show":type=="dict"}'>
+          <div class='fl ds_tree_box'>
+            <div class="ds_tree_search">
+              <input type="text" class="layui-input" placeholder="输入名称" ng-model='searchName' ng-keyup='myKeyup($event)'>
+              <i class="search iconfont layui-icon icon-Magnifier" ng-click='search()'></i>
+            </div>
+            <div class="ds_tree">
+              <ul id="tree" class="ztree"></ul>
+            </div>
+          </div>
+          <div class="fr">
+            <table class="layui-table">
+              <thead>
+                <tr>
+                  <th width="80">序号</th>
+                  <th>文本</th>
+                  <th>值</th>
+                </tr>
+              </thead>
+              <tbody ng-if='data_table && data_table.length>0'>
+                <tr ng-repeat='tr in data_table track by $index'>
+                  <td width="80" ng-bind='$index+1'></td>
+                  <td ng-bind='tr.text'></td>
+                  <td ng-bind='tr.value'></td>
+                </tr>
+              </tbody>
+              <tbody ng-if='!data_table || data_table.length==0'>
+                <tr>
+                  <td colspan="3">请选择数据字典</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="layui-tab-item layui-tab-item-tree" ng-class="{'layui-show':type=='db'}">
+          <div class='fl ds_tree_box'>
+            <div class="ds_tree_search">
+              <input type="text" class="layui-input" placeholder="输入名称" ng-model='searchName1' ng-keyup='myKeyup($event)'>
+              <i class="search iconfont layui-icon icon-Magnifier" ng-click='search()'></i>
+            </div>
+            <div class="ds_tree">
+              <ul id="tree1" class="ztree"></ul>
+            </div>
+          </div>
+          <div class="fr">
+            <table class="layui-table">
+              <thead>
+                <tr>
+                  <th width="80">序号</th>
+                  <th>文本</th>
+                  <th>值</th>
+                </tr>
+              </thead>
+              <tbody ng-if='data_table1 && data_table1.length>0'>
+                <tr ng-repeat='tr in data_table1 track by $index'>
+                  <td width="80" ng-bind='$index+1'></td>
+                  <td ng-bind='tr.text'></td>
+                  <td ng-bind='tr.value'></td>
+                </tr>
+              </tbody>
+              <tbody ng-if='!data_table1 || data_table1.length==0'>
+                <tr>
+                  <td colspan="3">请选择数据源</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="layui-tab-item" ng-class='{"layui-show":type=="static"}' ng-show='!onlyShowDict'>
+        <!-- <div class="layui-row">
+                        <div class="layui-col-md12" style="text-align:right;">
+                            <a class="layui-btn  layui-btn-sm toolsbutton" ng-click="addNew()">添加</a>
+                        </div>
+                    </div>
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>文本</th>
+                                <th>值</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='tr in dataTwo track by $index'>
+                                <td ng-bind='$index+1'></td>
+                                <td>
+                                    <input name="text_{{$index}}" class="form-control" type="text" ng-model="tr.text">
+                                </td>
+                                <td>
+                                    <input name="value_{{$index}}" class="form-control" type="text" ng-model="tr.value">
+                                </td>
+                                <td>
+                                    <a class="ds_button  ds_button_auxiliary ds_button_sm" ng-click='deleteFun($index)'>
+                                        <i class="layui-icon layui-icon-delete"></i>
+                                        删除
+                                    </a>
+                                    <a class="ds_button  ds_button_auxiliary ds_button_sm" ng-click='upFun(tr,$index)'>
+                                        <i class="layui-icon layui-icon-up"></i>
+                                        上移
+                                    </a>
+                                    <a class="ds_button  ds_button_auxiliary ds_button_sm" ng-click='downFun(tr,$index)'>
+                                        <i class="layui-icon layui-icon-down"></i>
+                                        下移
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+        <textarea style="width:100%;height:100%;padding:10px;" placeholder="支持格式：'文本'、'文本|值'两种格式，多个选项用回车符换行" ng-model="dataTwo"></textarea>
+      </div>
+      <!-- <div class="layui-tab-item" ng-class='{"layui-show":type=="vcode"}'>
+                    <textarea name="desc" placeholder="请输入内容" class="layui-textarea" ng-model='dataThree'></textarea>
+                </div> -->
+    </div>
+  </div>
+
+  </div>
+  <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+  <script src="../../../res/libs/layui/layui.all.js"></script>
+  <script src="../../../res/libs/lodash/lodash.min.js"></script>
+  <script src="../../../app.js"></script>
+  <script src="../../../res/dsf_res/dsf_config.js"></script>
+  <script src="../../../res/dsf_res/dsf_common.js"></script>
+  <script src="../res/ds_prop.js"></script>
+  <script src="../res/libs/angular/angular.min.js"></script>
+  <script src="../../../dsfa/bhc/hc/bhc.js"></script>
+  <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+  <script>
+    var tree = null;
+    var tree1 = null;
+    var control = null;
+    var nodeList = [
+      [],
+      []
+    ];
+    angular.module('myApp', []).controller('myController', function($scope) {
+      $scope.dataOne = "";
+      $scope.dataTwo = [];
+      $scope.dataThree = "";
+      $scope.dataFour = "";
+      $scope.onlyShowDict = !!dsf.url.queryString("onlyDict");
+      window.dialogInit = function(args) {
+        // dict:数据字典 ，static 静态数据，vcode伪代码
+        // args = {type:"",code:""}
+        $scope.type = args.value.type;
+        control = args.owner;
+        if ($scope.type == 'dict') {
+          $scope.dataOne = args.value.code || '';
+        } else if ($scope.type == 'db') {
+          $scope.dataFour = args.value.code || '';
+        } else if ($scope.type == 'static') {
+          var two = $.extend(true, [], args.value.code || []);
+          var str = [];
+          two.forEach(function(o, i) {
+            var v = o.text == o.value ? o.text : o.text + "|" + o.value;
+            str.push(v);
+          });
+          $scope.dataTwo = str.join("\n");
+        } else if ($scope.type == 'vcode') {
+          $scope.data = [];
+        }
+
+        // 数据字典
+        tree = $.fn.zTree.init($("#tree"), {
+          view: {
+            selectedMulti: false,
+            fontCss: getFontCss
+          },
+          check: {
+            enable: true,
+            chkStyle: "radio",
+            radioType: "all"
+          },
+          callback: {
+            onCheck: zTreeOnCheck,
+            onClick: zTreeOnClick
+          }
+        });
+
+        dsf.http.request(dsf.UrlSetting.get_dict, {}, "GET")
+          .done(function(response) {
+            function fn(data) {
+              let obj = {
+                "name": data.name,
+                "nocheck": data.type_value == "5" ? false : true,
+                "ID": data.dsfa_rm_id,
+                "iconSkin": (!data.children && data.type_value != '5') ? '_special' : ''
+
+              }
+              if (data.children) {
+                obj.children = [];
+                for (var i = 0; i < data.children.length; i++) {
+                  var n = data.children[i];
+                  let node = fn(n);
+                  obj.children.push(node);
+                }
+              }
+              if (obj.ID == $scope.dataOne) {
+                obj.checked = true;
+                zTreeOnCheck("", "", obj);
+                setTimeout(function() {
+                  var node = tree.getNodesByParam('ID', data.dsfa_rm_id);
+                  tree.selectNode(node[0], false, false);
+                }, 800);
+              }
+              return obj;
+            }
+            var nodes = [];
+            for (var i = 0; i < response.data.length; i++) {
+              let n = fn(response.data[i]);
+              nodes.push(n);
+            }
+            tree.addNodes(null, nodes);
+            tree.expandAll(true);
+          })
+          .error(function(response) {
+
+          })
+          .exec();
+
+        // 数据源
+        tree1 = $.fn.zTree.init($("#tree1"), {
+          view: {
+            selectedMulti: false,
+            fontCss: getFontCss
+          },
+          check: {
+            enable: true,
+            chkStyle: "radio",
+            radioType: "all"
+          },
+          callback: {
+            onCheck: zTreeOnCheck1,
+            onClick: zTreeOnClick1
+          }
+        });
+
+        dsf.http.request(dsf.UrlSetting.design_sqlds, {
+            namespace: ""
+          }, "GET")
+          .done(function(response) {
+            if (response.success) {
+              initData(response.data);
+              tree1.addNodes(null, response.data);
+              tree1.expandAll(true);
+            }
+          })
+          .error(function(response) {})
+          .exec();
+
+        $scope.$apply();
+      }
+
+      function initData(nodes) {
+        for (let i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          if (node.type_value != "3" && node.type_value != "8") {
+            node.nocheck = true;
+          }
+          if ((node.type_value != "3" && node.type_value != "8") && !node.children) {
+            node.iconSkin = '_special';
+          }
+          if (node.ID == $scope.dataFour) {
+            node.checked = true;
+            zTreeOnCheck1("", "", node);
+            setTimeout(function() {
+              var checked = tree1.getNodesByParam('dsfa_rm_id', node.dsfa_rm_id);
+              tree1.selectNode(checked[0], false, false);
+            }, 800)
+          }
+          if (node.children) {
+            initData(node.children);
+          }
+        }
+
+      }
+
+      $scope.addNew = function() {
+        $scope.dataTwo.push({
+          text: "",
+          value: ""
+        })
+      }
+
+      $scope.deleteFun = function(index) {
+        $scope.dataTwo.splice(index, 1);
+      }
+
+      $scope.upFun = function(obj, index) {
+        for (let i = index - 1; i >= 0; i--) {
+          let temp = $scope.dataTwo[i];
+          $scope.dataTwo[i] = obj;
+          $scope.dataTwo[index] = temp;
+          return;
+        }
+      }
+
+      $scope.downFun = function(obj, index) {
+        for (let i = index + 1; i < $scope.dataTwo.length; i++) {
+          let temp = $scope.dataTwo[i];
+          $scope.dataTwo[i] = obj;
+          $scope.dataTwo[index] = temp;
+          return;
+        }
+      }
+
+      window.getDialogResult = function() {
+        let data = {
+          type: $scope.type,
+          code: null
+        };
+        if ($scope.type == 'dict') {
+          let nodes = tree.getCheckedNodes();
+          if ($scope.onlyShowDict) {
+            return $scope.data_table || [];
+          }
+          if (nodes.length > 0) {
+            data.code = nodes[0].ID;
+            control.items = $scope.data_table || [];
+          }
+        } else if ($scope.type == 'db') {
+          let nodes = tree1.getCheckedNodes();
+          if ($scope.onlyShowDict) {
+            return $scope.data_table1 || [];
+          }
+          if (nodes.length > 0) {
+            data.code = nodes[0].ID;
+            control.items = $scope.data_table1 || [];
+          }
+        } else if ($scope.type == 'static') {
+          var temp = $scope.dataTwo.split("\n");
+          var val = []
+          temp.forEach(function(o, i) {
+            var v = o.split("|");
+            val.push({
+              "text": v[0],
+              "value": v[1] || v[0]
+            });
+          })
+          data.code = val;
+        } else {
+          data.code = $scope.dataThree;
+        }
+        return data;
+      };
+
+      function zTreeOnCheck(event, treeId, treeNode) {
+        if (treeNode.checked) {
+          dsf.http.request(dsf.UrlSetting.dict_list + "/" + treeNode.ID, null, "GET")
+            .done(function(response) {
+              console.log(response);
+              $scope.data_table = response.data;
+              $scope.$apply();
+            })
+            .error(function(response) {
+              $scope.data_table = [];
+              $scope.$apply();
+            })
+            .exec();
+
+        } else {
+          $scope.data_table = [];
+          $scope.$apply();
+        }
+        tree.selectNode(treeNode, false);
+      }
+
+      function zTreeOnClick(event, treeId, treeNode) {
+        tree.checkNode(treeNode, !treeNode.checked);
+        zTreeOnCheck(event, treeId, treeNode);
+      }
+
+      function zTreeOnClick1(event, treeId, treeNode) {
+        tree1.checkNode(treeNode, !treeNode.checked);
+        zTreeOnCheck1(event, treeId, treeNode);
+      }
+
+      function zTreeOnCheck1(event, treeId, treeNode) {
+        if (treeNode.checked) {
+          dsf.http.request(dsf.UrlSetting.dbSource, {
+              rmId: treeNode.ID
+            }, "GET")
+            .done(function(response) {
+              console.log(response);
+              $scope.data_table1 = response.data;
+              $scope.$apply();
+            })
+            .error(function(response) {
+              $scope.data_table1 = [];
+              $scope.$apply();
+            })
+            .exec();
+
+        } else {
+          $scope.data_table1 = [];
+          $scope.$apply();
+        }
+        tree1.selectNode(treeNode, false);
+      }
+      $scope.search = function() {
+        updateNodes(false);
+        var isDist = $scope.type == 'dict';
+        var index = isDist ? 0 : 1;
+        let treeObj = isDist ? tree : tree1;
+        let searchName = isDist ? $scope.searchName : $scope.searchName1;
+        if (searchName == '' || !searchName) return;
+        // if ($scope.searchName == '' || !$scope.searchName) return;
+        nodeList[index] = treeObj.getNodesByParamFuzzy('name', searchName);
+        if (nodeList[index].length > 0) treeObj.selectNode(nodeList[index][0], false, false);
+        updateNodes(true);
+      }
+
+      $scope.myKeyup = function(e) {
+        var keycode = window.event ? e.keyCode : e.which;
+        if (keycode == 13) {
+          $scope.search();
+        }
+      };
+
+      function getFontCss(treeId, treeNode) {
+        return (!!treeNode.highlight) ? {
+          color: "#A60000",
+          "font-weight": "bold"
+        } : {
+          color: "#333",
+          "font-weight": "normal"
+        };
+      }
+
+      function updateNodes(highlight) {
+        var index = $scope.type == 'dict' ? 0 : 1;
+        for (var i = 0, l = nodeList[index].length; i < l; i++) {
+          nodeList[index][i].highlight = highlight;
+          tree.updateNode(nodeList[index][i]);
+        }
+      }
+
+    })
+  </script>
+</body>
+
+</html>

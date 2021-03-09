@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>按钮编辑</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" /> -->
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+        
+        .form-control {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 30px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        
+        table>tbody td {
+            padding: 5px !important;
+        }
+    </style>
+</head>
+
+<body ng-controller="dataGridColumnEdit">
+    <div style="padding:10px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="layui-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;width:32px;">序号</th>
+                            <th style="text-align: center;width:80px">权限标识</th>
+                            <th style="text-align: center;width:80px">权限名称</th>
+                            <th style="text-align: center;">权限ID</th>
+                            <th style="text-align: center;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="pri in args.value track by $index">
+                            <td style="text-align:center">{{$index+1}}</td>
+                            <td>
+                                <input name="key_{{$index}}" class="form-control" type="text" ng-model="pri.key">
+                            </td>
+                            <td>
+                                <div>{{pri.name}}</div>
+                            </td>
+                            <td>
+                                <div>{{pri.priid}}</div>
+                            </td>
+                            <td style="text-align: center;">
+                                <a ng-click="deleteItem(pri)" style="cursor: pointer" title="删除"><i class="iconfont icon-shanchu"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {};
+        var isDataGrid = dsf.url.queryString("dg");
+        app.controller('dataGridColumnEdit', function($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.deleteItem = function(item) {
+                var index = $scope.args.value.indexOf(item);
+                if (index >= 0) {
+                    $scope.args.value.splice(index, 1);
+                }
+            }
+            window.setData = function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[i];
+                    let result = $scope.args.value.filter(function(v, i) {
+                        return v["priid"] == d["dsfa_oua_privilege_id"];
+                    });
+                    if (result.length > 0) {
+                        result.priid = d["dsfa_oua_privilege_id"];
+                        result.name = d["_name"];
+                    } else {
+                        var obj = {
+                            "key": "",
+                            "priid": d["dsfa_oua_privilege_id"],
+                            "name": d["_name"]
+                        }
+                        $scope.args.value.push(obj);
+                    }
+                    $scope.$apply();
+                }
+            }
+            window.dialogInit = function(args) {
+                $scope.args = $.extend(true, {}, args);
+                $scope.$apply();
+            }
+
+            window.getDialogResult = function() {
+                for(var i=0;i<$scope.args.value.length;i++){
+                    if(!$scope.args.value[i].key){
+                        dsf.layer.message("请填写权限标识",false);
+                        return false;
+                    }
+                }
+                return $scope.args.value;
+            }
+
+
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,257 @@
+﻿/*grid start*/
+.grid-panel
+{
+    position:relative;
+    overflow:hidden;
+    top:0px;
+    left:0px;
+    /*border-bottom:#99bbe8 1px solid;
+    border-left:#99bbe8 1px solid;
+    border-top:#99bbe8 1px solid;
+    border-right:#99bbe8 1px solid;*/
+    border-bottom:#c0c0c0 1px solid;
+    border-left:#c0c0c0 1px solid;
+    border-top:#c0c0c0 1px solid;
+    border-right:#c0c0c0 1px solid;
+}
+.grid-view
+{
+    position:relative;
+    overflow:hidden;
+}
+.grid-view1
+{
+    position:absolute;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    /*border:1px solid red;*/
+    z-index:2;
+    /*height:99999px;
+    background-Color:#f8f8f8;*/
+}
+.grid-view2
+{
+    position:absolute;
+    overflow:hidden;
+    top:0px;
+    z-index:1;
+
+}
+
+.grid-header
+{
+    border-bottom:#c0c0c0 1px solid;
+    overflow:hidden;
+    background-Color:#f8f8f8;
+    position:relative;
+}
+
+.grid-header-inner
+{
+    width:99999px;
+    display:block;
+    position:relative;
+}
+
+.grid-header TD{
+    /*border-top:#fff 1px solid;*/
+    border-right:#c0c0c0 1px solid;
+    /*border-left:#fff 1px solid;*/
+    border-bottom:#c0c0c0 1px solid;
+}
+.grid-view1 .grid-header TD
+{
+    background-Color:#f8f8f8;
+}
+.grid-view2 .grid-header TD
+{
+    background-Color:#f8f8f8;
+}
+
+.grid-cell
+{
+    font-size:12px;
+    /*padding:3px 4px 3px 4px;*/
+    /*border:10px solid #f8f8f8;*/
+    word-wrap:normal;
+    overflow:hidden;
+    margin:0px;
+    z-index:10;
+}
+
+.grid-cellNotation
+{
+    background:url(images/notation.gif) no-repeat;
+    background-position:top right;
+}
+.grid-warning {
+    /*background-color:red;*/
+    color:#ff0000;
+    font-weight:bold;
+}
+.grid-earlywarning {
+    /*background-color:yellow*/;
+    color:blue;
+    font-weight:bold;
+}
+
+.grid-cell .icon
+{
+    display:inline-block;
+    float:left;
+}
+
+.grid-cell .content
+{
+    padding:0px 4px 0px 4px;
+    width:auto;
+    display:inline-block;
+}
+.grid-cell .firstContent
+{
+    padding:0px 4px 0px 4px;
+}
+
+.asc
+{
+    background:#f8f8f8 url(images/up.gif) no-repeat 95% center;
+}
+.desc
+{
+    background:#f8f8f8 url(images/down.gif) no-repeat 95% center;
+}
+
+.grid-body
+{
+    padding:0px;
+    zoom:1;
+    overflow:auto;
+    position:relative;
+    
+}
+.grid-view1 .grid-body
+{
+    overflow:hidden;
+}
+.grid-view2 .rowStriped
+{
+    background-color:#f8f8f8;
+}
+.grid-body-inner
+{
+    padding:0px;
+    zoom:1;
+    /*position:relative;*/
+    padding-bottom: 20px;
+}
+.grid-view1 .grid-body .firstTd
+{
+    height:0px;
+    overflow:hidden;
+    font-size:0px;    
+    line-height:0px;
+	border-top-style:none !important;
+	border-bottom-style:none !important;
+	/*opacity:0;
+	filter:alpha(opacity=0);*/
+}
+
+.grid-view2 .grid-body .firstTd
+{
+    height:0px;
+    overflow:hidden;
+    font-size:0px;    
+    line-height:0px;
+	border-top-style:none !important;
+	border-bottom-style:none !important;
+}
+
+.grid-view2 .grid-body TABLE {
+    position:absolute;
+}
+.grid-view2 .grid-body TR {
+    /*position:relative;*/
+}
+
+.grid-view1 .grid-body TD{
+    border-bottom:#c0c0c0 1px solid;
+    border-right:#c0c0c0 1px solid;
+    overflow:hidden;
+    background-Color:#f8f8f8;
+}
+.grid-view2 .grid-body TD{
+    border-bottom:#c0c0c0 1px solid;
+    border-right:#c0c0c0 1px solid;
+    overflow:hidden;
+    /*position:absolute;*/
+}
+.grid-view .blank
+{
+    width:2px;
+    background-Color:#f8f8f8;
+    position:absolute;
+    z-index:9999;
+    /*border:1px solid red;*/
+}
+
+.selectCell
+{
+    background-Color:#e9ebf4 !important;
+}
+.selection
+{
+    background-Color:#e9ebf4 !important;
+}
+
+.grid-cell-border
+{
+    border-left: #ff0000 1px solid;
+    border-top: #ff0000 1px solid;
+    border-bottom: #ff0000 1px solid;
+    border-right: #ff0000 1px solid;
+    overflow:hidden;
+    font-size:0px;
+    background-color:#ff0000;
+}
+
+.grid-view2 .index
+{
+   background-color:#CCCC99;
+   display:inline-block;
+   float:left;
+   color:White;
+   padding-left:2px;
+   padding-right:2px;
+   padding-top:0px;
+   padding-bottom:0px;
+   font-size:10px;
+   font-family:微软雅黑;
+   /*position:absolute;
+   top:0px;
+   left:0px;*/
+   z-index:1;
+}
+.grid-view2 .indexTop
+{
+   background-color:#FF66FF;
+   display:inline-block;
+   float:left;
+   color:White;
+   padding-left:2px;
+   padding-right:2px;
+   padding-top:0px;
+   padding-bottom:0px;
+   font-size:10px;
+   font-family:微软雅黑;
+   /*position:absolute;
+   top:0px;
+   left:0px;*/
+   z-index:1;
+}
+
+.grid-edit-input
+{
+    border:1px solid #a4bed4;
+}
+/*grid end*/

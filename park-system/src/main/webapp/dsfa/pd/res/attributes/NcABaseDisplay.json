@@ -1,0 +1,154 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "接口地址",
+        "bindControlAttr": "setSourceUrl",
+        "showType": "text"
+      },
+      {
+        "text": "是否显示边距",
+        "bindControlAttr": "showPadding",
+        "showType": "boolean"
+      },
+
+      {
+        "text": "显示图片数量",
+        "bindControlAttr": "setCount",
+        "showType": "number"
+      },
+      {
+        "text": "是否自动播放",
+        "bindControlAttr": "setAutoPlay",
+        "showType": "boolean"
+      },
+      {
+        "text": "自动播放间隔时间",
+        "bindControlAttr": "setAutoPlayDelay",
+        "showType": "number"
+      },
+      {
+        "text": "背景图片",
+        "bindControlAttr": "bgImg",
+        "showType": "text",
+        "changeExecFunction": "setBgImg"
+      },
+      {
+        "text": "图片宽度",
+        "bindControlAttr": "width",
+        "showType": "text",
+        "changeExecFunction": "setWh"
+      },
+      {
+        "text": "图片高度",
+        "bindControlAttr": "height",
+        "showType": "text",
+        "changeExecFunction": "setWh"
+      },
+      {
+        "text": "是否可见",
+        "showType": "boolean",
+        "bindControlAttr": "visible",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "点击某一项需跳转的页面路由",
+        "bindControlAttr": "detailurlfun",
+        "showType": "text"
+      },
+      {
+        "text": "是否显示菜单(高级属性去配置)",
+        "bindControlAttr": "sdata.isshowBar",
+        "showType": "boolean",
+        "changeExecFunction": "isshowBarfun"
+      },
+      {
+        "text": "是否显示更多",
+        "bindControlAttr": "sdata.ismoreBtn",
+        "showType": "boolean",
+        "changeExecFunction": "isshowMoreBtnfun"
+      },
+         {
+        "text": "更多按钮链接(有菜单时优先使用第一个菜单配置的链接)",
+        "class": "webRoot_name2",
+        "bindControlAttr": "sdata.moreBtnUrl",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "最右侧按钮文本",
+        "bindControlAttr": "gmoretext",
+        "showType": "text",
+        "config": {
+          "placeholder": "示例（更多）"
+        }
+      },
+      {
+        "text": "是否显示操作按钮",
+        "bindControlAttr": "sdata.isshowChooseBtn",
+        "showType": "boolean",
+        "changeExecFunction": "isshowChooseBtnfun"
+      },
+      {
+        "text": "操作按钮文本",
+        "class": "webRoot_name",
+        "bindControlAttr": "sdata.Btntext",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题文字背景左(左右都配置才显示)",
+        "bindControlAttr": "gtitletxtbgl",
+        "showType": "text",
+        "config": {
+          "placeholder": "示例（/res/.../tit-left.png）"
+        }
+      },
+      {
+        "text": "标题文字背景右(左右都配置才显示)",
+        "bindControlAttr": "gtitletxtbgr",
+        "showType": "text",
+        "config": {
+          "placeholder": "示例（/res/.../tit-right.png）"
+        }
+      },
+      {
+        "text": "更多按钮的背景",
+        "bindControlAttr": "gmorebtnbg",
+        "showType": "text",
+        "config": {
+          "placeholder": "示例（#fff,/res/.../more01.png）"
+        }
+      },
+      {
+        "text": "标题图片",
+        "bindControlAttr": "sdata.titleicon",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题文本",
+        "bindControlAttr": "sdata.titleText",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题文本颜色",
+        "bindControlAttr": "sdata.titleTextcolor",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "背景设置",
+        "bindControlAttr": "background",
+        "showType": "backgroundEditor"
+      }
+    ]
+  }
+]

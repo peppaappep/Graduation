@@ -1,0 +1,83 @@
+[
+
+  {
+    "name": "基础属性",
+    "attributes": [{
+      "text": "组件标识",
+      "bindControlAttr": "caption",
+      "showType": "text"
+    },
+      {
+        "text": "标题",
+        "showType": "text",
+        "bindControlAttr": "label"
+      },
+      {
+        "text": "是否只读",
+        "showType": "boolean",
+        "bindControlAttr": "readOnly"
+      },
+      {
+        "text": "是否显示标题",
+        "showType": "boolean",
+        "bindControlAttr": "showLabel"
+      },
+      {
+        "text": "是否序号",
+        "showType": "boolean",
+        "bindControlAttr": "showIndex"
+      },
+      {
+        "text": "是否可见",
+        "showType": "boolean",
+        "bindControlAttr": "visible",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "列设置",
+        "showType": "dialog",
+        "bindControlAttr": "$columns",
+        "changeExecFunction": "render",
+        "config": {
+          "title": "数据列设置",
+          "url": "/dsfa/pd/views/subTableColumnEdit.html",
+          "width": "1000px",
+          "height": "600px",
+          "buttonText": "设置"
+        }
+      },
+      {
+        "text": "按钮设置",
+        "showType": "dialog",
+        "bindControlAttr": "$buttonBar",
+        "changeExecFunction": "renderContext",
+        "config": {
+          "title": "按钮设置",
+          "url": "/dsfa/pd/views/buttonsEdit.html",
+          "width": "1200px",
+          "height": "600px",
+          "buttonText": "设置"
+        }
+      },
+      {
+        "text": "行编辑启用",
+        "showType": "boolean",
+        "bindControlAttr": "$isEditabled",
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "显示Checkbox",
+        "showType": "boolean",
+        "bindControlAttr": "$isShowCheckboxColumn",
+        "changeExecFunction": "render"
+      },
+      {
+        "text": "显示操作列",
+        "showType": "boolean",
+        "bindControlAttr": "$isShowOperateColumn",
+        "changeExecFunction": "render"
+      }
+
+    ]
+  }
+]

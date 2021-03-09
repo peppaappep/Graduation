@@ -1,0 +1,35 @@
+[
+
+    {
+        "name": "基础属性",
+        "attributes": [{
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "上下视图高度",
+                "bindControlAttr": "$viewSplit",
+                "showType": "text",
+                "changeExecFunction": "resize"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "容器是否有边距",
+                "showType": "boolean",
+                "bindControlAttr": "hasPadding",
+                "changeExecFunction": "renderPadding"
+            },
+            {
+                "text": "是否有外边距",
+                "showType": "boolean",
+                "bindControlAttr": "showPadding"
+            }
+        ]
+    }
+]

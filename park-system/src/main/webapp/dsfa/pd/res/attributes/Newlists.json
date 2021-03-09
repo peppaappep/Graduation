@@ -1,0 +1,54 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "是否可见",
+        "showType": "boolean",
+        "bindControlAttr": "visible",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "是否失效",
+        "showType": "boolean",
+        "bindControlAttr": "disabled",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题图片",
+        "showType": "text",
+        "bindControlAttr": "titleImg",
+        "changeExecFunction": "changeTitleIcon"
+      },
+      {
+        "text": "搜索图片",
+        "showType": "text",
+        "bindControlAttr": "searchImg",
+        "changeExecFunction": "changeTitleIcon"
+      },
+      {
+        "text": "标题颜色",
+        "bindControlAttr": "fontCo",
+        "showType": "text",
+        "changeExecFunction": "changeColor"
+      },
+      {
+        "text": "标题图片背景颜色",
+        "bindControlAttr": "fontColor",
+        "showType": "text",
+        "changeExecFunction": "changeColor"
+      },
+      {
+        "text": "搜索按钮颜色",
+        "bindControlAttr": "searchColor",
+        "showType": "text",
+        "changeExecFunction": "changeColor"
+      }
+    ]
+  }
+]

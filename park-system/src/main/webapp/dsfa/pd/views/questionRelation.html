@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>关联题目</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/bhc.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <style>
+      body {
+        padding: 16px;
+        box-sizing: border-box;
+      }
+
+      .select-box .layui-form-item,
+      .select-box .layui-inline {
+        margin: 0
+      }
+
+      td,
+      th {
+        text-align: center !important;
+      }
+
+      .layui-form-select dl dd {
+        white-space: inherit;
+        text-align: left;
+      }
+
+      .msg {
+        line-height: 18px;
+        padding: 9px 0;
+        box-sizing: border-box;
+        word-break: break-all;
+      }
+
+      .hide {
+        opacity: 0;
+      }
+
+      .layui-form-radio,
+      .layui-form-checkbox {
+        width: 100%;
+      }
+
+      .layui-form-radio:last-child,
+      .layui-form-checkbox:last-child {
+        margin-bottom: 10px;
+      }
+
+      .ds_page {
+        font-weight: bolder;
+        color: #434343;
+      }
+
+      .ds_question_select {
+        font-weight: initial;
+      }
+    </style>
+  </head>
+
+  <body ng-controller='myController' class="layui-form">
+
+    <form class="layui-form hide" action="" lay-filter="example1">
+      <div class="layui-form-item">
+        <label class="layui-form-label">当前题目：</label>
+        <div class="layui-input-block msg">{{control.$questionIndex}}.{{control.$questionBody}}</div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">关联题目：</label>
+        <div ng-show='questions.length>0' class="layui-input-block">
+          <select name="select">
+            <option value=''>请选择要关联的题目</option>
+            <option ng-repeat='(i,tr) in questions track by i' value='{{tr.$questionIndex}}'>
+              {{tr.$questionIndex}}.{{tr.$questionBody}}</option>
+          </select>
+        </div>
+        <div class="layui-input-block" ng-if='questions.length==0'>
+          <div class="msg">暂无</div>
+        </div>
+      </div>
+      <div class="layui-form-item" ng-show='items.length>0'>
+        <div class="layui-input-block msg">
+          <div class="ds_page">
+            当“关联题目”选择下面的选择：
+            <div class="ds_question_select">
+              <div class="ds_item_box" style="min-height:28px">
+                <div id="content" class="q_content"></div>
+              </div>
+            </div>
+            时，“当前题目”才出现
+          </div>
+        </div>
+      </div>
+
+      <div class="layui-form-item" ng-show='logic.Q && items.length==0'>
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block msg">请先添加选项</div>
+      </div>
+
+    </form>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      angular.module('myApp', []).controller('myController', function ($scope) {
+        $scope.questions = [];//当前题之后题目集合
+        $scope.items = [];//当前题选项值集合
+        $scope.logic = {};//最后返回的数据
+        $scope.control = null;  //可关联的题目
+
+        var qsObj = {};
+
+        window.dialogInit = function (args) {
+          $scope.control = args.owner;
+          $scope.logic = args.logic_rela || $scope.control.logic_rela || {};
+          _.forEach($scope.control['_parent']['children'], function (v, k) {
+            if (v['$questionIndex'] && v['$caption'] != $scope.control['$caption'] && (v.ctrl_type == "QsCheckBox" || v.ctrl_type == "QsRadio")) {
+              $scope.questions.push(v);
+              qsObj[v['$questionIndex']] = v;
+            }
+            if (v['$caption'] == $scope.control['$caption']) {
+              return false;
+            }
+          })
+          $scope.$apply();
+
+          if ($scope.logic.Q != undefined) {
+            renderItems();
+            var obj = {
+              select: $scope.logic.Q || '',
+            }
+            if ($scope.logic.trig && $scope.logic.trig.length > 0) {
+              if (qsObj[$scope.logic.Q].ctrl_type == 'QsRadio') {
+                obj['xm'] = $scope.logic.trig[0];
+              } else {
+                _.forEach($scope.logic.trig, function (v, k) {
+                  obj["check['" + v + "']"] = v;
+                })
+              }
+            }
+            layui.form.val('example1', obj);
+          }
+          layui.form.render();
+          $('form.hide').removeClass('hide');
+        }
+
+        layui.form.on('select', function (data) {
+          let Q = data.value;
+          if (Q != $scope.logic.Q) {
+            $scope.logic = {
+              Q: Q,
+              trig: []
+            }
+          } else if (Q === '') {
+            $scope.logic = {};
+          } else {
+            return;
+          }
+          renderItems();
+        });
+
+        layui.form.on("radio", function (data) {
+          $scope.logic.trig = [data.value];
+        })
+        layui.form.on("checkbox", function (data) {
+          $scope.logic.trig = [];
+          let c = $(data.elem.closest('.ds_item_box')).find('.layui-form-checked').find('span');
+          _.forEach(c, function (v, k) {
+            $scope.logic.trig.push($(v).html());
+          })
+        })
+
+        function renderItems() {
+          let re_ctrl = qsObj[$scope.logic.Q];
+          $('#content').html("");
+          if (re_ctrl) {
+            $scope.items = re_ctrl._items;
+            if (re_ctrl.ctrl_type == 'QsCheckBox') {
+              _.forEach(re_ctrl._items, function (v, k) {
+				let checked = false; 
+				_.forEach($scope.logic.trig,(_v,_k)=>{
+					if(!checked){
+						checked = (_v==v.value);
+					}
+				})
+                $('#content').append($("<input type='checkbox' lay-skin='primary' title='" + v.text + "' value='" + v.value + "' name='check['" + v.value + "']' "+(checked ? "checked" : "")+" />"));
+              })
+            } else {
+              _.forEach(re_ctrl._items, function (v, k) {
+				let checked = ($scope.logic.trig[0]==v.value);
+                $('#content').append($("<input type='radio' name='xm' value='" + v.value + "' title='" + v.text + "' "+(checked ? "checked" : "")+" />"));
+              })
+            }
+            layui.form.render();
+          } else {
+            $scope.items = [];
+          }
+          $scope.$apply();
+        }
+        window.getDialogResult = function () {
+          return $scope.logic;
+        }
+
+      })
+    </script>
+  </body>
+
+</html>

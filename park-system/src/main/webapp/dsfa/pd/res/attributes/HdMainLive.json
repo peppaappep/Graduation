@@ -1,0 +1,86 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "是否可见",
+        "showType": "boolean",
+        "bindControlAttr": "visible",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "是否失效",
+        "showType": "boolean",
+        "bindControlAttr": "disabled",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题图片",
+        "bindControlAttr": "sdata.titleicon",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题文本",
+        "bindControlAttr": "sdata.titleText",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题文本颜色",
+        "bindControlAttr": "sdata.titleTextcolor",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "操作按钮文本",
+        "class": "webRoot_name",
+        "hidden": "!sdata.isshowChooseBtn",
+        "bindControlAttr": "sdata.Btntext",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "操作按钮url",
+        "class": "webRoot_name",
+        "hidden": "!sdata.isshowChooseBtn",
+        "bindControlAttr": "sdata.Btnurl",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "是否显示更多",
+        "hiddenKeyClass": "webRoot_name2",
+        "bindControlAttr": "sdata.ismoreBtn",
+        "showType": "boolean",
+        "changeExecFunction": "isshowMoreBtnfun"
+      },
+      {
+        "text": "更多按钮文本颜色",
+        "class": "webRoot_name2",
+        "hidden": "!sdata.ismoreBtn",
+        "bindControlAttr": "sdata.moreBtnColor",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "更多按钮链接(有菜单时优先使用第一个菜单配置的链接)",
+        "class": "webRoot_name2",
+        "hidden": "!sdata.ismoreBtn",
+        "bindControlAttr": "sdata.moreBtnUrl",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "背景设置",
+        "bindControlAttr": "background",
+        "showType": "backgroundEditor"
+      }
+    ]
+  }
+]

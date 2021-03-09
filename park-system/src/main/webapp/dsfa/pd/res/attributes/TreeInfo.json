@@ -1,0 +1,45 @@
+[{
+    "name": "基础属性",
+    "attributes": [{
+            "text": "组件标识",
+            "bindControlAttr": "caption",
+            "showType": "text"
+        },
+        {
+            "text": "获取父节点控件名称",
+            "bindControlAttr": "$pidExpress",
+            "showType": "text"
+        },
+        {
+            "text": "获取节点图片控件名称",
+            "bindControlAttr": "$iconExpress",
+            "showType": "text"
+        },
+        {
+            "text": "图标",
+            "showType": "dialog",
+            "bindControlAttr": "$iconMap",
+            "config": {
+                "title": "图标",
+                "url": "/dsfa/pd/views/treeImgSet.html",
+                "width": "600px",
+                "height": "600px",
+                "buttonText": "设置"
+            }
+        }
+    ]
+}, {
+    "name": "高级属性",
+    "attributes": [{
+            "text": "默认值",
+            "bindControlAttr": "metadata.defaultValue",
+            "showType": "defaultValue",
+            "config": {
+                "value":[
+                    { "text": "父节点ID", "code": "pid", "value": "" },
+                    { "text": "图标", "code": "icon", "value": "" }
+                ]
+            }
+        }
+    ]
+}]

@@ -1,0 +1,59 @@
+[
+    {
+      "name": "基础属性",
+      "attributes": [
+        {
+          "text": "组件标识",
+          "bindControlAttr": "caption",
+          "showType": "text"
+        },
+        {
+          "text": "是否可见",
+          "showType": "boolean",
+          "bindControlAttr": "visible",
+          "changeExecFunction": "renderContext"
+        },
+        {
+          "text": "是否失效",
+          "showType": "boolean",
+          "bindControlAttr": "disabled",
+          "changeExecFunction": "renderContext"
+        },
+        {
+          "text": "标题",
+          "bindControlAttr": "gtitle",
+          "showType": "text",
+          "config": {
+            "placeholder": "请输入标题"
+          }
+        },
+        {
+          "text": "是否显示更多按钮",
+          "bindControlAttr": "gismorebtn",
+          "showType": "boolean",
+          "changeExecFunction": "renderContext"
+        },
+        {
+          "text": "更多按钮的链接",
+          "bindControlAttr": "gmorebtnsrc",
+          "showType": "text",
+          "config": {
+            "placeholder": "请输入"
+          }
+        },
+        {
+          "text": "点击某一项需跳转的页面路由",
+          "bindControlAttr": "gdetailUrl",
+          "showType": "text",
+          "config": {
+            "placeholder": "请输入"
+          }
+        },
+        {
+          "text": "背景设置",
+          "bindControlAttr": "background",
+          "showType": "backgroundEditor"
+        }
+      ]
+    }
+  ]

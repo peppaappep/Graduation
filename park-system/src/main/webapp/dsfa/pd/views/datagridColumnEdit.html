@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据表格列设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body ng-controller="dataGridColumnEdit">
+    <div class="container-fluid dialog_container"
+        style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="float: right">
+                    <!-- <a class="layui-btn" ng-click="addMetaData()">选择元数据</a> -->
+                    <a class="ds_button" ng-click="addNew()">新增</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid dialog_container;" style="margin-top:68px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">列名</th>
+                            <th style="text-align: center;width:120px;">宽度</th>
+                            <!-- <th style="text-align: center;width:100px;">支持排序</th> -->
+                            <th style="text-align: center;width:120px;">表头格式</th>
+                            <th style="text-align: center;width:120px;">数据格式</th>
+                            <th style="text-align: center;width:100px;">是否隐藏</th>
+                            <!-- <th style="text-align: center;width:100px;">数据列</th> -->
+                            <th style="text-align: center;width:120px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input name="text_checkbox" class="form-control" type="text" ng-model="checkbox.text"
+                                    disabled="disabled">
+                            </td>
+                            <td>
+                                <input name="width_checkbox" class="form-control" type="text" ng-model="checkbox.width"
+                                    disabled="disabled">
+                            </td>
+                            <td>
+                                <select name="headAilgn_checkbox" class="form-control" ng-model="checkbox.headAilgn" disabled="disabled">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="bodyAilgn_checkbox" class="form-control" ng-model="checkbox.bodyAilgn"  disabled="disabled">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="hide_checkbox" class="form-control" ng-model="checkbox.hide">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input name="text_index" class="form-control" type="text" ng-model="index.text"  disabled="disabled">
+                            </td>
+                            <td>
+                                <input name="width_index" class="form-control" type="text" ng-model="index.width"  disabled="disabled">
+                            </td>
+                            <td>
+                                <select name="headAilgn_index" class="form-control" ng-model="index.headAilgn" disabled="disabled">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="bodyAilgn_index" class="form-control" ng-model="index.bodyAilgn" disabled="disabled">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="hide_index" class="form-control" ng-model="index.hide">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="col in args.value[args.value.length-1] track by $index">
+                            <td>
+                                <input name="text_{{$index}}" class="form-control" type="text" ng-model="col.text">
+                            </td>
+                            <td>
+                                <input name="width_{{$index}}" class="form-control" type="text" ng-model="col.width">
+                            </td>
+                            <td>
+                                <select name="headAilgn_{{$index}}" class="form-control" ng-model="col.headAilgn">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="bodyAilgn_{{$index}}" class="form-control" ng-model="col.bodyAilgn">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="hide_{{$index}}" class="form-control" ng-model="col.hide">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </td>
+                            <td style="vertical-align: middle;text-align: center">
+                                <a ng-click="sort(col,'up')">上移</a>
+                                <a ng-click="sort(col,'down')">下移</a>
+                                <a ng-click="deleteItem(col)">删除</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input name="text_operate" class="form-control" type="text" ng-model="operate.text"
+                                    disabled="disabled">
+                            </td>
+                            <td>
+                                <input name="width_operate" class="form-control" type="text" ng-model="operate.width">
+                            </td>
+                            <td>
+                                <select name="headAilgn_operate" class="form-control" ng-model="operate.headAilgn"
+                                    disabled="disabled">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="bodyAilgn_operate" class="form-control" ng-model="operate.bodyAilgn">
+                                    <option value="center">居中</option>
+                                    <option value="left">居左</option>
+                                    <option value="right">居右</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="hide_operate" class="form-control" ng-model="operate.hide">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {},
+            checkbox = null,
+            operate = null,
+            owner = null;
+
+        app.controller('dataGridColumnEdit', function ($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.checkbox = null;
+            $scope.operate = null;
+            $scope.index = null;
+
+            $scope.addNew = function () {
+                $scope.last.push(createColInfo())
+            }
+
+            $scope.addMetaData = function () {
+                window.parent.dsf.layer.openDialog({
+                    "title": "选择元数据组",
+                    "content": "metadataSelect2.html",
+                    "area": ["500px", "600px"],
+                    "args": $scope.args,
+                    "btn": [{
+                        "text": "确定",
+                        "handler": function (index, layer, win) {
+                            if (win.getDialogResult) {
+                                var info = $.extend(true, {}, win.getDialogResult());
+                                $scope.last.splice(0, $scope.last.length)
+                                for (var i = 0; i < info.fields.length; i++) {
+                                    var field = info.fields[i];
+                                    var code = field.metadata.id + (field.value.code ? ("_" + field.value.code) : "");
+                                    var col = createColInfo();
+                                    col.text = field.value.name;
+                                    col.code = code;
+                                    col.valueCode = field.value.code;
+                                    col.metadata = field.metadata;
+                                    $scope.last.push(col);
+                                    // tempMap[col.code] = col;
+                                }
+                                $scope.$apply();
+                            }
+                        }
+                    }, {
+                        "text": "取消",
+                        "handler": function (index, layero) {
+                            return;
+                        }
+                    }]
+                });
+            }
+            $scope.deleteItem = function (item) {
+                var index = $scope.last.indexOf(item);
+                if (index >= 0) {
+                    $scope.last.splice(index, 1);
+                }
+            }
+
+            $scope.sort = function (item, type) {
+                var index = $scope.last.indexOf(item);
+                if (index >= 0) {
+                    if (type == "up") {
+                        if (index > 0) {
+                            var prev = $scope.last[index - 1];
+                            $scope.last[index - 1] = item;
+                            $scope.last[index] = prev;
+                        }
+                    } else {
+                        if (index < $scope.last.length - 1) {
+                            var next = $scope.last[index + 1];
+                            $scope.last[index + 1] = item;
+                            $scope.last[index] = next;
+                        }
+                    }
+                }
+            }
+
+            window.dialogInit = function (args) {
+                $scope.args = $.extend(true, {}, args);
+                console.log(args)
+                owner = args.owner;
+                $scope.last = $scope.args.value[$scope.args.value.length - 1];
+                $scope.checkbox = args.owner.$checkboxColumn;
+                $scope.index = args.owner.$indexColumn;
+                $scope.operate = args.owner.$operateColumn;
+                $scope.$apply();
+            }
+
+            window.getDialogResult = function () {
+                if ($scope.operate) {
+                    let w = $scope.operate.width ? $scope.operate.width.toString() : "";
+                    if (!w) {
+                        dsf.layer.message("操作列宽度不可以为空", false);
+                        return false;
+                    }
+                    if (w.indexOf("%") > 0) {
+                        dsf.layer.message("操作列宽度不可以设置百分比", false);
+                        return false;
+                    }
+                }
+                for (var i = 0; i < $scope.last.length; i++) {
+                    var r = $scope.last[i];
+                    if (!vaildate(r, "text", i, "required", "请填写名称")) {
+                        return false;
+                    }
+                    // if (!vaildate(r, "width", i, "required", "请填写宽度")) {
+                    //     return false;
+                    // }
+                }
+                owner.$checkboxColumn = $scope.checkbox;
+                owner.$operateColumn = $scope.operate
+                return $scope.args.value;
+            }
+
+            function vaildate(r, key, index, vaildateType, message) {
+                var result = true;
+                if (vaildateType == "required") {
+                    if (!$.trim(r[key])) {
+                        result = false;
+                    }
+                } else if (vaildateType == "metadatename") {
+                    if (!dsf.metadata.vaildateMetaName(r[key])) {
+                        result = false;
+                    }
+                }
+                if (!result) {
+                    var control = $("[name='" + key + "_" + index + "']");
+                    control.addClass("error");
+                    control.one("click", function (evt) {
+                        control.removeClass("error");
+                        return false;
+                    });
+                    dsf.Dom.scrollToElement(control, -78);
+                    dsf.layer.message(message, false);
+                    return false;
+                }
+                return true;
+            }
+
+            function createColInfo() {
+                return {
+                    "id": dsf.uuid(),
+                    "text": "列" + ($scope.last.length + 1),
+                    "width": "200",
+                    "sort": "0",
+                    "headAilgn": "center",
+                    "bodyAilgn": "center",
+                    "code": "",
+                    "hide": "0",
+                    "metadata": null,
+                    "valueCode": "",
+                    "colType": "dataColumn"
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

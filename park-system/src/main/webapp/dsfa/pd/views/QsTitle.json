@@ -1,0 +1,19 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "内容",
+        "bindControlAttr": "questionBody",
+        "showType": "dialog",
+        "config": {
+          "url": "/dsfa/pd/views/qsHelloMsg.html",
+          "width": "800px",
+          "height": "600px",
+          "buttonText": "编辑标题",
+          "title": "编辑"
+        }
+      }
+    ]
+  }
+]

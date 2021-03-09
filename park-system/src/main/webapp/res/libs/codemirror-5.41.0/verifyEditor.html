@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+	  	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>计算公式</title>
+		<link type="text/css" rel="stylesheet" href="../layui/css/layui.css" />
+		<link type='text/css' rel='stylesheet' href='lib/codemirror.css' />
+		<!--themes-->
+		<link type='text/css' rel='stylesheet' href='addon/hint/show-hint.css' />
+		<link type='text/css' rel='stylesheet' href='addon/fold/foldgutter.css'>
+		<link type='text/css' rel='stylesheet' href='addon/display/fullscreen.css'>
+		<link type='text/css' rel="stylesheet" href="addon/search/matchesonscrollbar.css">
+		<link type='text/css' rel="stylesheet" href="addon/dialog/dialog.css">
+		<link type='text/css' rel='stylesheet' href='lib/github-markdown.css' />
+		<link type="text/css" rel="stylesheet" href="theme/self.css" />
+
+		<script src='../layui/layui.js'></script>
+		<script src='lib/codemirror.js'></script>
+		<script src='lib/showdown.min.js'></script>
+		<!--代码提示-->
+		<script src='addon/hint/show-hint.js'></script>
+		<script src='addon/hint/javascript-hint.js'></script>
+		<script src='addon/hint/sql-hint.js'></script>
+		<script src='addon/hint/html-hint.js'></script>
+		<script src='addon/hint/css-hint.js'></script>
+		<!--自动加载代码类型-->
+		<script src='addon/mode/simple.js'></script>
+		<script src='addon/mode/loadmode.js'></script>
+		<script src='mode/meta.js'></script>
+		<!--自定添加关闭标签-->
+		<script src='addon/edit/closetag.js'></script>
+
+		<!--收缩块-->
+		<script src='addon/fold/foldcode.js'></script>
+		<script src='addon/fold/foldgutter.js'></script>
+		<script src='addon/fold/indent-fold.js'></script>
+		<!--F11 全屏-->
+		<script src='addon/display/fullscreen.js'></script>
+
+		<script src='addon/scroll/annotatescrollbar.js'></script>
+		<script src='addon/dialog/dialog.js'></script>
+		<script src='addon/search/searchcursor.js'></script>
+		<script src='addon/search/search.js'></script>
+		<script src='addon/search/matchesonscrollbar.js'></script>
+		<script src='addon/search/jump-to-line.js'></script>
+		<script src='addon/search/match-highlighter.js'></script>
+		<script src='addon/edit/trailingspace.js'></script>
+		<script src='addon/edit/matchbrackets.js'></script>
+		<script src='editorInit.js'></script>
+		<style>
+			body {
+				display: table;
+			}
+			.main {
+				height: 100%;
+				display: table-row;
+			}
+			.main > div {
+				height: 100%;
+			}
+			.main .main_code {
+				width: 80%;
+				display: table-cell;
+			}
+			.main .main_objects {
+				width: 20%;
+				border: 1px solid green;
+				display: table-cell;
+			}
+			.main .main_object {
+				max-width: 300px;
+			}
+			.main .main_object .layui-tab-item > div {
+				padding: 4px 6px;
+				background: #FF5722;
+				border-radius: 2px;
+				margin: 4px;
+				display: inline-block;
+				color: white;
+				cursor: pointer;
+				font-size: 12px;
+			}
+			.main .main_object .layui-tab-item > div:hover {
+				display: inline-block;
+			    opacity: .8;
+			    filter: alpha(opacity=80);
+			    color: #fff;
+			}
+		</style>
+		<script type="text/javascript">
+		</script>
+	</head>
+		
+	<body>
+		<div class='main'>
+			<div class='main_code'></div>
+			<div class='main_objects'>
+				<div class="main_object layui-tab layui-tab-card" lay-filter="variable"  onselectstart="javascript:return false">
+					<ul class="layui-tab-title">
+					</ul>
+					<div class="layui-tab-content">
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		var value = ``;
+        
+        //注入对象
+        var variable = {
+        	'A卷': {
+        		name: 'A',
+        		values: ['A100','A101','A102','A103','A104','A105','A105_1','A105_2','A106','A107','A108','A109','A110','A112','A113','A114','A115','A116','A117','A118','A119','A200','A201','A203','A204','A205','A206','A207','A208','A209','A210','A107_1','A120','A211','A212','A213','A214','ZZBM','HHSTATUS']
+        	},
+        	'B卷': {
+        		name: 'B',
+        		values: []
+        	},
+        	'C卷': {
+        		name: 'C',
+        		values: []
+        	},
+        	'E卷': {
+        		name: 'E',
+        		values: []
+        	},
+        	'G卷': {
+        		name: 'G',
+        		values: []
+        	},
+        	'账页': {
+        		name: 'ZY',
+        		values: []
+        	}
+        }
+        var editor;
+		layui.use('element', function(){
+			let {$, element} = layui, variables = {};
+	        Object.keys(variable).forEach(function(n, i) {
+	        	variables[variable[n].name] = variable[n].values;
+				element.tabAdd('variable', {
+			        title: n,
+			        attr: variable[n].name,
+			        content: variable[n].values.map(d => {return `<div>${d}</div>`}).join(''),
+		      	})
+	        });
+			
+			editor = editorInit({
+				codeEle: document.querySelector('.main_code'),
+				language: 'python',
+				include: [],
+				width: .8,
+				value: localStorage.code || value,
+				api: 'verify.API.md',
+				variable: variables,
+				keywords: 'if while for switch break return true false',
+				saveFn: function(cm) {
+					localStorage.code = cm.getValue();
+					localStorage.cursor = JSON.stringify(cm.getCursor());
+					localStorage.scrollTop = editor.getDoc().scrollTop;
+					console.log('保存成功！');
+				},
+				otherWords: {
+					javascript: {
+						regexObj: 'regexObj : 提供可选校验正则集合',
+						abs: 'abs(string) : 返回数的绝对值，空字符串返回0.0 \n 返回值：float',
+						ceil: 'ceil(string) : 对数进行上舍入，空字符串返回0.0 \n 返回值 float',
+						float: 'float(string) : 字符串转浮点数，空字符串返回0.0 \n 返回值：float',
+						floor: 'floor(string) : 对数进行下舍入，空字符串返回0.0 \n 返回值：float',
+						has: 'has(string: 字符串, string: 匹配字符串) : 是否存在此字符 \n 返回值：boolean',
+						int: 'int(string) \n 返回值：int 字符串转整数，空字符串返回0',
+						isEmpty: 'isEmpty(string) : 判断字符串是否为空字符串 \n 返回值：boolean',
+						isNotEmpty: 'isNotEmpty(string) : 判断字符串不为空字符串 \n 返回值：boolean',
+						isNotNull: 'isNotNull(object) : 判断字符串不为空 \n 返回值：boolean',
+						isNull: 'isNull(object) : 判断字符串是否为空 \n 返回值：boolean',
+						length: 'length(string) \n 返回值：int 返回字符串长度',
+						lower: 'lower(string) : 字符串转小写 \n 返回值：string',
+						match: 'match(string: 字符串, string/regex: 匹配字符串) : 找到一个或多个正则表达式的匹配，无匹配则返回空数组 \n 返回值：boolean',
+						matchL: 'matchL(string: 字符串, string/regex: 匹配字符串) : 获取左边则表达式的匹配；即第一个，无则返回空字符串 \n 返回值：boolean',
+						matchR: 'matchR(string: 字符串, string/regex: 匹配字符串) : 获取右边则表达式的匹配；即第最后一个，无则返回空字符串 \n 返回值：boolean',
+						replace: 'replace(string: 原字符串, string: 替换字符串, string/regex: 字符串或正则式) : 字符串替换，支持正则表达式 \n 返回值：string',
+						round: 'round(string) : 把数四舍五入为最接近的整数，空字符串返回0.0 \n 返回值：float',
+						sub: 'sub(string/array, int[, int]) : 字符串或数组切片; int 可为负数，则从末尾开始 \n 返回值：string/array',
+						test: 'test(string: 字符串, regex: 正则式) : 正则式匹配字符串 \n 返回值：boolean',
+						test1: 'test1(string: 字符串, char: regexObj正则式标识) : 正则式匹配字符串 \n 返回值：boolean',
+						trim: 'trim(string) : 字符串去除前后空格 \n 返回值：string',
+						up: 'up(string) : 字符串转大写 \n 返回值：string',
+					},
+					python: {
+						test: 'test() : 测试',
+						sum: 'sum(array) : 加和函数',
+						get_zy: 'get_zy(self, 位置[, int:pcode人码]) : 获取当前位置的账页或人的账页 \n 返回值：结果集',
+						zy: 'zy(int: 账页编码, int: （1：数量；2：价格；3：数量1）) : 获取此类账页编码的和 \n 返回值：number',
+					}
+				},
+	//			theme: ['default', '3024-day', '3024-night', 'abcdef', 'ambiance',
+	//				'base16-dark', 'base16-light', 'bespin', 'blackboard', 'cobalt',
+	//				'colorforth', 'darcula', 'dracula', 'duotone-dark', 'duotone-light',
+	//				'eclipse', 'elegant', 'erlang-dark', 'gruvbox-dark', 'hopscotch',
+	//				'icecoder', 'idea', 'isotope', 'lesser-dark', 'liquibyte', 'lucario',
+	//				'material', 'mbo', 'mdn-like', 'midnight', 'monokai', 'neat', 'neo',
+	//				'night', 'oceanic-next', 'panda-syntax', 'paraiso-dark', 'paraiso-light',
+	//				'pastel-on-dark', 'railscasts', 'rubyblue', 'seti', 'shadowfox',
+	//				'solarized dark', 'solarized light', 'the-matrix', 'tomorrow-night-bright',
+	//				'tomorrow-night-eighties', 'ttcn', 'twilight', 'vibrant-ink', 'xq-dark', 'xq-light', 'yeti', 'zenburn'],
+			});
+			if (localStorage.cursor)
+				editor.setCursor(JSON.parse(localStorage.cursor));
+			if (localStorage.scrollTop)
+				editor.display.scroller.scrollTop = localStorage.scrollTop;
+	        $('.layui-tab-title li:first').click()
+			$('.layui-tab-item > div').dblclick(function(e) {
+		  		let text = this.innerText, name = $('.layui-tab-title > .layui-this').attr('lay-attr');
+		  		editor.insert(`${name}.${text}`);
+    			editor.setCursor(editor.getCursor());
+		  	});
+		  	$('.CodeMirror-code').mouseover(function() {
+//  			editor.setCursor(editor.getCursor());
+		  	});
+		});
+	</script>
+</html>

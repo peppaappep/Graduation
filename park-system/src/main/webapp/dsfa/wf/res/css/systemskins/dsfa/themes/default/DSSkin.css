@@ -1,0 +1,141 @@
+﻿body {
+    margin: 0px;
+    font-size: 12px;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+}
+
+.clear {
+    clear: both;
+    overflow: hidden;
+    font-size: 0px;
+    height: 0px;
+}
+
+.ds_textbox {
+    font-size: 12px;
+    border: 1px solid #A4BED4;
+    /*line-height:20px;*/
+    height: 20px;
+}
+
+.ds_textarea {
+    font-size: 12px;
+    border: 1px solid #A4BED4;
+}
+.ds_textarea:focus {
+   border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.ds_textbox:focus,
+input[type="text"]:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.tool-bar {
+    height: auto;
+    background: #F4F4F4;
+    border-bottom: 1px solid #dddddd;
+    padding: 2px 1px 2px 1px;
+    overflow: hidden;
+    display: block;
+    width: auto;
+}
+
+.tool-bar-separator {
+    height: 24px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #fff;
+    margin: 2px 1px;
+    float: left;
+    display: inherit;
+}
+
+.tool-bar-bottom {
+    height: auto;
+    background: #F4F4F4;
+    border-top: 1px solid #dddddd;
+    padding: 2px 1px 2px 1px;
+    overflow: hidden;
+    display: block;
+    width: auto;
+}
+
+
+
+
+/*
+基本信息的添加修改表单样式，可根据不同皮肤定义
+创建者：段凯歌
+*/
+.formTable {
+    background: #fff;
+    border-color: gray;
+}
+
+.formTable th, .formTable td {
+    border: solid 1px #ACC2D6;
+}
+
+.formTable th{
+    /*background: #EBF0FE;*/
+    /*color: #0C6699;*/
+}
+
+.formTable input, .formTable textarea {
+    border:solid 1px #EBF0FE;
+}
+
+.formTitle {
+    border-bottom: 2px solid #2E669E;
+}
+
+.formTitle span {
+    color: #223c75;
+}
+.formTable .title{
+    color:#d90000;
+    border: solid 1px #ACC2D6;
+    background: #EBF0FE;
+}
+
+/*当前部门等信息的样式*/
+.navigation-bar {
+    border-left:#abafb8 1px solid;
+    border-top:#abafb8 1px solid;
+    border-bottom:#abafb8 0px solid;
+    border-right:#abafb8 1px solid;
+    overflow:hidden;
+    background-Color:#e5eeff;
+}
+.navigation-bar div {
+    border-width:0px;
+    overflow:hidden;
+}
+
+/*菜单栏的样式*/
+.navi {
+    background: transparent url(../../../../admin_client/resource/image/navigation.png) repeat-x center top;
+}
+
+/*
+logo信息背景
+*/
+.logoInfo {
+    background-color: #d3def2;
+}

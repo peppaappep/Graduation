@@ -1,0 +1,53 @@
+[{
+	"name": "控件属性",
+	"attributes": [{
+			"text": "选择菜单数量",
+			"bindControlAttr": "$showNavNum",
+			"showType": "text",
+			"type": "number",
+			"changeExecFunction": "renderContext"
+		},
+		{
+			"text": "显示菜单数量",
+			"bindControlAttr": "liShowNum",
+			"showType": "text",
+			"type": "number",
+			"changeExecFunction": "renderContext"
+		},
+		{
+			"text": "菜单开始下标(0开始)",
+			"bindControlAttr": "startIndex",
+			"showType": "text"
+		},
+		{
+			"text": "组件风格",
+			"bindControlAttr": "navStyle",
+			"showType": "select",
+			"changeExecFunction": "render",
+			"dictionary": [{
+					"text": "一列",
+					"value": "1"
+				},
+				{
+					"text": "三列",
+					"value": "3"
+				}
+			],
+            "showKeyClass":"navHeight,3"
+		},
+		{
+			"text": "组件高度",
+			"class":"navHeight",
+			"bindControlAttr": "navHeight",
+			"hidden":"navStyle!=3",
+			"showType": "text",
+			"changeExecFunction": "setNavHeight"
+		},
+		{
+			"text": "是否不可编辑",
+			"showType": "boolean",
+			"bindControlAttr": "hiddenSet",
+			"changeExecFunction": "render"
+		}
+	]
+}]

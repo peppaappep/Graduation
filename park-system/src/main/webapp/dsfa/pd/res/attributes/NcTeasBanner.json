@@ -1,0 +1,73 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+    	{
+        "text": "主标题",
+        "bindControlAttr": "mainTitle",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "副标题",
+        "bindControlAttr": "subTitle",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "标题颜色",
+        "bindControlAttr": "fontCo",
+        "showType": "text",
+        "changeExecFunction": "renderContext"
+      },
+
+      {
+        "text": "是否显示副标题",
+        "bindControlAttr": "showSubTitle",
+        "showType": "boolean",
+        "changeExecFunction": "handleShowSubTitle"
+      },
+      {
+        "text": "是否切换标题图标",
+        "bindControlAttr": "switchIcon",
+        "showType": "boolean",
+        "changeExecFunction": "handleChangeIcon"
+      },
+      {
+				"text": "选择标题icon",
+				"showType": "select",
+				"bindControlAttr": "iconnum",
+				"dictionary": [
+					{
+						"text": "标题icon1-红",
+						"value": "1"
+					}, {
+						"text": "标题icon2-白",
+						"value": "2"
+					}, {
+						"text": "标题icon3-黄",
+						"value": "3"
+					}
+				],
+				"changeExecFunction": "changeTitle"
+			},
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "是否可见",
+        "showType": "boolean",
+        "bindControlAttr": "visible",
+        "changeExecFunction": "renderContext"
+      },
+      {
+        "text": "是否失效",
+        "showType": "boolean",
+        "bindControlAttr": "disabled",
+        "changeExecFunction": "renderContext"
+      }
+    ]
+  }
+]

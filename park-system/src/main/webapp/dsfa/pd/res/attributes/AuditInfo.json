@@ -1,0 +1,42 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text",
+                "config": {
+                    "disabled": true
+                }
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "名称是否显示",
+                "bindControlAttr": "showLabel",
+                "showType": "boolean"
+            },
+            {
+                "text": "提示性审核必须备注",
+                "showType": "boolean",
+                "bindControlAttr": "$requireRemark"
+            },
+            {
+                "text": "是否将状态同步到子表",
+                "showType": "boolean",
+                "bindControlAttr": "isSyncChildList"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            }
+        ]
+    }
+]

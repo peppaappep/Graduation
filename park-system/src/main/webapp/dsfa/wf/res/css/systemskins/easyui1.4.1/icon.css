@@ -1,0 +1,608 @@
+.icon-k5 {
+    background: url('icons/5.jpg') no-repeat center center;
+}
+.icon-k15 {
+    background: url('icons/15.jpg') no-repeat center center;
+}
+.icon-k30 {
+    background: url('icons/30.jpg') no-repeat center centeri;
+}
+.icon-k60 {
+    background: url('icons/60.jpg') no-repeat center center;
+}
+.icon-bjpm {
+    background: url('icons/bjpm.jpg') no-repeat center center;
+}
+.icon-day {
+    background: url('icons/day.jpg') no-repeat center center;
+}
+.icon-detail {
+    background: url('icons/detail.jpg') no-repeat center center;
+}
+.icon-month {
+    background: url('icons/month.jpg') no-repeat center center;
+}
+.icon-trade {
+    background: url('icons/trade.png') no-repeat center center;
+}
+.icon-week {
+    background: url('icons/week.jpg') no-repeat center center;
+}
+.icon-cata {
+    background: url('icons/cata.jpg') no-repeat center center;
+}
+
+
+
+
+
+.icon-dbf {
+	background: url('icons/dbf.jpg') no-repeat center center;
+}
+.icon-blank {
+	background: url('icons/blank.gif') no-repeat center center;
+}
+.icon-add {
+	background: url('icons/edit_add.png') no-repeat center center;
+}
+.icon-edit {
+	background: url('icons/pencil.png') no-repeat center center;
+}
+.icon-remove {
+	background: url('icons/edit_remove.png') no-repeat center center;
+}
+.icon-save {
+	background: url('icons/filesave.png') no-repeat center center;
+}
+.icon-cut {
+	background: url('icons/cut.png') no-repeat center center;
+}
+.icon-ok {
+	background: url('icons/ok.png') no-repeat center center;
+}
+.icon-no {
+	background: url('icons/no.png') no-repeat center center;
+}
+.icon-cancel {
+	background: url('icons/cancel.png') no-repeat center center; /*background: url('icons/delete_16x16.gif') no-repeat center center;*/
+}
+.icon-reload {
+	background: url('icons/reload.png') no-repeat center center;
+}
+.icon-search {
+	background: url('icons/search.png') no-repeat center center;
+}
+.icon-print {
+	background: url('icons/print.png') no-repeat center center;
+}
+.icon-help {
+	background: url('icons/help.png') no-repeat center center;
+}
+.icon-undo {
+	background: url('icons/undo.png') no-repeat center center;
+}
+.icon-redo {
+	background: url('icons/redo.png') no-repeat center center;
+}
+.icon-back {
+	background: url('icons/back.png') no-repeat center center;
+}
+.icon-sum {
+	background: url('icons/sum.png') no-repeat center center;
+}
+.icon-count {
+	background: url('icons/count.png') no-repeat center center;
+}
+.icon-function {
+	background: url('icons/function.png') no-repeat center center;
+}
+.icon-mydesktop {
+	background: url('icons/mydesktop.gif') no-repeat center center;
+}
+.icon-epdocument {
+	background: url('icons/epdocument.gif') no-repeat center center;
+}
+.icon-mydocument {
+	background: url('icons/mydocument.gif') no-repeat center center;
+}
+.icon-recyclebin {
+	background: url('icons/recyclebin.gif') no-repeat center center;
+}
+.icon-share {
+	background: url('icons/share.gif') no-repeat center center;
+}
+.icon-favorites {
+	background: url('icons/favorites.gif') no-repeat center center;
+}
+.icon-file {
+	background: url('icons/file.gif') no-repeat center center;
+}
+.icon-folder {
+	background: url('icons/folder.gif') no-repeat center center;
+}
+.icon-addfolder {
+	background: url('icons/addfolder.gif') no-repeat center center;
+}
+.icon-addfile {
+	background: url('icons/addfile.gif') no-repeat center center;
+}
+.icon-updatefile {
+	background: url('icons/rename.gif') no-repeat center center;
+}
+.icon-deletefile {
+	background: url('icons/deletefile.gif') no-repeat center center;
+}
+.icon-copyfile {
+	background: url('icons/copyfile.gif') no-repeat center center;
+}
+.icon-movefile {
+	background: url('icons/movefile.gif') no-repeat center center;
+}
+.icon-rename {
+	background: url('icons/rename.gif') no-repeat center center;
+}
+.icon-downloadfile {
+	background: url('icons/downloadfile.gif') no-repeat center center;
+}
+.icon-delete {
+	background: url('icons/delete.gif') no-repeat center center;
+}
+.icon-property {
+	background: url('icons/property.gif') no-repeat center center;
+}
+.icon-addfavorites {
+	background: url('icons/addfavorites.gif') no-repeat center center;
+}
+.icon-updatefavorites {
+	background: url('icons/updatefavorites.gif') no-repeat center center;
+}
+.icon-deletefavorites {
+	background: url('icons/deletefavorites.gif') no-repeat center center;
+}
+.icon-reduce {
+	background: url('icons/reduce.gif') no-repeat center center;
+}
+.icon-remoteedit {
+	background: url('icons/remoteedit.gif') no-repeat center center;
+}
+.icon-return {
+	background: url('icons/return.gif') no-repeat center center;
+}
+.icon-previewfile {
+	background: url('icons/previewfile.gif') no-repeat center center;
+}
+.icon-permission {
+	background: url('icons/permission.gif') no-repeat center center;
+}
+.icon-workflow {
+	background: url('icons/workflow.gif') no-repeat center center;
+}
+.icon-quote {
+	background: url('icons/quote.gif') no-repeat center center;
+}
+.icon-messagebox {
+	background: url('icons/messagebox.gif') no-repeat center center;
+}
+.icon-alreadytask {
+	background: url('icons/alreadytask.gif') no-repeat center center;
+}
+.icon-version_download {
+	background: url('icons/version_download.gif') no-repeat center center;
+}
+.icon-version_rollback {
+	background: url('icons/version_rollback.gif') no-repeat center center;
+}
+.icon-version_upload {
+	background: url('icons/version_upload.gif') no-repeat center center;
+}
+.icon-leader {
+	background: url('icons/leader.gif') no-repeat center center;
+}
+.icon-assistant {
+	background: url('icons/assistant.gif') no-repeat center center;
+}
+.icon-user {
+	background: url('icons/user.gif') no-repeat center center;
+}
+.icon-root {
+	background: url('icons/root.gif') no-repeat center center;
+}
+.icon-dept {
+	background: url('icons/dept.gif') no-repeat center center;
+}
+.icon-admin {
+	background: url('icons/admin.gif') no-repeat center center;
+}
+.icon-role {
+	background: url('icons/role.gif') no-repeat center center;
+}
+.icon-tip {
+	background: url('icons/tip.png') no-repeat center center;
+}
+.icon-pagination-first {
+	background: url('icons/pagination_first.gif') no-repeat center center;
+}
+.icon-pagination-last {
+	background: url('icons/pagination_last.gif') no-repeat center center;
+}
+.icon-pagination-next {
+	background: url('icons/pagination_next.gif') no-repeat center center;
+}
+.icon-pagination-prev {
+	background: url('icons/pagination_prev.gif') no-repeat center center;
+}
+.icon-up {
+	background: url('icons/up.gif') no-repeat center center;
+}
+.icon-down {
+	background: url('icons/down.gif') no-repeat center center;
+}
+.icon-filter {
+	background: url('icons/filter.gif') no-repeat center center;
+}
+.icon-filter-delete {
+	background: url('icons/filter_delete.gif') no-repeat center center;
+}
+.icon-flag-delete {
+	background: url('icons/flag_delete.gif') no-repeat center center;
+}
+.icon-calculate {
+	background: url('icons/calculate_16x16.gif') no-repeat center center;
+}
+.icon-columns {
+	background: url('icons/column.gif') no-repeat center center;
+}
+.icon-pie {
+	background: url('icons/pie.gif') no-repeat center center;
+}
+.icon-line {
+	background: url('icons/line.gif') no-repeat center center;
+}
+.icon-chart {
+	background: url('icons/chart.gif') no-repeat center center;
+}
+.icon-table {
+	background: url('icons/table_split_cells_16x16.gif') no-repeat center center;
+}
+.icon-copy {
+	background: url('icons/copy.gif') no-repeat center center;
+}
+.icon-home {
+	background: url('icons/home_16x16.gif') no-repeat center center;
+}
+.icon-flag {
+	background: url('icons/flag2_16x16.gif') no-repeat center center;
+}
+.icon-database {
+	background: url('icons/database_16x16.gif') no-repeat center center;
+}
+.icon-notepad {
+	background: url('icons/notepad_16x16.gif') no-repeat center center;
+}
+.icon-excel {
+	background: url('icons/xls.gif') no-repeat center center;
+}
+.icon-html {
+	background: url('icons/html.gif') no-repeat center center;
+}
+.icon-order
+{
+    background: url('icons/order.gif') no-repeat center center;
+}
+.icon-select{
+    background: url('icons/select.gif') no-repeat center center;
+}
+.icon-record{
+    background: url('icons/record.gif') no-repeat center center;
+}
+.icon-tag-blue {
+	background: url('icons/tag_blue.png') no-repeat;
+}
+.icon-tag-red {
+	background: url('icons/tag_red.png') no-repeat;
+}
+.icon-check-out {
+	background: url('icons/check-out.gif') no-repeat center center;
+}
+.icon-brush {
+	background: url('icons/brush.png') no-repeat center center;
+}
+.icon-import {
+	background: url('icons/database_import.gif') no-repeat center center;
+}
+.icon-export {
+	background: url('icons/database_export.gif') no-repeat center center;
+}
+.icon-line {
+	background: url('icons/line.png') no-repeat center center;
+}
+.icon-linkadd {
+	background: url('icons/link_(add)_16x16.gif') no-repeat center center;
+}
+.icon-linkdelete {
+	background: url('icons/link_(delete)_16x16.gif') no-repeat center center;
+}
+
+.icon-nstart {
+	background: url('icons/n_start.png') no-repeat center center;
+}
+.icon-nend {
+	background: url('icons/n_end.png') no-repeat center center;
+}
+.icon-nlogic {
+	background: url('icons/n_logic.png') no-repeat center center;
+}
+.icon-ncollect {
+	background: url('icons/n_collect.png') no-repeat center center;
+}
+.icon-ngeneral {
+	background: url('icons/n_node.png') no-repeat center center;
+}
+.icon-sql {
+	background: url('icons/sql.png') no-repeat center center;
+}
+.icon-key {
+	background: url('icons/pk.gif') no-repeat center center;
+}
+.icon-removecell {
+	background: url('icons/deleteCell.png') no-repeat center center;
+}
+.icon-deletefrozen {
+	background: url('icons/deleteFrozen.png') no-repeat center center;
+}
+.icon-deletehead {
+	background: url('icons/deleteHead.png') no-repeat center center;
+}
+.icon-insertcolumn {
+	background: url('icons/insertColumn.png') no-repeat center center;
+}
+.icon-insertrow {
+	background: url('icons/insertRow.png') no-repeat center center;
+}
+.icon-lock {
+	background: url('icons/lock.gif') no-repeat center center;
+}
+.icon-unlock {
+	background: url('icons/unlock.gif') no-repeat center center;
+}
+
+.icon-htmlcontrol {
+	background: url('icons/html.png') no-repeat  center center;
+}
+
+.icon-task {
+	background: url('icons/task.png') no-repeat  center center;
+}
+.icon-publish {
+	background: url('icons/publish.png') no-repeat  center center;
+}
+.icon-unit {
+	background: url('icons/unit.gif') no-repeat  center center;
+}
+
+/**
+* ��������ʽ  0����� 1��ע��  2���޸� ��ϵͳ����������
+*/
+.icon-status0 {
+	background: url('icons/tree_icon_0.jpg') no-repeat  center center;
+}
+.icon-status1 {
+	background: url('icons/tree_icon_1.jpg') no-repeat  center center;
+}
+.icon-aligntop {
+	background: url('icons/align_top.png') no-repeat  center center;
+}
+.icon-alignbottom {
+	background: url('icons/align_bottom.png') no-repeat  center center;
+}
+.icon-alignleft {
+	background: url('icons/align_left.png') no-repeat  center center;
+}
+.icon-alignright {
+	background: url('icons/align_right.png') no-repeat  center center;
+}
+
+.icon-verticalsplit {
+	background: url('icons/vertical_split.png') no-repeat  center center;
+}
+
+.icon-horizontalsplit {
+	background: url('icons/horizontal_split.png') no-repeat  center center;
+}
+
+.icon-height {
+	background: url('icons/height.gif') no-repeat  center center;
+}
+
+.icon-width {
+	background: url('icons/width.gif') no-repeat  center center;
+}
+
+.icon-size {
+	background: url('icons/size.gif') no-repeat  center center;
+}
+.icon-toup {
+	background: url('icons/toup.png') no-repeat  center center;
+}
+.icon-todown {
+	background: url('icons/todown.png') no-repeat  center center;
+}
+
+.icon-group {
+	background: url('icons/group.png') no-repeat  center center;
+}
+.icon-normal {
+	background: url('icons/normal.png') no-repeat  center center;
+}
+.icon-fit {
+	background: url('icons/fit.gif') no-repeat  center center;
+}
+.icon-setting {
+	background: url('icons/setting.gif') no-repeat  center center;
+}
+.icon-event {
+	background: url('icons/event.gif') no-repeat  center center;
+}
+.icon-chartclass {
+	background: url('icons/chartclass.png') no-repeat  center center;
+}
+.icon-containerclass {
+	background: url('icons/containerclass.png') no-repeat center center;
+}
+.icon-chooseclass {
+	background: url('icons/chooseclass.png') no-repeat  center center;
+}
+.icon-window {
+	background: url('icons/window.png') no-repeat center center;
+}
+.icon-linechart {
+	background: url('icons/linechart.png') no-repeat center center;
+}
+.icon-piechart {
+	background: url('icons/piechart.png') no-repeat center center;
+}
+.icon-columnschart {
+	background: url('icons/columnschart.png') no-repeat center center;
+}
+.icon-areachart {
+	background: url('icons/areachart.png') no-repeat center center;
+}
+.icon-map {
+	background: url('icons/map.png') no-repeat center center;
+}
+.icon-datagrid {
+	background: url('icons/table1.png') no-repeat center center;
+}
+.icon-dropdownlist {
+	background: url('icons/dropdownlist.png') no-repeat center center;
+}
+.icon-gauge {
+	background: url('icons/gauge.png') no-repeat center center;
+}
+.icon-radiobutton {
+	background: url('icons/radiobutton.png') no-repeat center center;
+}
+
+.icon-service {
+	background: url('icons/service.png') no-repeat center center;
+}
+.icon-category {
+	background: url('icons/category.png') no-repeat center center;
+}
+.icon-slider {
+	background: url('icons/slider.png') no-repeat center center;
+}
+.icon-polar {
+	background: url('icons/polar.png') no-repeat center center;
+}
+.icon-toolbar {
+	background: url('icons/toolbar.png') no-repeat center center;
+}
+.icon-scatter {
+	background: url('icons/scatter.png') no-repeat center center;
+}
+
+.icon-waterfall {
+	background: url('icons/waterfall.png') no-repeat center center;
+}
+
+.icon-label {
+	background: url('icons/label.png') no-repeat center center;
+}
+
+.icon-textbox {
+	background: url('icons/textbox.png') no-repeat center center;
+}
+
+.icon-colors {
+	background: url('icons/colors.png') no-repeat center center;
+}
+.icon-tab {
+	background: url('icons/tab.png') no-repeat center center;
+}
+.icon-button {
+	background: url('icons/button.png') no-repeat center center;
+}
+.icon-trend {
+	background: url('icons/trend.png') no-repeat center center;
+}
+
+
+
+/**
+* ������ʽ  �ʼ�����-д�ʼ��˵�ͼ��
+*/
+.icon-pencil {
+	background: url('icons/pencil.png') no-repeat center center;
+}
+
+/**
+* ������ʽ  �ʾ��ռ�״̬ͼ��
+*/
+.icon-zoom {
+	background: url('icons/zoom.png') no-repeat center center;
+}
+.icon-zoomin {
+	background: url('icons/zoom_in.png') no-repeat center center;
+}
+.icon-zoomout {
+	background: url('icons/zoom_out.png') no-repeat center center;
+}
+
+.icon-check {
+	background: url('icons/icon2_020.png') no-repeat center center;
+}
+.icon-checked {
+	background: url('icons/icon2_089.png') no-repeat center center;
+}
+
+/**
+* ������ʽ  �ʼ���Ϣͼ��
+*/
+.icon-email {
+	background: url('icons/mail.png') -48px 0 no-repeat center center;
+}
+.icon-email-yd {
+	background: url('icons/mail.png') -48px -16px no-repeat center center;
+}
+.icon-datebox{
+	background: url('icons/datebox.png') no-repeat center center;
+}
+.icon-map1{
+	background: url('icons/map1.png') no-repeat center center;
+}
+.icon-chord{
+	background: url('icons/chord.png') no-repeat center center;
+}
+.icon-force{
+	background: url('icons/force.png') no-repeat center center;
+}
+.icon-bubble{
+	background: url('icons/bubble.png') no-repeat center center;
+}
+.icon-k{
+	background: url('icons/k.png') no-repeat center center;
+}
+.icon-flag-b{
+	background: url('icons/b_flag.png') no-repeat center center;
+}
+.icon-flag-bedit{
+	background: url('icons/b_flag_edit.png') no-repeat center center;
+}
+
+.icon-out{
+	background: url('icons/wjj.png') no-repeat center center;
+	background-size: 16px 16px;
+}
+.icon-inner{
+	background: url('icons/XLTX.png') no-repeat center center;
+	background-size: 16px 16px;
+}
+.icon-pc{
+	background: url('icons/pc.png') no-repeat center center;
+    background-size: 18px;
+}
+.icon-pad{
+	background: url('icons/pad.png') no-repeat center center;
+    background-size: 24px;
+}

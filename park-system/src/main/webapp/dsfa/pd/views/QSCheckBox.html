@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css"/>
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css"/>
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css"/>
+  <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="../res/components.css"/>
+</head>
+
+<body>
+<div style="padding:10px;padding-bottom: 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">题干：</label>
+    <div class="layui-input-block">
+      <input type="text" id="question" required  placeholder="请输入" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">选项：</label>
+    <div class="layui-input-block">
+      <textarea id="items" style="width:100%;min-height:400px;padding:10px;"
+                placeholder="支持格式：'文本'、'文本|值'两种格式，多个选项用回车符换行"></textarea>
+    </div>
+  </div>
+</div>
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+<script>
+  window.dialogInit = function (args) {
+    $("#question").val(args.owner.$questionBody || "");
+    if (args.owner.items&&args.owner.items.length>0) {
+      var str=[];
+      args.owner.items.forEach(function (o, i) {
+        var v = o.text == o.value ? o.text : o.text + "|" + o.value;
+        str.push(v);
+      });
+      $("#items").val(str.join("\n"))
+    }
+  };
+  window.getDialogResult = function () {
+    var temp = $("#items").val().split("\n");
+    var val = [];
+    temp.forEach(function (o, i) {
+      if ($.trim(o)) {
+        var v = o.split("|");
+        val.push({
+          "text": v[0],
+          "value": v[1] || v[0]
+        });
+      }
+    });
+    var $scope = $("#question").val();
+    return {
+      $questionBody: $scope, staticItem: {
+        code:val,
+        type:'static'
+      }
+    }
+  }
+</script>
+</body>
+
+</html>

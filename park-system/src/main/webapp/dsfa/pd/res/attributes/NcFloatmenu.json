@@ -1,0 +1,63 @@
+[
+	{
+		"name": "基础属性",
+		"attributes": [
+			{
+				"text": "组件标识",
+				"bindControlAttr": "caption",
+				"showType": "text"
+			}, {
+				"text": "是否可见",
+				"showType": "boolean",
+				"bindControlAttr": "visible",
+				"changeExecFunction": "renderContext"
+			}, {
+				"text": "是否失效",
+				"showType": "boolean",
+				"bindControlAttr": "disabled",
+				"changeExecFunction": "renderContext"
+			}, {
+				"text": "显示哪几个菜单（1,3）-表示显示第一个和第三个菜单",
+				"bindControlAttr": "ismainshow",
+				"showType": "text"
+			},{
+				"text": "菜单名称(现在4个菜单顺序不能变)",
+				"bindControlAttr": "maintext",
+				"showType": "text"
+			}, {
+				"text": "二维码的链接",
+				"bindControlAttr": "qrcodeurl",
+				"showType": "text"
+			}, {
+				"text": "联系方式",
+				"bindControlAttr": "tel",
+				"showType": "text"
+			}, {
+				"text": "用户反馈的链接",
+				"bindControlAttr": "feedbackurl",
+				"showType": "text"
+			}, {
+				"text": "放置位置",
+				"showType": "select",
+				"bindControlAttr": "iswhere",
+				"dictionary": [
+					{
+						"text": "默认不定位",
+						"value": "0"
+					}, {
+						"text": "定位左侧边",
+						"value": "1"
+					}, {
+						"text": "定位右侧边",
+						"value": "2"
+					}
+				],
+				"changeExecFunction": "changewhere"
+			}, {
+				"text": "模块边距",
+				"bindControlAttr": "spacingnum",
+				"showType": "text"
+			}
+		]
+	}
+]

@@ -1,0 +1,26 @@
+[
+   {
+     "name": "基础属性",
+     "attributes": [
+       {
+         "text": "组件标识",
+         "bindControlAttr": "caption",
+         "showType": "text"
+       },
+       {
+         "text": "列表请求地址",
+         "bindControlAttr": "$requestUrl",
+         "showType": "text"
+       },
+       {
+        "text": "每页显示条数",
+        "bindControlAttr": "$pagesize",
+        "showType": "text"
+      }
+     ]
+   },
+   {
+     "name": "高级属性",
+     "attributes": [ ]
+   }
+ ]

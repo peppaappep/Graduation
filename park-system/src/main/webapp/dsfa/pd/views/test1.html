@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>机试题1</title>
+</head>
+<style>
+    #div1 {
+        position: relative;
+        border: 1px solid blue;
+        box-sizing: border-box;
+        padding: 10px;
+        height: 300px;
+        width: 300px;
+        box-sizing: content-box
+    }
+    
+    #div2 {
+        border: 1px solid red;
+    }
+</style>
+
+<body style="margin:0px;">
+    <button onclick="add()">添加</button>
+    <div id="app"></div>
+    <textarea id="text"></textarea>
+    <script type="html/template" id="weng">
+        <div id="app" style="width:200px;height:200px;">
+            <label></label>
+            <div>
+                <input id="1111" type="text" />
+                <textarea>
+                </textarea>
+                <select>
+                        <option value="w">test</option>
+                        <option value="w1" selected>test1</option>
+                    </select>
+            </div>
+        </div>
+    </script>
+
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../../../dsfa/bhc/hc/bhc.js"></script>
+    <script>
+        var app = dsf.vdom.toVNode(document.getElementById("weng").innerText);
+        app.render(document.getElementById("app"), app)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+	<style>
+		body {
+			background-color: #fff;
+		}
+
+		.fileSetting .layui-input-block {
+			min-height: 36px;
+			margin-left: 20px;
+			line-height: 36px;
+		}
+
+		.fileSetting .islinkMime .layui-input-block {
+			line-height: auto;
+		}
+
+		.fileSetting .item_name {
+			line-height: 30px;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 10px 0;
+		}
+
+		.item_sub_name {
+			line-height: 30px;
+			font-size: 15px;
+			font-weight: bold;
+		}
+
+		.fileSetting .layui-form li {
+			padding: 0 20px;
+		}
+
+		.fileSetting .layui-form-checkbox[lay-skin=primary] span {
+			font-size: 16px;
+		}
+
+		.fileSetting .layui-tab {
+			margin: 0;
+			/* padding-top:10px; */
+		}
+
+		.fileSetting .layui-tab-title {
+			position: fixed;
+			left: 0;
+			right: 0;
+			background: #fff;
+			z-index: 10;
+			height: 50px
+		}
+
+		.fileSetting .layui-tab-content {
+			position: absolute;
+			top: 50px;
+			left: 0;
+			right: 0;
+		}
+
+		.fileSetting ul {
+			padding-left: 0;
+		}
+
+		.fileSetting .layui-tab-title .layui-this:after {
+			height: 51px;
+		}
+
+		.fileSetting .layui-tab-title li {
+			line-height: 50px;
+			font-size: 15px;
+		}
+
+		.islinkMime {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: #fff;
+			border-top: 1px solid #ddd;
+			padding: 0 10px;
+		}
+
+		.islinkMime .layui-form {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.islinkMime .layui-block {
+			display: flex;
+		}
+
+		.choosenFile_box {
+			position: fixed;
+			bottom: 38px;
+			left: 10px;
+			right: 10px;
+			background-color: #fff;
+			border-top: 1px solid #ddd;
+		}
+
+		.choosenFile_box .item_name {
+			margin: 0;
+		}
+
+		.choosenExts {
+			line-height: 30px;
+			font-size: 15px;
+			text-indent: 2rem;
+			min-height: 30px;
+		}
+
+		.islinkMime label {
+			float: left;
+			display: block;
+			padding: 9px 15px;
+			width: 244px;
+			font-weight: 400;
+			line-height: 20px;
+			text-align: right;
+		}
+
+		.fileSetting .layui-form-item {
+			margin-bottom: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div style="position:absolute;top:0px;right:0px;left:0px;bottom:0px" class="fileSetting">
+		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<ul class="layui-tab-title">
+				<li class="layui-this">常用列表</li>
+				<li>个性化配置</li>
+			</ul>
+			<div class="layui-tab-content">
+				<div class="layui-tab-item  layui-show">
+					<div class="layui-form" lay-filter="normalList">
+						<ul>
+							<li>
+								<p class="item_name">文档类</p>
+								<div class="layui-input-block">
+									<input type="checkbox" name="check[normal_1]" lay-skin="primary"
+										title=".txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf "
+										value="text/plain,application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/x-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/mspowerpoint,application/powerpoint,application/vnd.ms-powerpoint,application/x-mspowerpoint">
+								</div>
+							</li>
+							<li>
+								<p class="item_name">wps文档</p>
+								<div class="layui-input-block">
+									<input type="checkbox" name="check[normal_2]" lay-skin="primary"
+										title=".wps,.et,.dps"
+										value="application/kswps,application/kset,application/ocelet-stream,application/ksdps">
+								</div>
+							</li>
+							<li>
+								<p class="item_name">压缩包</p>
+								<div class="layui-input-block">
+									<input type="checkbox" name="check[normal_3]" lay-skin="primary"
+										title="zip,.7z,.rar"
+										value="application/x-zip-compressed,application/x-7z-compressed,application/x-rar-compressed">
+								</div>
+							</li>
+							<li>
+								<p class="item_name">图片类</p>
+								<div class="layui-input-block">
+									<input type="checkbox" name="check[normal_4]" lay-skin="primary"
+										title=".BMP,.JPG,.JPEG,.PNG,.GIF"
+										value="image/bmp,image/jpeg,image/png,image/gif">
+								</div>
+							</li>
+							<li>
+								<p class="item_name">视频类</p>
+								<div class="layui-input-block">
+									<input type="checkbox" name="check[normal_5]" lay-skin="primary"
+										title=".AVI,.QT,.MOV,.MP4,.ASF,.RM,.MPEG"
+										value="video/avi,video/msvideo,video/x-msvideo,application/x-troff-msvideo,video/quicktime,video/mp4,video/x-ms-asf,application/vnd.rn-realmedia,audio/x-pn-realaudio,video/mpeg">
+								</div>
+							</li>
+							<li>
+								<p class="item_name">音频类</p>
+								<div class="layui-input-block">
+									<input type="checkbox" name="check[normal_6]" lay-skin="primary"
+										title=".mp3,.rm,.wav,.midi"
+										value="audio/mpeg3,audio/x-mpeg-3,video/mpeg,video/x-mpeg,application/vnd.rn-realmedia,audio/x-pn-realaudio,audio/wav,audio/x-wav,application/x-midi,audio/midi,audio/x-mid,audio/x-midi,music/crescendo,x-music/x-midi">
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="layui-tab-item">
+					<div class="layui-form" lay-filter="personalSet">
+						<div class="fileType_box layui-form-item">
+							<p class="item_name">允许上传文件类型</p>
+							<div class="layui-input-block">
+								<select name="fileType" lay-filter="fileType">
+									<!-- <option value="">无</option> -->
+									<option value="file">file(所有文件)</option>
+									<option value="images">images（图片）</option>
+									<option value="video">video（视频）</option>
+									<option value="audio">audio（音频）</option>
+								</select>
+							</div>
+						</div>
+						<div class="fileExts_box layui-form-item">
+							<p class="item_name">允许上传文件后缀</p>
+							<div id="allowExt">
+							</div>
+						</div>
+					</div>
+					<div class="islinkMime">
+						<div style="overflow: hidden;" class='layui-form' lay-filter="isLinkMine">
+							<p class="item_name">已选上传文件后缀</p>
+							<div class="layui-form-item">
+								<div class="layui-block">
+									<label class="">是否在文件筛选框中显示指定类型文件</label>
+									<div class="layui-input-block" style="margin-left: 0;">
+										<input type="checkbox" name="b" lay-skin="switch" lay-text="ON|OFF"
+											lay-filter="switchLink">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="choosenExts"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../../res/libs/layui/layui.all.js"></script>
+		<script src="../../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../../app.js"></script>
+		<script src="../../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../../res/dsf_res/dsf_common.js"></script>
+		<script src="../res/ds_prop.js"></script>
+		<script>
+			var form = layui.form;
+			var elem = layui.element;
+			var allowExtstr = null;
+			var allowExtObj = {};
+			var fileExtArr = [];
+			var choosenExtsStr = "";
+			var isLinkeMine = true;
+			var fileType = "file";
+			var tabIndex = 0;
+			var extStr = "";
+			var mineStr = "";
+			var alreadySetting = {};
+			var choosenBoxHtml = "";
+			var CheckedNameStr =""
+
+			elem.on('tab(docDemoTabBrief)', function (data) {
+				tabIndex = data.index;
+				if (data.index == 1) {
+					$(".fileSetting .layui-show").css("padding-bottom", "80px");
+				}
+			})
+			form.on('select(fileType)', function (data) {
+				var key = fileType = data.value;
+				extStr = "";
+				mineStr = "";
+				$('.choosenExts').html("");
+				createAllowExtStr(allowExtObj[key], key);
+				if (alreadySetting && fileType == alreadySetting.fileType) {
+					initFormVal()
+				}
+			})
+			form.on('checkbox', function (data) {
+				var mimeStr = data.value,
+					ext = $.trim(data.othis.text());
+				var tempExt = ext.replace(/\./g, "") + ",",
+					tempMime = mimeStr + ',';
+				var CheckedName = data.elem.getAttribute('name'),
+					tmpCheckedName = CheckedName+",";
+				choosenBoxHtml = $('.choosenExts').html()
+				if (tabIndex != 0) {
+					emptyFormVal((alreadySetting && alreadySetting.fileType) || 'file');
+					if (data.elem.checked) {
+						$('.choosenExts').append(tempExt);
+						extStr += tempExt;
+						mineStr += tempMime;
+					} else {
+						extStr = choosenBoxHtml.split(tempExt).join("");
+						mineStr = mineStr.split(tempMime).join("");
+						$('.choosenExts').html("");
+						$('.choosenExts').append(extStr);
+					}
+				} else {
+					emptyFormVal((alreadySetting && alreadySetting.fileType) || 'file')
+					if (data.elem.checked) {
+						fileType = "file"
+						extStr += tempExt;
+						mineStr += tempMime;
+						CheckedNameStr += tmpCheckedName
+					} else {
+						extStr = extStr.split(tempExt).join("");
+						mineStr = mineStr.split(tempMime).join("");
+						CheckedNameStr = CheckedNameStr.split(tmpCheckedName).join('')
+					}
+				}
+			})
+			form.on('switch(switchLink)', function (data) {
+				isLinkeMine = data.elem.checked;
+			});
+
+			window.dialogInit = function (args) {
+				dialogArgs = args;
+				getExtObj()
+				mineStr = "", extStr = "";
+				// 已经设置过的 给表单赋初值
+				var oldExtsSetting = dialogArgs.owner.$extsSetting;
+				if (oldExtsSetting && oldExtsSetting.extStr) {
+					$.extend(alreadySetting, oldExtsSetting);
+					createAllowExtStr(allowExtObj[alreadySetting.fileType], alreadySetting.fileType);
+					fileType = alreadySetting.fileType;
+					mineStr = alreadySetting.mineStr+",";
+					extStr = alreadySetting.extStr.split("|").join(",") + ",";
+					CheckedNameStr = alreadySetting.CheckedNameStr;
+					if (alreadySetting.tabIndex) {
+						$($(".layui-tab-item").get(alreadySetting.tabIndex)).addClass("layui-show").siblings().removeClass("layui-show");
+						$($(".layui-tab-title>li").get(alreadySetting.tabIndex)).addClass("layui-this").siblings().removeClass("layui-this");
+						$(".fileSetting .layui-show").css("padding-bottom", "80px");
+						tabIndex = alreadySetting.tabIndex;
+					}
+					initFormVal();
+				} else {
+					createAllowExtStr(fileExtArr, "file");
+				}
+			}
+			window.getDialogResult = function () {
+				var tempstr = extStr.replace(/\./g, "").replace(/,/g, "|")
+				return {
+					extStr: tempstr.substr(0, tempstr.length - 1).toLowerCase(),
+					mineStr: mineStr.substr(0, mineStr.length - 1),
+					isLinkeMine: isLinkeMine,
+					fileType: fileType,
+					tabIndex: tabIndex,
+					CheckedNameStr:CheckedNameStr
+				}
+			}
+			// 创建允许上传文件后缀Dom
+			function createAllowExtStr(extArr, key) {
+				var inputStr = "";
+				$("#allowExt").html("");
+				if (key != "file") {
+					_(extArr).forEach(function (value) {
+						inputStr += '<input type="checkbox" name="' + value.name + '" lay-skin="primary" title="' + value.title +
+							'" lay-filter="' +
+							value.filter + '" value="' + value.value + '">'
+					})
+					allowExtstr = '<div class="layui-input-block">' + inputStr + '</div>'
+				} else {
+					inputStr += '<ul id="doc">'
+					_(extArr).forEach(function (value) {
+						inputStr += '<li><p class="item_sub_name">' + value.itemName + '</p><div class="layui-input-block">';
+						_(value.children).forEach(function (val) {
+							inputStr += '<input type="checkbox" name="' + val.name + '" lay-skin="primary" title="' + val.title +
+								'" value="' + val.value + '">'
+						})
+						inputStr += '</div></li>'
+					})
+					inputStr += '</ul>'
+					allowExtstr = inputStr
+				}
+				$("#allowExt").html(allowExtstr);
+				form.render("checkbox");
+			}
+			// 获取文件后缀
+			function getExtObj() {
+				dsf.http.request_sync("../res/uploadFileExt.json", false, "GET")
+					.done(function (response) {
+						allowExtObj = response;
+						fileExtArr = response.file;
+					}).error(function (response) { }).exec();
+			}
+			// 表单赋初值
+			function initFormVal() {
+				var obj = {}
+				if (!$.isEmptyObject(alreadySetting)) {
+					if (alreadySetting.tabIndex != 0) {
+						_(alreadySetting.extStr.split("|")).forEach(function (value) {
+							obj[value] = true
+						})
+						obj.fileType = alreadySetting.fileType;
+						extStr = alreadySetting.extStr.split("|").join(",") + ","
+						$('.choosenExts').append(extStr)
+						if (obj.fileType != 'file') {
+							createAllowExtStr(allowExtObj[obj.fileType])
+						}
+						form.val("personalSet", obj);
+						form.val("isLinkMine", {
+							"b": alreadySetting.isLinkeMine
+						});
+					} else {
+						_(alreadySetting.CheckedNameStr.split(",")).forEach(function (value) {
+							obj[value] = true
+						})
+						form.val("normalList", obj);
+						form.val("isLinkMine", {
+							"b":true
+						});
+					}
+				}
+			}
+			function emptyFormVal(fieType) {
+				var obj = {}
+				if (tabIndex == 0) {
+					if (!$.isEmptyObject(alreadySetting) && alreadySetting.extStr && alreadySetting.tabIndex != tabIndex && alreadySetting.tabIndex != 0) {
+						_(alreadySetting.extStr.split("|")).forEach(function (value) {
+							obj[value] = false
+						})
+						extStr = mineStr = CheckedNameStr = "";
+						alreadySetting = {}
+					} else {
+						_(extStr.split(",")).forEach(function (value) {
+							obj[value] = false
+							extStr.split(value + ",").join('')
+						})
+					}
+					obj.fileType = fieType;
+					$('.choosenExts').html("")
+					form.val("personalSet", obj);
+					form.val("isLinkMine", { "b": false });
+				} else {
+					if (!$.isEmptyObject(alreadySetting) && alreadySetting.tabIndex != tabIndex && alreadySetting.tabIndex == 0) {
+						_(alreadySetting.CheckedNameStr.split(",")).forEach(function (value) {
+							obj[value] = false;
+						})
+						extStr = mineStr = CheckedNameStr = "";
+						alreadySetting = {}
+						form.val("normalList", obj);
+						form.val("isLinkMine", { "b": true });
+					} else {
+						_(CheckedNameStr.split(",")).forEach(function (value) {
+							obj[value] = false
+							extStr.split(value + ",").join('')
+						})
+					}
+				}
+			}
+		</script>
+</body>
+
+</html>

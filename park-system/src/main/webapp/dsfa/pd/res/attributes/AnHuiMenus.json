@@ -1,0 +1,27 @@
+[
+
+   {
+      "name": "基础属性",
+      "attributes": [{
+         "text": "组件标识",
+         "bindControlAttr": "caption",
+         "showType": "text"
+      }]
+   },
+   {
+      "name": "控件属性",
+      "attributes": [{
+         "text": "菜单配置",
+         "showType": "dialog",
+         "bindControlAttr": "menus",
+         "changeExecFunction": "renderDom",
+         "config": {
+            "title": "菜单配置",
+            "url": "/dsfa/pd/views/anMenusHandle.html",
+            "width": "1200px",
+            "height": "600px",
+            "buttonText": "设置"
+         }
+      }]
+   }
+]

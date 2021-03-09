@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+    <title>codeMirror测试</title>
+    <link type="text/css" rel="stylesheet" href="lib/codemirror.css" />
+    <!--themes-->
+    <link type="text/css" rel="stylesheet" href="addon/hint/show-hint.css" />
+    <link type="text/css" rel="stylesheet" href="addon/fold/foldgutter.css">
+    <link type="text/css" rel="stylesheet" href="addon/display/fullscreen.css">
+    <link type="text/css" rel="stylesheet" href="addon/search/matchesonscrollbar.css">
+    <link type="text/css" rel="stylesheet" href="addon/dialog/dialog.css">
+    <link type="text/css" rel="stylesheet" href="lib/github-markdown.css" />
+    <link type="text/css" rel="stylesheet" href="theme/self.css" />
+
+    <script src="lib/codemirror.js"></script>
+    <script src="lib/showdown.min.js"></script>
+    <!--代码提示-->
+    <script src="addon/hint/show-hint.js"></script>
+    <script src="addon/hint/javascript-hint.js"></script>
+    <script src="addon/hint/sql-hint.js"></script>
+    <script src="addon/hint/html-hint.js"></script>
+    <script src="addon/hint/css-hint.js"></script>
+    <!--自动加载代码类型-->
+    <script src="addon/mode/simple.js"></script>
+    <script src="addon/mode/loadmode.js"></script>
+    <script src="mode/meta.js"></script>
+    <!--自定添加关闭标签-->
+    <script src="addon/edit/closetag.js"></script>
+
+    <!--收缩块-->
+    <script src="addon/fold/foldcode.js"></script>
+    <script src="addon/fold/foldgutter.js"></script>
+    <script src="addon/fold/indent-fold.js"></script>
+    <!--F11 全屏-->
+    <script src="addon/display/fullscreen.js"></script>
+
+    <script src="addon/scroll/annotatescrollbar.js"></script>
+    <script src="addon/dialog/dialog.js"></script>
+    <script src="addon/search/searchcursor.js"></script>
+    <script src="addon/search/search.js"></script>
+    <script src="addon/search/matchesonscrollbar.js"></script>
+    <script src="addon/search/jump-to-line.js"></script>
+    <script src="addon/search/match-highlighter.js"></script>
+    <script src="addon/edit/trailingspace.js"></script>
+    <script src="addon/edit/matchbrackets.js"></script>
+    <script src="editorInit.js"></script>
+    <script src="codeKit.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="code"></div>
+</body>
+<script>
+    //注入对象
+    var object = {
+            // "url": function(e) {
+            //     return dsf.url.queryString(e);
+            // },
+            "dsfa_mm.id": "qwe",
+            "dsfa_mm.id1": "qwe",
+            "dsfa_mm.ids": "qwe",
+            "dsfa_mm.name": "we",
+            "dsfa_mm.code": "we",
+            "dsfa_mm.type": {
+                "text": "系统对象",
+                "value": "2"
+            },
+            "dsfa_mm.at": "wewewe",
+            "dsfa_mm.controls": [{
+                "text": "文本框",
+                "value": "dsf.textbox"
+            }, {
+                "text": "下拉框",
+                "value": "dsf.select"
+            }],
+            "dsfa_mm_vatt": [{
+                "dsfa_mm_vatt.name": "测试1",
+                "dsfa_mm_vatt.code": "测试1",
+                "dsfa_mm_vatt.type": {
+                    "text": "数字",
+                    "value": "number"
+                },
+                "dsfa_mm_vatt.length": "1",
+                "dsfa_mm_vatt.min": "1",
+                "dsfa_mm_vatt.max": "1",
+                "dsfa_mm_vatt.dv": "12"
+            }, {
+                "dsfa_mm_vatt.name": "测试2",
+                "dsfa_mm_vatt.code": "测试2",
+                "dsfa_mm_vatt.type": {
+                    "text": "数字",
+                    "value": "number"
+                },
+                "dsfa_mm_vatt.length": "测试2",
+                "dsfa_mm_vatt.min": "1",
+                "dsfa_mm_vatt.max": "12",
+                "dsfa_mm_vatt.dv": "12"
+            }]
+        }, // requier object
+        {
+            variable,
+            fks
+        } = codeKit.format(object); // map object
+
+    var value = `/**
+  * F1：函数说明(API)
+  * F11：全屏
+  * Ctrl-S：保存
+  * Ctrl-A：全选
+  * Ctrl-D：删除行
+  * Ctrl-Y：恢复上一步
+  * Ctrl-Z：撤销上一步
+  * Ctrl-F： 查找
+  * Ctrl-H：替换
+  * Ctrl-Home：跳转到首行
+  * Ctrl-End：跳转到尾行
+  * Ctrl-+：字体放大
+  * Ctrl--：字体缩小
+  * Ctrl-鼠标左键：跨行多选词
+  * Alt-鼠标左键：跨行扩选
+  * Alt-/:打开提示
+  * 已注入对象: ${fks.join(", ")}
+  */
+` +
+        `
+/** 编辑公式注意事项：
+  * 1.公式或语句结束：必须使用";"符号结尾
+  * 2.指定变量类型：byte,short,int,long,float,double,boolean,char,string,object,integer,date,datatime
+  * 3.返回值（return）：必须为字符串
+  * 4.JSON定义与取值：Json("{a:123}").get("a")
+  * 5.字符串声明：禁止使用单引号开始和结尾
+  * 6.字符串函数：建议封装一层，如API中的字符串函数
+  * 7.Java封装函数：parseInt, parseFloat等函数
+  * 8.打印信息函数：print("")
+  */
+` + `
+string a = dsfa_mm.id + dsfa_mm_vatt.code;
+string b = dsfa_mm.ids + dsfa_mm.id1;
+string c = dsfa_mm.id1 + dsfa_mm_vatt.code;
+string str = " dsfa_mm.id  ";
+string d = dsfa_mm.at + 123;
+if (dsfa_mm.controls == "abc") {
+	int i = 1+1
+}
+for (int i : [1,2,3]) {
+	print(i);
+}
+for (var i : [1,2,3])
+	print(i);
+switch ("a") {
+	case "a":
+		print("a");
+	case "b":
+		break;
+}
+url(123);
+return "{test:""}"
+`;
+    // 保存操作
+    var saveFn = function(cm) {
+        let pseudocode=cm.getValue();
+        var template = codeKit.template(pseudocode, object);
+        template.pseudocode=pseudocode;
+        return template;
+    }
+
+    var editor = null;
+
+    let b={"data":{"dsfa_mm_vatt.name":"ddddd"},"get":function(key){return data[key]}}
+
+
+
+    function initEditor(data,code) {
+        value=(code&&code.pseudocode)||"";
+        editor = editorInit({
+            codeEle: document.getElementById("code"),
+            api: "verify.API.md",
+            value,
+            saveFn,
+            variable,
+            keywords: "if while for switch case default break return true false",
+            otherWords: {
+                javascript: {
+                    regexObj: "regexObj : 提供可选校验正则集合",
+                    abs: "abs(string) : 返回数的绝对值，空字符串返回0.0 \n 返回值：float",
+                    ceil: "ceil(string) : 对数进行上舍入，空字符串返回0.0 \n 返回值 float",
+                    float: "float(string) : 字符串转浮点数，空字符串返回0.0 \n 返回值：float",
+                    floor: "floor(string) : 对数进行下舍入，空字符串返回0.0 \n 返回值：float",
+                    has: "has(string: 字符串, string: 匹配字符串) : 是否存在此字符 \n 返回值：boolean",
+                    int: "int(string) \n 返回值：int 字符串转整数，空字符串返回0",
+                    isEmpty: "isEmpty(string) : 判断字符串是否为空字符串 \n 返回值：boolean",
+                    isNotEmpty: "isNotEmpty(string) : 判断字符串不为空字符串 \n 返回值：boolean",
+                    isNotNull: "isNotNull(object) : 判断字符串不为空 \n 返回值：boolean",
+                    isNull: "isNull(object) : 判断字符串是否为空 \n 返回值：boolean",
+                    length: "length(string) \n 返回值：int 返回字符串长度",
+                    lower: "lower(string) : 字符串转小写 \n 返回值：string",
+                    match: "match(string: 字符串, string/regex: 匹配字符串) : 找到一个或多个正则表达式的匹配，无匹配则返回空数组 \n 返回值：boolean",
+                    matchL: "matchL(string: 字符串, string/regex: 匹配字符串) : 获取左边则表达式的匹配；即第一个，无则返回空字符串 \n 返回值：boolean",
+                    matchR: "matchR(string: 字符串, string/regex: 匹配字符串) : 获取右边则表达式的匹配；即第最后一个，无则返回空字符串 \n 返回值：boolean",
+                    replace: "replace(string: 原字符串, string: 替换字符串, string/regex: 字符串或正则式) : 字符串替换，支持正则表达式 \n 返回值：string",
+                    round: "round(string) : 把数四舍五入为最接近的整数，空字符串返回0.0 \n 返回值：float",
+                    sub: "sub(string/array, int[, int]) : 字符串或数组切片; int 可为负数，则从末尾开始 \n 返回值：string/array",
+                    test: "test(string: 字符串, regex: 正则式) : 正则式匹配字符串 \n 返回值：boolean",
+                    test1: "test1(string: 字符串, char: regexObj正则式标识) : 正则式匹配字符串 \n 返回值：boolean",
+                    trim: "trim(string) : 字符串去除前后空格 \n 返回值：string",
+                    up: "up(string) : 字符串转大写 \n 返回值：string",
+                }
+            },
+            language: "javascript", //["python", "javascript", "java", "sql", "vue", "html", "markdown"],
+            // theme: ["default", "3024-day", "3024-night", "abcdef", "ambiance",
+            //     "base16-dark", "base16-light", "bespin", "blackboard", "cobalt",
+            //     "colorforth", "darcula", "dracula", "duotone-dark", "duotone-light",
+            //     "eclipse", "elegant", "erlang-dark", "gruvbox-dark", "hopscotch",
+            //     "icecoder",, "isotope", "lesser-dark", "liquibyte", "lucario",
+            //     "material", "mbo", "mdn-like", "midnight", "monokai", "neat", "neo",
+            //     "night", "oceanic-next", "panda-syntax", "paraiso-dark", "paraiso-light",
+            //     "pastel-on-dark", "railscasts", "rubyblue", "seti", "shadowfox",
+            //     "solarized dark", "solarized light", "the-matrix", "tomorrow-night-bright",
+            //     "tomorrow-night-eighties", "ttcn", "twilight", "vibrant-ink", "xq-dark", "xq-light", "yeti", "zenburn"
+            // ],
+            theme:"default"
+            
+        });
+    }
+
+    function getContent() {
+        return saveFn(editor);
+    }
+
+    function setValue(value){
+        editor.setValue(value)
+    }
+</script>
+
+</html>

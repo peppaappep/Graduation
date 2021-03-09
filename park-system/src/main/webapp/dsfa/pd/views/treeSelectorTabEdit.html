@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>树选择器Tab设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+		td{
+			text-align: center;
+		}
+        .radio-group{
+        /*    display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center; */
+        }
+        .radio-group label{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;            
+        }
+        .radio-group label input{
+            margin-right: 5px;
+        }
+        .radio-group label + label{
+            margin-left: 15px;
+        }
+		.ds_icon_button_text{
+			line-height: 34px;
+		}
+    </style>
+</head>
+
+<body ng-controller="treeSelectorTabEdit">
+    <div class="container-fluid dialog_container"
+        style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="float: right">
+                    <!-- <a class="layui-btn" ng-click="addMetaData()">选择元数据</a> -->
+                    <a class="ds_button" ng-click="addNew()">新增</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid dialog_container;" style="margin-top:68px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Tab名称</th>
+                            <th style="text-align: center;width:120px;">选择条件</th>
+                            <th style="text-align: center;width:120px;">开启单条选择</th>
+                            <th style="text-align: center;width:80px;">默认展开层级</th>
+                            <th style="text-align: center;width:120px;">数据源类型</th>
+                            <th style="text-align: center;width:120px;">接口URL</th>
+                            <th style="text-align: center;width:100px;">元数据组</th>
+                            <th style="text-align: center;width:100px;">异步加载</th>
+                            <th style="text-align: center;width:80px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="col in opts track by $index">
+                            <td>
+                                <input name="name_{{$index}}" class="form-control" type="text" ng-model="col.name">
+                            </td>
+                            <td>
+                                <input name="types_{{$index}}" class="form-control" type="text" ng-model="col.types">
+                            </td>
+                            <td class="radio-group">
+                                <select name="chooseOneNode_{{$index}}" class="form-control" ng-model="col.chooseOneNode">
+                                    <option ng-selected="col.chooseOneNode === '1'" value="1">是</option>
+                                    <option ng-selected="col.chooseOneNode === '0'" value="0">否（携带子节点）</option>
+                                </select>                                   
+                            </td>                            
+                            <td>
+                                <input name="defaultOpenSeries_{{$index}}" class="form-control" type="number" ng-model="col.defaultOpenSeries">
+                            </td>                            
+                            <td>
+                                <select name="metaDataType_{{$index}}" class="form-control" ng-model="col.metaDataType">
+                                    <option ng-selected="col.metaDataType === '0'" value="0">接口</option>
+                                    <option ng-selected="col.metaDataType === '1'" value="1">元数据组</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input ng-disabled="col.metaDataType === '1'" name="sqlUrl_{{$index}}" class="form-control" type="text" ng-model="col.sqlUrl">
+                            </td>                            
+                            <td>
+                                <button ng-click="addMetaData(col)" ng-disabled="col.metaDataType === '0'" type="button" class="ds_button ds_icon_button_text">选择</button>
+                            </td>                            
+                            <td class="radio-group">
+                                <select name="async_{{$index}}" class="form-control" ng-model="col.async">
+                                    <option ng-selected="col.async === '1'" value="1">是</option>
+                                    <option ng-selected="col.async === '0'" value="0">否</option>
+                                </select>                                
+                            </td>
+                            <td style="vertical-align: middle;text-align: center">
+                                <a ng-click="deleteItem(col, $index)">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="../res/components.css" />
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        let owner = null;
+        app.controller('treeSelectorTabEdit', function ($scope) {
+            $scope.opts = [];
+            $scope.addNew = function () {
+                $scope.opts.push(createColInfo());
+            }
+
+            $scope.addMetaData = function (item) {
+				var args = $.extend(true,{},$scope.args);
+                window.parent.dsf.layer.openDialog({
+                    "title": "选择元数据组",
+                    "content": "treeSelector_nav.html",
+                    "area": ["1000px", "550px"],
+					"args": $.extend(true,args,{value:item.chooseMetaData}),
+                    "btn": [{
+                        "text": "确定",
+                        "handler": function (index, layer, win) {
+                            if (win.getDialogResult) {
+								var frame = layer.find("iframe");
+								var win = frame.get(0).contentWindow;
+								var result = win.getDialogResult();
+								if(result){
+									item.chooseMetaData = result;
+									$scope.$apply(); 
+								}else{
+									return false;
+								}
+                                
+                            }else{
+								return false;
+							}
+                        }
+                    }, {
+                        "text": "取消",
+                        "handler": function (index, layero) {
+                            return;
+                        }
+                    }]
+                });
+            }
+            $scope.deleteItem = function (item, index) {
+                $scope.opts.splice(index, 1);
+            }
+
+
+            window.dialogInit = function (args) {
+                owner = args.owner;
+                $scope.args = $.extend(true, {}, args);
+                if (args.value.length) {
+                    $scope.opts = args.value.slice(0);
+                } else {
+                    $scope.opts = [createColInfo()];
+                }
+                $scope.$apply();
+            }
+
+            window.getDialogResult = function () {
+                return $scope.opts;
+            }
+
+            function vaildate(r, key, index, vaildateType, message) {
+                var result = true;
+                if (vaildateType == "required") {
+                    if (!$.trim(r[key])) {
+                        result = false;
+                    }
+                } else if (vaildateType == "metadatename") {
+                    if (!dsf.metadata.vaildateMetaName(r[key])) {
+                        result = false;
+                    }
+                }
+                if (!result) {
+                    var control = $("[name='" + key + "_" + index + "']");
+                    control.addClass("error");
+                    control.one("click", function (evt) {
+                        control.removeClass("error");
+                        return false;
+                    });
+                    dsf.Dom.scrollToElement(control, -78);
+                    dsf.layer.message(message, false);
+                    return false;
+                }
+                return true;
+            }
+
+            function createColInfo() {
+                return {
+                    "id": dsf.uuid(),
+                    "name": "tab" + ($scope.opts ? $scope.opts.length + 1 : 1),
+                    "types": owner.types,
+                    "typeStyle": "list",
+                    "metaDataType": "1",
+                    "async": '0',
+                    "chooseMetaData": {},
+                    "sqlUrl": "",
+                    "chooseOneNode": "1",
+                    "defaultOpenSeries": 1
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

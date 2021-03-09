@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+    <title>html模板</title>
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/lib/codemirror.css" />
+    <!--themes-->
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/3024-day.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/3024-night.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/abcdef.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/ambiance.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/base16-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/bespin.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/base16-light.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/blackboard.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/cobalt.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/colorforth.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/dracula.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/duotone-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/duotone-light.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/eclipse.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/elegant.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/erlang-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/gruvbox-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/hopscotch.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/icecoder.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/isotope.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/lesser-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/liquibyte.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/lucario.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/material.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/mbo.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/mdn-like.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/midnight.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/monokai.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/neat.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/neo.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/night.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/oceanic-next.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/panda-syntax.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/paraiso-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/paraiso-light.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/pastel-on-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/railscasts.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/rubyblue.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/seti.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/shadowfox.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/solarized.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/the-matrix.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/tomorrow-night-bright.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/tomorrow-night-eighties.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/ttcn.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/twilight.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/vibrant-ink.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/xq-dark.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/xq-light.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/yeti.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/idea.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/darcula.css">
+    <link rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/zenburn.css">
+    <!--themes-->
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/addon/hint/show-hint.css" />
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/addon/fold/foldgutter.css">
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/addon/display/fullscreen.css">
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/addon/search/matchesonscrollbar.css">
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/addon/dialog/dialog.css">
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/lib/github-markdown.css" />
+    <link type="text/css" rel="stylesheet" href="../../res/libs/codemirror-5.41.0/theme/self.css" />
+
+    <script src="../../res/libs/codemirror-5.41.0/lib/codemirror.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/lib/showdown.min.js"></script>
+    <!--代码提示-->
+    <script src="../../res/libs/codemirror-5.41.0/addon/hint/show-hint.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/hint/javascript-hint.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/hint/sql-hint.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/hint/html-hint.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/hint/css-hint.js"></script>
+    <!--自动加载代码类型-->
+    <script src="../../res/libs/codemirror-5.41.0/addon/mode/simple.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/mode/loadmode.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/mode/meta.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/mode/css/css.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/mode/xml/xml.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/mode/htmlmixed/htmlmixed.js"></script>
+    <!--自定添加关闭标签-->
+    <script src="../../res/libs/codemirror-5.41.0/addon/edit/closetag.js"></script>
+
+    <!--收缩块-->
+    <script src="../../res/libs/codemirror-5.41.0/addon/fold/foldcode.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/fold/foldgutter.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/fold/indent-fold.js"></script>
+    <!--F11 全屏-->
+    <script src="../../res/libs/codemirror-5.41.0/addon/display/fullscreen.js"></script>
+
+    <script src="../../res/libs/codemirror-5.41.0/addon/scroll/annotatescrollbar.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/dialog/dialog.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/search/searchcursor.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/search/search.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/search/matchesonscrollbar.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/search/jump-to-line.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/search/match-highlighter.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/edit/trailingspace.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/addon/edit/matchbrackets.js"></script>
+    <script src="../../res/libs/codemirror-5.41.0/editorInit.js"></script>
+</head>
+
+<body style="overflow: auto">
+    <div id="code" style="position: absolute;bottom:0px;right:0px;left:0px;top:0px"></div>
+</body>
+<script>
+    var value = "";
+    var editor = null;
+    function initEditor(value) {
+        editor = CodeMirror(document.getElementById("code"), {
+            height:"100%",
+            mode: "text/html",
+            value: value
+        });
+    }
+    function getContent(){
+        return editor.getValue();
+    }
+</script>
+
+</html>

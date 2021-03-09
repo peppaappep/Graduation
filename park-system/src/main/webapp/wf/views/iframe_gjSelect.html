@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" class="ds_workflow_dialog">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>高级模式</title>
+		<link rel="stylesheet" type="text/css" href="../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/font/iconfont.css" />
+	</head>
+
+	<body class="gjSelect-box" ng-controller='myCtrl'>
+		<form class="layui-form" action="" lay-filter="example">
+			<div class="gjSelect-box">
+				<div class="left-box">
+					<div class="layui-input-block">
+						<textarea rows="9" placeholder="请输入公式" class="layui-textarea" ng-model='config.gjSeleteData'></textarea>
+					</div>
+				</div>
+				<div class="right-box">
+					<ul class="ztree" id="treeUl"></ul>
+				</div>
+			</div>
+		</form>
+
+		<script src="../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../res/libs/layui/layui.all.js"></script>
+		<script src="../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+		<script src="../../app.js"></script>
+		<script src="../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../res/dsf_res/dsf_common.js"></script>
+		<script src="../../dsfa/pd/res/ds_prop.js"></script>
+		<script src="../../dsfa/pd/res/libs/angular/angular.min.js"></script>
+		<script>
+			var $treeDom = $("#treeUl"),
+				$treeObj = null,
+				$treeLoaded = false;
+			angular.module('myApp', []).controller('myCtrl', function($scope) {
+				$scope.config = {
+					gjSeleteData: ""
+				}
+				initTree();
+				window.getSriptConfig = function(){
+					return {
+						name:'表达式',
+						exp:getFormConfig($scope.config.gjSeleteData)
+					}
+				}
+				window.initScriptConfig = function(data){
+					setFormConfig(data);
+				}
+				
+				window.dialogInit = function(data) {
+					var dialogArgs = data;
+					var row = dialogArgs.rowData;
+					var element = dialogArgs.el;
+					var workFlow = dialogArgs.workFlow;
+					var nodeObj = dialogArgs.nodeObj;
+					var appInfo = dialogArgs.appInfo;
+					var flow = dialogArgs.flowPlugin;
+					
+					var exAction = null;
+					if (row.nodeLevel == 1) {
+						exAction = nodeObj[row.nodeName];
+					}
+					else if (row.nodeLevel == 2) {
+						if (!nodeObj[row.nodeName1]) exAction = nodeObj[row.nodeName1];
+						exAction = nodeObj[row.nodeName1][row.nodeName2];
+					}
+					else if (row.nodeLevel == 3) {
+						exAction = nodeObj[row.nodeName1][row.nodeName2][row.nodeName3];
+					}
+					setFormConfig(exAction.Expression);
+				}
+				window.getDialogResult = function() {
+					return {"Expression":getFormConfig($scope.config.gjSeleteData)};
+				}
+
+				function initTree() {
+					if (!$treeLoaded) {
+						var data = getTreeData();
+						var treeSet = {
+							view: {
+								selectedMulti: false
+							},
+							data: {
+								key: {
+									children: "children",
+									name: "_name",
+									url: ""
+								},
+								simpleData: {
+									enable: true,
+									idKey: "_id",
+									pIdKey: "treeinfo_pid",
+									rootPId: ""
+								}
+							},
+							callback: {
+								onDblClick: function(event, treeId, treeNode) {
+									$scope.config.gjSeleteData += ("你选择了{" + treeNode._name + "}节点的表达式");
+									$scope.$apply();
+								}
+							}
+						};
+						$treeObj = $.fn.zTree.init($treeDom, treeSet, data);
+						$treeObj.expandAll(true);
+						$treeLoaded = true;
+					}
+				}
+				function setFormConfig(result) {
+				    var jstr = JSON.stringify(result || '');
+					var globalTreeNodes = $treeObj.transformToArray($treeObj.getNodes());
+					_.forEach(globalTreeNodes,function(obj){
+						jstr = jstr.replace(new RegExp("<@" + obj._id + ">", 'g'), "{" + obj._name + "}")
+					})
+				    $scope.config.gjSeleteData = JSON.parse(jstr);
+				    $scope.$apply();
+				}
+				function getFormConfig(result) {
+				    var jstr = JSON.stringify(result);
+					var globalTreeNodes = $treeObj.transformToArray($treeObj.getNodes());
+					_.forEach(globalTreeNodes,function(obj){
+						jstr = jstr.replace(new RegExp("{" + obj._name + "}", 'g'), "<@" + obj._id + ">")
+					})
+					return JSON.parse(jstr);
+				}
+			})
+			function getTreeData() {
+				return [{
+					_id: 1,
+					treeinfo_pid: 0,
+					open: "true",
+					_name: "公文",
+					children: [{
+							_id: 11,
+							treeinfo_pid: 1,
+							_name: "发文"
+						},
+						{
+							_id: 12,
+							treeinfo_pid: 1,
+							_name: "收文"
+						},
+						{
+							_id: 13,
+							treeinfo_pid: 1,
+							_name: "签报"
+						},
+					]
+				}, {
+					_id: 2,
+					treeinfo_pid: 0,
+					open: "true",
+					_name: "报销",
+					children: [{
+							_id: 21,
+							treeinfo_pid: 2,
+							_name: "日常报销"
+						},
+						{
+							_id: 22,
+							treeinfo_pid: 2,
+							open: "true",
+							_name: "项目报销",
+							children: [{
+									_id: 221,
+									treeinfo_pid: 22,
+									_name: "内部项目"
+								},
+								{
+									_id: 222,
+									treeinfo_pid: 22,
+									_name: "外部项目"
+								}
+							]
+						}
+					]
+				}];
+			}
+		</script>
+	</body>
+
+</html>

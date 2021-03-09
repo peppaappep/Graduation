@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html class="ds_workflow_dialog property_dialog_hzxx" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>汇总信息</title>
+		<link rel="stylesheet" type="text/css" href="../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/font/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../res/dsf_styles/bhc.css" />
+	</head>
+	<body ng-controller='myCtrl'>
+		<form class="layui-form" lay-filter='hzxx'>
+			<div class="layui-form-item">
+				<label class="layui-form-label">汇总比例：</label>
+				<div class="layui-input-inline">
+					<input type="text" name="hubl" required lay-verify="required" autocomplete="off" class="layui-input" ng-model='config.hubl'>
+				</div>
+			</div>
+		</form>
+		<table id='table_hzxx' lay-size="sm" class="layui-table" lay-skin="row" lay-filter="table_hzxx"></table>
+		<script src="../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../res/libs/layui/layui.all.js"></script>
+		<script src="../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+		<script src="../../app.js"></script>
+		<script src="../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../res/dsf_res/dsf_common.js"></script>
+		<script src="../../dsfa/pd/res/ds_prop.js"></script>
+		<script src="../../dsfa/pd/res/libs/angular/angular.min.js"></script>
+		<script src="../scripts/common.js"></script>
+		<script type="text/javascript">
+			var dialogArgs, row, element, workFlow, nodeObj, appInfo, flow;
+			angular.module('myApp', []).controller('myCtrl', function($scope) {
+				$scope.config = {
+					hubl:0
+				}
+				window.dialogInit = function(data) {
+					dialogArgs = data;
+					row = dialogArgs.rowData;
+					element = dialogArgs.el;
+					workFlow = dialogArgs.workFlow;
+					nodeObj = dialogArgs.nodeObj;
+					appInfo = dialogArgs.appInfo;
+					flow = dialogArgs.flowPlugin;
+					
+					layui.table.render({
+						elem: '#table_hzxx',
+						id: "table_hzxx",
+						width: 280,
+						size: "sm",
+						cols: [
+							[{
+									checkbox: true,
+									width: 50
+								},
+								{
+									field: 'text',
+									title: '连线名称'
+								}
+							]
+						],
+						data: GetAllLineObj()
+					});
+					$scope.$apply();
+				}
+
+				function GetAllLineObj() {
+					var checked = [];
+				    if (nodeObj.GatherRule.Proportion) {
+						$scope.config.hubl = nodeObj.GatherRule.Proportion
+				        if (nodeObj.GatherRule.GatherRange) {
+				            checked = nodeObj.GatherRule.GatherRange.split(",");
+				        }
+				    }
+					var data = [];
+					for (var i = 0; i < flow.lines.length; i++) {
+						var line = flow.lines[i];
+						if (line.id != nodeObj.ID) {
+							data.push({
+								value: line.id,
+								text: line.name,
+								"LAY_CHECKED":checked.includes(line.id)?true:false
+							});
+						}
+					}
+					return data;
+				}
+
+				window.getDialogResult = function() {
+					var rows = layui.table.checkStatus("table_hzxx").data;
+					var vals = [];
+					for (var i = 0; i < rows.length; i++) {
+						vals.push(rows[i].value);
+					}
+					var GatherRule = {
+						Proportion: $scope.config.hubl,
+						GatherRange:  vals.join(",")
+					};
+					return GatherRule;
+				}
+			})
+		</script>
+	</body>
+</html>

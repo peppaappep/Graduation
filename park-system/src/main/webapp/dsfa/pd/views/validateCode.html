@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <style>
+        body {
+            background-color: #F2F2F2;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position:absolute;top:0px;right:0px;left:0px;bottom:0px">
+        <div id="base" style="height:100%;display:none">
+            <div class="layui-form" id="validateForm" lay-filter="validate">
+                <div class="layui-card" id="card2">
+                    <div class="layui-card-header">校验规则</div>
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否必填：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="required" value="1" title="是" />
+                                <input type="radio" name="required" value="0" title="否" checked />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否为数字：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="isNumber" value="1" title="是" lay-filter="isNumber" />
+                                <input type="radio" name="isNumber" value="0" title="否" lay-filter="isNumber" checked/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="precision" style="display:none">
+                            <label class="layui-form-label">最大精度：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="precision" placeholder="保留小数的位数" autocomplete="off" class="layui-input" />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最小值/长度：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="min" placeholder="文本类型为最小字符长度/数字类型为最小数值" autocomplete="off" class="layui-input" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最大值/长度：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="max" placeholder="文本类型为最大字符长度/数字类型为最大数值" autocomplete="off" class="layui-input" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="express">
+                            <label class="layui-form-label">校验规则：</label>
+                            <div class="layui-input-block">
+                                <select name="express">
+                                    <option value="">无</option>
+                                    <option value="isIDCard">身份证</option>
+                                    <option value="isMobile">手机号码</option>
+                                    <option value="isTelPhone">电话</option>
+                                    <option value="isMobileOrTelPhone">电话/手机号码</option>
+                                    <option value="isEmail">电子邮箱</option>
+                                    <option value="isPlateNumber">车牌号</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="super" style="height:100%;display:none">
+            <iframe id="codeEditor" src="../../../res/libs/codemirror-5.41.0/codeEditor.html" style="display: block; border-style:none;"></iframe>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <!-- <script src="../hc/control_mm_map.js"></script> -->
+    <!-- <script src="../../../res/libs/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../../../res/libs/datatables/js/dataTables.bootstrap.min.js"></script> -->
+    <script>
+        // var table = layui.table;
+        var dialogArgs = null;
+        var data = {};
+        var config = {};
+        var code = {};
+        var codeWin = null;
+        var isCodeRender = false;
+
+        window.dialogInit = function(args) {
+            dialogArgs = args;
+            config = dialogArgs.value.config;
+            loadBaseModeConfig(config);
+            codeWin = $("#codeEditor").get(0).contentWindow;
+            codeWin.initEditor(null, dialogArgs.value.code);
+            changeModel(dialogArgs.value.model);
+
+        }
+        window.getDialogResult = function() {
+            //基础规则配置数据
+            opener = opener || window.self
+            var result = getBaseModelData();
+            config = result;
+            if (dialogArgs.value.model == "base") {
+                //如果是基础模式则将基础模式配置生成代码
+                convertToCode();
+            }
+
+            //高级数据
+            var template = codeWin.getContent();
+            return {
+                model: dialogArgs.value.model,
+                config: config,
+                code: template
+            }
+        }
+
+        function loadBaseModeConfig(args) {
+            if (args) {
+                //绑定验证数据
+                data.required = args.required ? "1" : "0";
+                data.isNumber = args.isNumber;
+                data.precision = args.precision;
+                data.express = args.express;
+                data.max = args.max;
+                data.min = args.min;
+            }
+            layui.form.render(null);
+            layui.form.val("validate", data);
+            data.isNumber == "1" ? $("#precision").show() : $("#precision").hide();
+
+            //监听是否为数字单选框
+            layui.form.on('radio(isNumber)', function(data) {
+                data.value == "1" ? $("#precision").show() : $("#precision").hide();
+            });
+        }
+
+        function changeModel(model) {
+            dialogArgs.value.model = model;
+            if (model == "super") {
+                let code = dialogArgs.value.code;
+                $("#super").show();
+                $("#base").hide();
+                codeWin.resize();
+                codeWin.refreshEditor()
+            } else {
+                $("#super").hide();
+                $("#base").show();
+            }
+        }
+
+        function convertToCode() {
+            let result = getBaseModelData();
+            if (result) {
+                var codes = [];
+                if (result.required) {
+                    var code = {
+                        "code": "isNotNull(currentValue)",
+                        "errorMsg": "该项必填"
+                    }
+                    codes.push(code);
+                }
+                if (result.isNumber == "1") {
+                    var code = {
+                        "code": "isNumber(currentValue," + (result.precision || 0) + ")",
+                        "errorMsg": (result.precision && result.precision != "0") ? "请填写一个数字且最多保留" + (result.precision) + "位小数" : "请填写一个整数"
+                    }
+                    codes.push(code);
+                }
+                if (result.express) {
+                    var code = {
+                        "code": result.express + "(currentValue)",
+                        "errorMsg": "格式错误"
+                    }
+                    codes.push(code);
+                }
+                if (result.isNumber == "1") {
+                    if (result.min && result.max) {
+                        var code = {
+                            "code": "(!isUnder(currentValue," + result.min + ")&&!isOver(currentValue," + result.max + "))",
+                            "errorMsg": "必须在" + result.min + "~" + result.max + "范围内"
+                        }
+                        codes.push(code);
+                    } else if (result.min && !result.max) {
+                        var code = {
+                            "code": "!isUnder(currentValue," + result.min + ")",
+                            "errorMsg": "不能小于" + result.min
+                        }
+                        codes.push(code);
+                    } else if (result.max && !result.min) {
+                        var code = {
+                            "code": "!isOver(currentValue," + result.max + ")",
+                            "errorMsg": "不能大于" + result.max
+                        }
+                        codes.push(code);
+                    }
+                } else {
+                    if (result.min && result.max) {
+                        var code = {
+                            "code": "(!isUnderLength(currentValue," + result.min + ")&&!isOverLength(currentValue," + result.max + "))",
+                            "errorMsg": "必须在" + result.min + "~" + result.max + "个字符"
+                        }
+                        codes.push(code);
+                    } else if (result.min && !result.max) {
+                        var code = {
+                            "code": "!isUnderLength(currentValue," + result.min + ")",
+                            "errorMsg": "不能小于" + result.min + "个字符"
+                        }
+                        codes.push(code);
+                    } else if (result.max && !result.min) {
+                        var code = {
+                            "code": "!isOverLength(currentValue," + result.max + ")",
+                            "errorMsg": "不能大于" + result.max + "个字符"
+                        }
+                        codes.push(code);
+                    }
+                }
+
+                var codeArray = [];
+                for (var i = 0; i < codes.length; i++) {
+                    var c = "dsf_validate(" + codes[i].code + ",\"" + codes[i].errorMsg + "\");";
+                    codeArray.push(c);
+                }
+                codeWin.setValue(codeArray.join("\r\n"));
+            }
+
+        }
+
+        function getBaseModelData() {
+            var validateForm = $("#validateForm");
+            result = {};
+            result.required = validateForm.find("input[name=required]:checked").val() == "1" ? true : false;
+            result.isNumber = validateForm.find("input[name=isNumber]:checked").val();
+            result.precision = validateForm.find("input[name=precision]").val();
+            // result.type = validateForm.find("input[name=type]:checked").val();
+            result.express = validateForm.find("select[name=express]").val();
+            result.min = validateForm.find("input[name=min]").val();
+            result.max = validateForm.find("input[name=max]").val();
+            return result;
+        }
+    </script>
+
+</body>
+
+</html>

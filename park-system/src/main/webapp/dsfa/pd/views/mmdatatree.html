@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+</head>
+
+<body>
+    <div>
+        <ul id="tree" class="ztree"></ul>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../hc/control_mm_map.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var tree = null;
+        var dialogArgs = null;
+        window.dialogInit = function(args) {
+            dialogArgs = args;
+            tree = $.fn.zTree.init($("#tree"), {
+                data: {
+                    key: {
+                        children: "childs",
+                        name: "name"
+                    }
+                },
+                view: {
+                    selectedMulti: false
+                }
+               
+            });
+
+
+            dsf.http.request("../tempdata/mmdata.json", null, "GET")
+                .done(function(response) {
+                    function fn(data) {
+                        let obj = {
+                            "name": data.name,
+                            "attr": data
+                        }
+                        if (data.childs) {
+                            obj.childs = [];
+                            for (var i = 0; i < data.childs.length; i++) {
+                                var n = data.childs[i];
+                                let node = fn(n);
+                                obj.childs.push(node);
+                            }
+                        }
+                        return obj;
+                    }
+                    var nodes = [];
+                    for (var i = 0; i < response.length; i++) {
+                        let n = fn(response[i]);
+                        nodes.push(n);
+                    }
+                    tree.addNodes(null, nodes);
+                    tree.expandAll(true)
+                })
+                .error(function(response) {
+
+                })
+                .exec();
+        }
+        window.getDialogResult = function() {
+            var nodes = tree.getSelectedNodes();
+            if (nodes.length <= 0) {
+                dsf.layer.message("请选择有效一个元数据", 5);
+                return false;
+            }
+            let node = nodes[0].attr;
+            if (node.type == "0" && node.level == "0") {
+                dsf.layer.message("您选择的是一个目录,请选择有效一个元数据", 5);
+                return false;
+            }
+            if (node.type == "1") {
+                let isExist = false;
+                for (let i = 0; i < node.controls.length; i++) {
+                    let ctrlname = node.controls[i];
+                    if (dsf.control_map[dialogArgs.owner.ctrl_type] == ctrlname) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    dsf.layer.message("控件不在元数据适用范围内", 5);
+                    return false;
+                }
+            }
+            // console.log(node)
+            return node;
+        }
+    </script>
+</body>
+
+</html>

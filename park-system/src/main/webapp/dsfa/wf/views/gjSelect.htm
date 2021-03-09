@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>流程绘制 </title>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3"/>
+    <meta http-equiv="description" content="this is my page"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link href="../res/css/systemskins/dsfa/themes/gray/DSSkin.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/easyui1.4.1/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../res/css/easyui1.4.1/icon.css" rel="stylesheet" type="text/css" />
+    <script src="../../../res/libs/jquery-1.12.4.min.js" type="text/javascript"></script>
+    <script src="../script/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../script/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../script/common.js" type="text/javascript"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js" type="text/javascript"></script>
+    <script src="../../../app.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_config.js" type="text/javascript"></script>
+    <script src="../../../res/dsf_res/dsf_common.js" type="text/javascript"></script>
+	<script src="../script/flowGjSelect.js" type="text/javascript"></script>
+	<style>
+        .pinput {
+            width:80px;
+        }
+
+        #dbName {
+            width:100%;
+        }
+
+        #sql {
+            /* width:378px;
+            height:120px;
+            margin-top:2px; */
+            width:99%;
+            height:120px;
+            margin-top:2px;
+        }
+        #code {
+            width:99%;
+            height:150px;
+            margin-top:2px;
+        }
+
+        /* .width_more #dbName{
+            width:99%;
+        } */
+
+        /* .width_more #sql,.width_more .superPanel {
+            width:578px;
+        } */
+
+        .width_more .pinput {
+            width:180px;
+        }
+
+
+
+	</style>
+	<script type="text/javascript">
+
+        $(document).ready(function(){
+            flowGjSelect.init();
+        });
+
+	</script>
+  </head>
+  <body class="easyui-layout" fit="true" style="overflow:hidden">
+      <div data-options="region:'center',title:'',border:false" id="center" fit="true" style="overflow:hidden">
+          <table id="ctable" style="border:0px solid #ddd;width:100%;height:100%">
+              <tr>
+                  <td style="vertical-align: top;">
+                      <div style="width:100%;height:100%">
+                          <div id="superType0" class="superPanel" style="width:100%;height:100;%float:left;display: none">
+                              <div style="margin-bottom:5px;width:100%">
+                                  <div style="float:left">
+                                    数据源：
+                                  </div>
+                                  <div style="margin-left:60px;">
+                                    <select id="dbName" name="dbName" style="float:left;" >
+                                        <option value="dsfa">dsfa</option>
+                                        <option value="temp">temp</option>
+                                    </select>
+                                  </div>
+                                  
+                              </div>
+                              <textarea id="sql"></textarea>
+                          </div>
+                          <div id="superType1" class="superPanel" style="width:100%;height:100;float:left;">
+                              <div style="margin-bottom:5px">
+                                  <div style="float:left">
+                                    类：<input id="className" class="pinput" type="text"/>
+                                  </div>
+                                  <div style="float:left">
+                                    方法：<input id="method" class="pinput" type="text"/>
+                                  </div>
+                                  <a href="#" onclick="flowGjSelect.parameterSelect('dataGrid1');return false" class="easyui-linkbutton" plain="true" style="float:right;" data-options="iconCls:'icon-addfile'"></a>
+                                  <a href="#" onclick="flowGjSelect.parameterRemove('dataGrid1');return false" class="easyui-linkbutton" plain="true" style="float:right;" data-options="iconCls:'icon-remove'"></a>
+                                  <a href="#" onclick="flowGjSelect.parameterClear('dataGrid1');return false"  class="easyui-linkbutton" plain="true" style="float:right;margin-left:5px;" data-options="iconCls:'icon-cancel'"></a>
+                              </div>
+                              <div style="overflow-y: auto;overflow-x: hidden;width: 100%;height: 140px;">
+                                  <table id="dataGrid1" class="parameterGrid"></table>
+                              </div>
+                          </div>
+                          <div id="superType2" class="superPanel" style="width:100%;height:100;float:left;">
+                              <div style="margin-bottom:5px">
+                                  <div style="float:left">
+                                    Action：<input id="action" class="pinput" type="text"/>
+                                  </div>
+                                  <div style="float:left">
+                                    结果集：<input id="dataSet" class="pinput" type="text"/>
+                                  </div>
+                                  <a href="#" onclick="flowGjSelect.parameterSelect('dataGrid2');return false" class="easyui-linkbutton" plain="true" style="float:right;" data-options="iconCls:'icon-addfile'"></a>
+                                  <a href="#" onclick="flowGjSelect.parameterRemove('dataGrid2');return false" class="easyui-linkbutton" plain="true" style="float:right;" data-options="iconCls:'icon-remove'"></a>
+                                  <a href="#" onclick="flowGjSelect.parameterClear('dataGrid2');return false"  class="easyui-linkbutton" plain="true" style="float:right;margin-left:5px;" data-options="iconCls:'icon-cancel'"></a>
+                              </div>
+                              <div style="overflow-y: auto;overflow-x: hidden;width: 100%;height: 140px;">
+                                  <table id="dataGrid2" class="parameterGrid"></table>
+                              </div>
+                          </div>
+                          <div id="superType3" class="superPanel" style="width:100%;height:100;float:left;">
+                              <div style="margin-bottom:5px">
+                                  <div style="float:left">
+                                      URL地址：<input id="url" class="pinput" type="text"/>
+                                   </div>
+                                  <div style="float:left">
+                                      结果：<input id="urlDateSet" class="pinput" type="text"/>
+                                  </div>
+                                  <a href="#" onclick="flowGjSelect.parameterSelect('dataGrid3');return false" class="easyui-linkbutton" plain="true" style="float:right;" data-options="iconCls:'icon-addfile'"></a>
+                                  <a href="#" onclick="flowGjSelect.parameterRemove('dataGrid3');return false" class="easyui-linkbutton" plain="true" style="float:right;" data-options="iconCls:'icon-remove'"></a>
+                                  <a href="#" onclick="flowGjSelect.parameterClear('dataGrid3');return false"  class="easyui-linkbutton" plain="true" style="float:right;margin-left:5px;" data-options="iconCls:'icon-cancel'"></a>
+                              </div>
+                              <div style="overflow-y: auto;overflow-x: hidden;width: 100%;height: 140px;">
+                                  <table id="dataGrid3" class="parameterGrid"></table>
+                              </div>
+                          </div>
+                          <div id="superType4" class="superPanel" style="width:100%;height:100;float:left;">
+                            <textarea id="code"></textarea>
+                        </div>
+                      </div>
+                  </td>
+                  <td style="border-left:0px solid #ddd;vertical-align: top;width:165px;">
+                      <div id="ysj">
+                          <ul id="flowParams" style="overflow:auto;width:165px;height:155px;border:1px solid #ddd;"></ul>
+                      </div>
+                  </td>
+              </tr>
+          </table>
+      </div>
+
+      <div region="north" split="false" border="false" title="" style="height: 25px; overflow: auto; padding-top: 0px;">
+          <label style="margin-right:5px;color:blue"><input type="radio"  name="superType" value="0" checked="checked" />SQL</label>
+          <label style="margin-right:5px;color:blue"><input type="radio"  name="superType" value="1"/>JavaMethod</label>
+          <label style="margin-right:5px;color:blue"><input type="radio"  name="superType" value="2"/>ActionXml</label>
+          <label style="margin-right:5px;color:blue"><input type="radio"  name="superType" value="3"/>RestFul</label>
+          <label style="margin-right:5px;color:blue"><input type="radio"  name="superType" value="4"/>JavaScript</label>
+      </div>
+
+  </body>
+</html>

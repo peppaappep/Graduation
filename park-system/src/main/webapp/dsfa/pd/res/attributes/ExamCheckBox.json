@@ -1,0 +1,43 @@
+[
+
+  {
+      "name": "基础属性",
+      "attributes": [
+          {
+              "text": "题干",
+              "bindControlAttr": "questionBody",
+              "showType": "text",
+              "changeExecFunction": "render"
+          },
+          {
+              "text": "选项设置",
+              "showType": "dialog",
+              "bindControlAttr": "$metadata.dataSource",
+              "changeExecFunction": "getItemsByMetaData",
+              "config": {
+                  "url": "/dsfa/pd/views/qsEnumEditor.html",
+                  "width": "850px",
+                  "height": "550px",
+                  "buttonText": "编辑选项"
+              }
+          },
+          {
+              "text": "列数(0表示自适应)",
+              "bindControlAttr": "colNum",
+              "showType": "number",
+              "changeExecFunction": "render"
+          },
+          {
+              "text": "是否只读",
+              "showType": "boolean",
+              "bindControlAttr": "readOnly"
+          },
+          {
+              "text": "是否可见",
+              "showType": "boolean",
+              "bindControlAttr": "visible",
+              "changeExecFunction": "render"
+          }
+      ]
+  }
+]

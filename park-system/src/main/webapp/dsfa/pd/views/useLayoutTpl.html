@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>元数据组选择</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <style>
+        ._special_ico_docu {
+            margin-right: 2px !important;
+            background-position: -110px -2px;
+        }
+
+        .ztree li span.button.chk {
+            margin-left: 3px
+        }
+		.ds_tree_box{
+			padding-top: 50px;
+			overflow: hidden;
+			box-sizing: border-box;
+			height: 100%;
+		}
+		.ds_tree_search{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			background-color: #f2f2f2;
+			height: 50px;
+			box-sizing: border-box;
+		}
+		.ds_tree{
+			overflow: auto;
+			height: 100%;
+			box-sizing: border-box;
+		}
+    </style>
+</head>
+
+<body ng-controller="tplController">
+    <div class="ds_tree_box">
+        <div class="ds_tree_search">
+            <input type="text" class="layui-input" placeholder="输入名称" id='search_input'>
+            <i class="search iconfont layui-icon icon-Magnifier" id='search'></i>
+        </div>
+        <div class="ds_tree">
+            <ul id="tree" class="ztree"></ul>
+        </div>
+    </div>
+
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../../../dsfa/bhc/hc/bhc.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var tree = null;
+        var dialogArgs = null;
+        var nodeList = [];
+        $('#search').on('click', function (e) {
+            // 搜索
+            search();
+        });
+        $('#search_input').on('keyup', function (e) {
+            // 回车搜索
+            let keycode = window.event ? e.keyCode : e.which;
+            if (keycode == 13) {
+                search();
+            }
+        });
+        function search(){
+            updateNodes(false);
+            let v = $('#search_input').val();
+            if (v == '' || !v) return;
+            nodeList = tree.getNodesByParamFuzzy('name', v);
+            if(nodeList.length>0) tree.selectNode(nodeList[0],false,false);
+            updateNodes(true);
+        }
+        function getFontCss(treeId,treeNode){
+            return (!!treeNode.highlight) ? {color:"#A60000", "font-weight":"bold"} : {color:"#333", "font-weight":"normal"};
+        }
+        function updateNodes(highlight){
+            for( var i=0, l=nodeList.length; i<l; i++) {
+                nodeList[i].highlight = highlight;
+                tree.updateNode(nodeList[i]);
+            }
+        }
+        window.dialogInit = function (args) {
+            dialogArgs = args;
+            tree = $.fn.zTree.init($("#tree"), {
+                view: {
+                    selectedMulti: false,
+                    fontCss: getFontCss
+                },
+                check: {
+                    enable: true,
+                    chkStyle: "radio",
+                    radioType: "all"
+                },
+                callback: {
+                    onClick:zTreeOnClick
+                }
+            });
+
+            dsf.http.request(dsf.UrlSetting.design_tpl, {}, "GET")
+                .done(function (response) {
+                    if (response.success) {
+                        var nodes = response.data;
+                        console.log(nodes);
+                        fn(nodes)
+                        tree.addNodes(null, nodes);
+                        tree.expandAll(true)
+                    }
+                })
+                .error(function (response) { })
+                .exec();
+        }
+
+        function fn(nodes) {
+            for (let i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                if (node.type_value != "7") {
+                    node.nocheck = true;
+                }
+                if (node.type_value != '7' && !node.children) {
+                    node.iconSkin = '_special';
+                }
+                if (node.children) {
+                    fn(node.children)
+                }
+            }
+        }
+
+        window.getDialogResult = function () {
+            var row = tree.getCheckedNodes();
+            if (row.length <= 0) {
+                dsf.layer.message("请选择一个模板", false);
+                return false;
+            } else {
+                var row = row[0];
+                var layoutNameIndex = row.path.lastIndexOf("/");
+                var path = row.path.substring(0, layoutNameIndex);
+                var layoutName = row.path.substring(layoutNameIndex + 1);
+                return path + "/hc/" + layoutName + ".layout.js";
+            }
+        }
+        function zTreeOnClick(event, treeId, treeNode){
+            tree.checkNode(treeNode,!treeNode.checked);
+        }
+    </script>
+</body>
+
+</html>

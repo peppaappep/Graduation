@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dream-dsfa</groupId>
+        <artifactId>dream-dsfa</artifactId>
+        <version>1.0.1</version>
+    </parent>
+
+
+    <artifactId>park-system</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Community-Park</name>
+    <description>MyGraduation</description>
+    <packaging>war</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+
+
+        <!--基础框架-->
+        <dependency>
+            <groupId>dream-dsfa</groupId>
+            <artifactId>dream-dsfa-frame</artifactId>
+            <version>4.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>dream-dsfa</groupId>
+            <artifactId>dream-dsfa-platform</artifactId>
+            <version>1.1.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>dream-dsfa</groupId>
+                    <artifactId>dream-dsfa-frame</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>dream-dsfa</groupId>-->
+        <!--            <artifactId>dream-dsfa-platform</artifactId>-->
+        <!--            <type>war</type>-->
+        <!--        </dependency>-->
+        <!--  <dependency>
+              <groupId>dream-dsfa</groupId>
+              <artifactId>dream-dsfa-platform</artifactId>
+              &lt;!&ndash;<version>${dream-dsfa-platform}</version>&ndash;&gt;
+              <type>jar</type>
+              <scope>system</scope>
+              <systemPath>${project.basedir}/../dream-dsfa-platform/target/dream-dsfa-platform-1.0.0-SNAPSHOT.jar</systemPath>
+          </dependency>-->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-configuration-processor</artifactId>-->
+        <!--            <optional>true</optional>-->
+        <!--        </dependency>-->
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.sql</include>
+                    <include>**/*.txt</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

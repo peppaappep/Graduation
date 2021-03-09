@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>跳题逻辑</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/bhc.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <style>
+      .select-box .layui-form-item,
+      .select-box .layui-inline {
+        margin: 0
+      }
+
+      td,
+      th {
+        text-align: center !important;
+      }
+
+      .layui-form-select dl dd {
+        white-space: inherit;
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body ng-controller='myController' class="layui-form">
+    <form class="layui-form" action="" lay-filter="example1">
+      <div style="padding:10px;padding-bottom: 0;">
+        <p ng-if="!items||items.length==0">请先设置选项值</p>
+        <table ng-if="items.length>0" class="layui-table" lay-size="sm">
+          <thead>
+            <tr>
+              <th></th>
+              <th>选项</th>
+              <th>跳转到</th>
+            </tr>
+          </thead>
+          <tbody id="tableContent">
+            <tr ng-repeat="item in items">
+              <td>选择</td>
+              <td>
+                <span ng-bind="item['text']"></span>
+              </td>
+              <td class="select-box">
+                <div class="layui-form-item">
+                  <div class="layui-inline" value='{{item.value!=""?item.value:item.text}}'>
+                    <div class="layui-input-inline">
+                      <select name='select_{{item.value!=""?item.value:item.text}}'>
+                        <option value=''>请选择要跳转的题目</option>
+                        <option ng-repeat='(i,tr) in questions track by i' value='{{tr.$questionIndex}}'>{{tr.$questionIndex}}.{{tr.$questionBody}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+    
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script>
+      var control = null;
+      angular.module('myApp', []).controller('myController', function ($scope) {
+        $scope.questions = [];//当前题之后题目集合
+        $scope.items = [];//当前题选项值集合
+        $scope.logic = [];//最后返回的数据
+        $scope.cks = {};//已勾选的数据
+
+        window.dialogInit = function (args) {
+          control = args.owner;
+          $scope.logic = control.logic || [];
+          var beginPush = false;
+          if (control['_parent']['children'] && control['_parent']['children'].length > 0) {
+            for (var i = 0, length = control['_parent']['children'].length; i < length; i++) {
+              if (!beginPush && control['_parent']['children'][i]['$caption'] == control['$caption']) {
+                beginPush = true;
+                continue;
+              }
+			  // 找到当前题目
+              if (beginPush && control['_parent']['children'][i]['$questionIndex']) {
+                $scope.questions.push(control['_parent']['children'][i]);
+              }
+            }
+          }
+          //必须清楚之前的$$hashKey，重新生成
+          for (let n in control['_items']) {
+            delete control['_items'][n]['$$hashKey'];
+          }
+          $scope.items = control['_items'];
+          $scope.$apply();
+
+          layui.form.render();
+          if ($scope.logic) {
+            initCheck($scope.logic);
+          }
+        }
+
+        layui.form.on('select', function (data) {
+          // 选项的值
+          let item = $(data.elem.closest('.layui-inline')).attr('value');
+          // data.value 选中的题目
+          $scope.cks[item] = data.value;
+        });
+        window.getDialogResult = function () {
+          checkLogic();
+          return $scope.logic;
+        }
+
+        //遍历cks，赋值到logic
+        function checkLogic() {
+          var result = [];
+          for (var key in $scope.cks) {
+            let Q = $scope.cks[key];
+            if (Q) {
+              result.push({
+                Q: Q,
+                trig: [key]
+              });
+            }
+          }
+          $scope.logic = result;
+        }
+
+        //初始化选中
+        function initCheck(logic) {
+          var obj = {};
+          _.forEach(logic, function (v, k) {
+            var _k = v.trig[0];
+            obj['select_' + _k] = v.Q;
+            $scope.cks[_k] = v.Q;
+          })
+          layui.form.val('example1', obj);
+        }
+      })
+    </script>
+  </body>
+
+</html>

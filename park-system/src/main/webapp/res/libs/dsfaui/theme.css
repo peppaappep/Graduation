@@ -1,0 +1,251 @@
+/**
+ * 部分ui标准 
+ * 字体、分页、按钮
+ */
+body {
+	font-family: "微软雅黑", helvetica;
+}
+
+.f1 {
+	font-size: 34px;
+}
+
+.f2 {
+	font-size: 24px;
+}
+
+.f3 {
+	font-size: 18px;
+}
+
+.f4 {
+	font-size: 16px;
+}
+
+.f5 {
+	font-size: 14px;
+}
+
+.f6 {
+	font-size: 12px;
+}
+
+.f7 {
+	font-size: 10px;
+}
+
+
+/*分页*/
+
+.layui-table-page .layui-laypage a,
+.layui-table-page .layui-laypage span.layui-laypage-curr {
+	padding: 0 12px;
+	min-width: 34px;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+	background-color: #4daf7b;
+}
+
+.layui-table-page .layui-laypage input {
+	width: 46px;
+}
+
+.layui-laypage input:focus,
+.layui-laypage select:focus {
+	border-color: #4daf7b!important;
+}
+
+.layui-laypage a:hover {
+	color: #4daf7b;
+}
+
+
+/*按钮 */
+
+[class*=big-btn] {
+	font-size: 16px;
+	height: 44px;
+	line-height: 44px;
+	background-color: #028BE6;
+	color: #fff;
+	text-align: center;
+}
+
+.big-btn {
+	width: 112px;
+}
+
+.big-btn i {
+	font-size: 16px;
+	margin-right: 5px;
+}
+
+.big-btn-long {
+	width: 146px;
+}
+
+[class*=med-btn] {
+	height: 38px;
+	line-height: 38px;
+	font-size: 14px;
+	background-color: #028BE6;
+	color: #fff;
+	text-align: center;
+}
+
+.med-btn {
+	width: 92px;
+}
+
+.med-btn i {
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+.med-btn-long {
+	width: 138px;
+}
+
+[class*=sff-btn] {
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	background-color: #fff;
+	border-color: #f6f6f6;
+	color: #333;
+	text-align: center;
+}
+
+.sff-btn {
+	width: 80px;
+}
+
+.sff-btn i {
+	font-size: 12px;
+	margin-right: 2px;
+}
+
+.sff-btn-long {
+	width: 116px;
+}
+
+[class*=mini-btn] {
+	height: 22px;
+	line-height: 22px;
+	font-size: 12px;
+	background-color: #fff;
+	border-color: #f6f6f6;
+	color: #333;
+	text-align: center;
+}
+
+.mini-btn {
+	width: 68px;
+}
+
+.mini-btn i {
+	font-size: 12px;
+	margin-right: 2px;
+}
+
+.mini-btn-long {
+	width: 110px;
+}
+
+
+/*次要按钮样式*/
+
+.btn-bg-green {
+	background-color: #D6E7F7;
+	color: #3C8DDB;
+	border-color: #3C8DDB;
+}
+
+.btn-bg-blue {
+	background-color: #D3F2E2;
+	color: #2EC177;
+	border-color: #2EC177;
+}
+
+.btn-bg-red {
+	background-color: #FEE1E2;
+	color: #FB3A5B;
+	border-color: #FB3A5B;
+}
+
+
+/*非引导按钮*/
+
+.btn-bg-white {
+	background-color: #fff;
+	color: #333;
+	border-color: #d0d0d0;
+}
+
+
+/*图标*/
+
+.icon-big {
+	width: 40px;
+	height: 40px;
+	font-size: 40px;
+}
+
+.icon-med {
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+}
+
+.icon-sff {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+}
+
+.icon-mini {
+	width: 12px;
+	height: 12px;
+	font-size: 12px;
+}
+
+
+/**
+ * 提供的class 
+ */
+
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+.layui-btn.layui-clear-border {
+	border: 0 !important;
+}
+
+.layui-btn.layui-btn-text {
+	background: transparent;
+	border: 0 !important;
+	color: #2fc178;
+}
+
+.layui-btn {
+	border-radius: 4px;
+	background-color: #2fc178;
+}
+
+.layui-btn .layui-icon {
+	vertical-align: middle;
+	position: relative;
+	top: -1px;
+}
+
+.layui-btn-primary {
+	background: transparent;
+}

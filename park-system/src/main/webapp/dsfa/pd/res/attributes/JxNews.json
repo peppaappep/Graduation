@@ -1,0 +1,104 @@
+[
+  {
+    "name": "基础属性",
+    "attributes": [
+      {
+        "text": "组件标识",
+        "bindControlAttr": "caption",
+        "showType": "text"
+      },
+      {
+        "text": "组件宽度",
+        "bindControlAttr": "mainWidth",
+        "showType": "text",
+        "changeExecFunction": "changeMainWidth"
+      },
+      {
+        "text": "组件高度",
+        "bindControlAttr": "mainHeight",
+        "showType": "text",
+        "changeExecFunction": "changeMainHeight"
+      },
+      {
+        "text": "组件外边距(上右下左)",
+        "bindControlAttr": "mainMargin",
+        "showType": "text",
+        "changeExecFunction": "changeMainMargin"
+      },
+      {
+        "text": "选项卡编辑",
+        "bindControlAttr": "tabs",
+        "showType": "dialog",
+        "changeExecFunction": "changeTabsData",
+        "config": {
+          "title": "选项卡编辑",
+          "url": "/dsfa/pd/views/JxNewsTabsData.html",
+          "width": "900px",
+          "height": "600px",
+          "buttonText": "设置"
+        }
+      }
+    ]
+  },
+  {
+    "name": "请求设置",
+    "attributes": [
+      {
+        "text": "请求接口",
+        "bindControlAttr": "url",
+        "showType": "text"
+      },
+      {
+        "text": "method",
+        "showType": "select",
+        "bindControlAttr": "httpMethed",
+        "dictionary": [
+          {
+            "text": "GET",
+            "value": "GET"
+          }, {
+            "text": "POST",
+            "value": "POST"
+          }, {
+            "text": "DELETE",
+            "value": "DELETE"
+          }, {
+            "text": "PUT",
+            "value": "PUT"
+          }
+        ]
+      },
+      {
+        "text": "参数pageSize：最多显示数量",
+        "bindControlAttr": "params.pageSize",
+        "showType": "number",
+        "changeExecFunction": "changePageSize"
+      },
+      {
+        "text": "参数pageSize对应key",
+        "bindControlAttr": "paramsKey.pageSize",
+        "showType": "text"
+      },
+      {
+        "text": "参数(选项卡标识)对应key",
+        "bindControlAttr": "paramsKey.keyword",
+        "showType": "text"
+      }
+    ]
+  },
+  {
+    "name": "响应设置",
+    "attributes": [
+      {
+        "text": "数据文本对应key",
+        "bindControlAttr": "dataKey.text",
+        "showType": "text"
+      },
+      {
+        "text": "数据日期对应key",
+        "bindControlAttr": "dataKey.time",
+        "showType": "text"
+      }
+    ]
+  }
+]

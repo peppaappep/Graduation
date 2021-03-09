@@ -1,0 +1,119 @@
+{
+	"WorkFlow": {
+		"BaseInfo": {
+			"ID": "",
+			"Name": "",
+			"Version": "",
+			"Desc": "",
+			"ToDoListName": "",
+			"TimeLimit": {
+				"Type": "0",
+				"Value": ""
+			},
+			"Vendor": {
+				"ID": "dreamsoft",
+				"Name": "",
+				"Desc": "",
+				"APP": {
+					"ID": "",
+					"Name": "",
+					"Template": "",
+					"Desc": ""
+				},
+				"WFID": ""
+			}
+		},
+		"NodeList": "",
+		"LineList": "",
+		"Corridor": {
+			"Type": "0",
+			"CorridorList": "",
+			"StageList": ""
+		},
+		"ElementList": "",
+		"NodeTemplete": {
+			"ID": "",
+			"Name": "",
+			"Type": "1",
+			"Desc": "",
+			"TimeLimit": {
+				"Type": "0",
+				"Value": ""
+			},
+			"AreaVisible": "",
+			"ReadOnly": "",
+			"Messages": "",
+			"OutLine": {
+				"Type": "0",
+				"IsEnableBatch": "0",
+				"SendPreConditions": "",
+				"SendConditions": "",
+				"AutoDo": "",
+				"SpecialSendRange": ""
+			},
+			"InLine": {
+				"IsCC": "0",
+				"IsAutoSend": "0",
+				"IsInherit": "0",
+				"ExpandLevel": "0",
+				"Multiplayer": {
+					"IsEnabled": "0",
+					"SendMode": "0"
+				},
+				"RangeRule": "",
+				"ExAction": "",
+				"SendBackAction": "",
+				"ExInfo": "",
+				"AutoAction": ""
+			}
+		},
+		"LineTemplete": {
+			"ID": "",
+			"Name": "",
+			"StartNodeID": "",
+			"EndNodeID": "",
+			"Type": "0",
+			"Desc": "",
+			"SendParameter": {
+				"IsEnabled": "0",
+				"IsCC": "0",
+				"IsAutoSend": "0",
+				"IsInherit": "0",
+				"ExpandLevel": "0",
+				"Multiplayer": {
+					"IsEnabled": "0",
+					"SendMode": "0"
+				},
+				"RangeRule": "",
+				"ExAction": "",
+				"SendBackAction": ""
+			},
+			"GatherRule": {
+				"Proportion": "",
+				"GatherRange": ""
+			}
+		},
+		"ElementTemplete": {
+			"type": "",
+			"attrs": {
+				"x": "",
+				"y": "",
+				"width": "",
+				"height": "",
+				"r": "",
+				"rx": "",
+				"ry": "",
+				"fill": "",
+				"stroke": "",
+				"stroke-width": ""
+			},
+			"attributes": {
+				"xmlType": "",
+				"cid": "",
+				"eid": "",
+				"textId": "",
+				"endLines": ""
+			}
+		}
+	}
+}

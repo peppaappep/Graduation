@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='myApp'>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>跳题设置</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../res/components.css" />
+  <style>
+    tr>td:first-child{
+      text-align: center;
+    }
+    ._special_ico_docu{
+      margin-right: 2px !important;
+      background-position: -110px -2px;
+    }
+    .ztree li span.button.chk{
+      margin-left: 3px
+    }
+    .ztree li a{
+      height: 20px !important;
+      line-height: 20px;
+    }
+    .ztree li span{
+      margin-top: 1px !important;
+    }
+    .layui-tab,
+    .layui-tab-title{
+      margin: 0;
+    }
+    .layui-tab-item-tree{
+      overflow: hidden;
+      height: 398px;
+    }
+    .layui-tab-item-tree>div:first-child{
+      float: left;
+      width: 40%;
+    }
+    .layui-tab-item-tree>div:last-child{
+
+      max-height: 398px;
+      float: right;
+      width: 60%;
+      padding-right: 10px;
+      overflow: auto;
+    }
+    .ds_tree_box .ds_tree{
+      height: 348px;
+      border-right: 1px solid #f2f2f2;
+    }
+    .layui-tab-content{
+      padding: 0px;
+    }
+    .fr{
+      padding: 10px;
+    }
+    .fr table{
+      margin-top: 0;
+    }
+    .layui-tab-item:not(.layui-tab-item-tree){
+      padding: 10px;
+      height: 398px;
+      overflow: auto;
+    }
+    .layui-table th{
+      text-align: center;
+    }
+    .ck-td{
+      position: relative;
+    }
+    .ck-td input[type='checkbox']{
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .layui-form-checkbox[lay-skin=primary]{
+      padding: 0 6px;
+    }
+    .layui-table[lay-size=sm] td, .layui-table[lay-size=sm] th{
+      font-size: 13px;
+      padding: 8px 5px;
+    }
+  </style>
+</head>
+
+<body ng-controller='myController'>
+<div style="padding:10px;padding-bottom: 0;">
+  <p ng-if="!items||items.length==0">请先设置选项值</p>
+  <table ng-if="items.length>0" class="layui-table" lay-size="sm">
+    <thead>
+    <tr>
+      <th>题号</th>
+      <th colspan="{{items.length}}">触发隐藏选中项</th>
+    </tr>
+    </thead>
+    <tbody id="tableContent">
+    <tr>
+      <td></td>
+      <td align="center" ng-repeat="item in items">
+        <span ng-bind="item['text']"></span>
+      </td>
+    </tr>
+    <tr ng-repeat='(i,tr) in questions track by i'>
+      <td ng-bind='tr'></td>
+      <td ng-repeat="item in items" align="center" class="ck-td">
+        <input type="checkbox" name="{{tr}}" ng-model="cks[tr][item.value]" ng-true-value="true" ng-false-value="false" value="{{item.value}}">
+        <div class="layui-unselect layui-form-checkbox" ng-class="{'layui-form-checked':cks[tr][item.value]}" lay-skin="primary">
+          <i class="layui-icon layui-icon-ok"></i>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+<script src="../../../app.js"></script>
+<script src="../../../res/dsf_res/dsf_config.js"></script>
+<script src="../../../res/dsf_res/dsf_common.js"></script>
+<script src="../res/ds_prop.js"></script>
+<script src="../res/libs/angular/angular.min.js"></script>
+<!--<script src="../../../dsfa/bhc/hc/bhc.js"></script>-->
+<script>
+  var control = null;
+  var app = angular.module('myApp', []);
+  app.controller('myController', function ($scope) {
+    $scope.questions = [];//当前题之后题目集合
+    $scope.items = [];//当前题选项值集合
+    $scope.logic=[];//最后返回的数据
+    $scope.cks={};//已勾选的数据
+
+    window.dialogInit = function (args) {
+      debugger
+      control = args.owner;
+      $scope.logic=control.logic||[];
+      var beginPush=false;
+      if(control['_parent']['children']&&control['_parent']['children'].length>0){
+        for(var i=0,length=control['_parent']['children'].length;i<length;i++){
+          if(!beginPush&&control['_parent']['children'][i]['$questionIndex']==control['$questionIndex']){
+            beginPush=true;
+            continue;
+          }
+          if(beginPush&&control['_parent']['children'][i]['$questionIndex']){
+            $scope.questions.push(control['_parent']['children'][i]['$questionIndex']);
+            $scope.cks[control['_parent']['children'][i]['$questionIndex']]={};
+          }
+        }
+      }
+      //必须清楚之前的$$hashKey，重新生成
+      for(let n in control['_items']){
+        delete control['_items'][n]['$$hashKey'];
+      }
+      $scope.items=control['_items'];
+
+      if($scope.logic){
+        initCheck($scope.logic);
+      }
+      $scope.$apply();
+    }
+
+    window.getDialogResult = function() {
+      checkLogic();
+      return $scope.logic;
+    }
+
+    //遍历cks，赋值到logic
+    function checkLogic() {
+      var result=[];
+      for(var key in $scope.cks){
+        var q={
+          Q:key,
+          trig:[]
+        };
+        for(var k in $scope.cks[key]){
+          if($scope.cks[key][k]===true){
+            q['trig'].push(k)
+          }
+        }
+        //存在跳题逻辑的保存
+        if(q['trig'].length>0){
+          result.push(q);
+        }
+      }
+      $scope.logic=result;
+    }
+
+    //初始化选中
+    function initCheck(logic) {
+      for(var i=0,length=logic.length;i<length;i++){
+        var obj={};
+        for(var n=0,leng=logic[i]['trig'].length;n<leng;n++){
+          obj[logic[i]['trig'][n]]=true
+        }
+        $scope.cks[logic[i]['Q']]=obj;
+      }
+    }
+  })
+</script>
+</body>
+
+</html>

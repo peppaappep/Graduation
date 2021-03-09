@@ -1,0 +1,162 @@
+[{
+      "name": "基础属性",
+      "attributes": [{
+            "text": "组件标识",
+            "bindControlAttr": "caption",
+            "showType": "text"
+         },
+         {
+            "text": "标题",
+            "showType": "text",
+            "bindControlAttr": "label"
+         },
+         {
+            "text": "是否显示标题",
+            "showType": "boolean",
+            "bindControlAttr": "$showTitle",
+            "changeExecFunction": "renderContext"
+          },
+         {
+            "text": "单位标签",
+            "showType": "text",
+            "bindControlAttr": "dept"
+         },
+         {
+            "text": "人员标签",
+            "showType": "text",
+            "bindControlAttr": "people"
+         }
+      ]
+   },
+   {
+      "name": "组织架构属性",
+      "attributes": [{
+            "text": "数据源类型",
+            "bindControlAttr": "metaDataType",
+            "showType": "select",
+            "hiddenKeyClass": "sqlUrl",
+            "showKeyClass": "metaDataDialog",
+            "dictionary": [{
+                  "text": "接口",
+                  "value": "0"
+               },
+               {
+                  "text": "元数据组",
+                  "value": "1"
+               }
+            ]
+         },
+         {
+            "text": "接口URL",
+            "showType": "text",
+            "class": "sqlUrl",
+            "bindControlAttr": "sqlUrl",
+            "changeExecFunction": "loadOrganData",
+            "hidden": "metaDataType==1"
+         },
+         {
+            "text": "元数据组选择",
+            "bindControlAttr": "chooseMetaData",
+            "showType": "dialog",
+            "changeExecFunction": "loadOrganData",
+            "config": {
+               "url": "/dsfa/pd/views/authOrgan.html",
+               "width": "450px",
+               "height": "550px",
+               "buttonText": "选择",
+               "title": "选择元数据组"
+            },
+            "class": "metaDataDialog",
+            "hidden": "metaDataType==0"
+         },
+         {
+            "text": "高级查询设置",
+            "showType": "dialog",
+            "bindControlAttr": "$organSearchInfo",
+            "changeExecFunction": "renderOrganInfo",
+            "config": {
+               "title": "查询条件设置",
+               "url": "/dsfa/pd/views/authOrganEdit.html",
+               "width": "1170px",
+               "height": "600px",
+               "buttonText": "设置"
+            },
+            "class": "metaDataDialog",
+            "hidden": "metaDataType==0"
+         }
+      ]
+   },
+   {
+      "name": "人员列表属性",
+      "attributes": [{
+            "text": "数据源类型",
+            "bindControlAttr": "metaDataTypeClass",
+            "showType": "select",
+            "hiddenKeyClass": "sqlUrlClass",
+            "showKeyClass": "metaDataDialogClass",
+            "dictionary": [{
+                  "text": "接口",
+                  "value": "0"
+               },
+               {
+                  "text": "元数据组",
+                  "value": "1"
+               }
+            ]
+         },
+         {
+            "text": "接口URL",
+            "showType": "text",
+            "class": "sqlUrlClass",
+            "bindControlAttr": "sqlUrlClass",
+            "changeExecFunction": "loadClassData",
+            "hidden": "metaDataTypeClass==1"
+         },
+         {
+            "text": "元数据组选择",
+            "bindControlAttr": "chooseMetaDataClass",
+            "showType": "dialog",
+            "changeExecFunction": "loadClassData",
+            "config": {
+               "url": "/dsfa/pd/views/authClasses.html",
+               "width": "450px",
+               "height": "550px",
+               "buttonText": "选择",
+               "title": "选择元数据组"
+            },
+            "class": "metaDataDialogClass",
+            "hidden": "metaDataTypeClass==0"
+         },
+         {
+            "text": "高级查询设置",
+            "showType": "dialog",
+            "bindControlAttr": "$classSearchInfo",
+            "changeExecFunction": "renderClassInfo",
+            "config": {
+               "title": "查询条件设置",
+               "url": "/dsfa/pd/views/authClassesEdit.html",
+               "width": "1170px",
+               "height": "600px",
+               "buttonText": "设置"
+            },
+            "class": "metaDataDialogClass",
+            "hidden": "metaDataTypeClass==0"
+         },
+         {
+            "text": "数据列设置",
+            "showType": "dialog",
+            "bindControlAttr": "$columns",
+            "changeExecFunction": "renderClassColumns",
+            "config": {
+                "title": "数据列设置",
+                "url": "/dsfa/pd/views/authColumnEdit.html",
+                "width": "1000px",
+                "height": "600px",
+                "buttonText": "设置"
+            },
+            "class": "metaDataDialogClass",
+            "hidden": "metaDataTypeClass==0"
+        }
+      ]
+   }
+]

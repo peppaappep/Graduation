@@ -1,0 +1,131 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "名称是否显示",
+                "bindControlAttr": "showLabel",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly",
+                "changeExecFunction": "renderContext"
+            }
+        ]
+    },
+    {
+        "name": "控件属性",
+        "attributes": [
+            {
+                "text": "是否裁剪照片",
+                "showType": "boolean",
+                "bindControlAttr": "$isCutPic",
+                "hiddenKeyClass":"cutRatio",
+                "showKeyClass":"cutRatio",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "剪裁比例(如：16:9)",
+                "showType": "text",
+                "bindControlAttr": "$aspectRatio",
+                "class":"cutRatio",
+                "changeExecFunction": "renderContext",
+                "hidden":"$isCutPic==false"
+            }, 
+            {
+                "text": "按钮名称是否显示",
+                "bindControlAttr": "showBtnName",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否支持多张上传",
+                "bindControlAttr": "$multiple",
+                "showType": "boolean",
+                "hiddenKeyClass":"fileNum",
+                "showKeyClass":"fileNum",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "上传图片数量",
+                "bindControlAttr": "$uploadFileNum",
+                "showType": "text",
+                "class":"fileNum",
+                "changeExecFunction": "renderContext",
+                "hidden":"$multiple==false"
+            },
+            {
+                "text": "上传图片大小限制",
+                "bindControlAttr": "$maxFileSize",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "允许上传图片后缀名(','分隔)",
+                "bindControlAttr": "$uploadFileExts",
+                "showType": "text"
+            },
+            {
+                "text": "文件打包下载文件名称",
+                "bindControlAttr": "$zipFileName",
+                "showType": "text"
+            }
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [
+            {
+                "text": "元数据",
+                "bindControlAttr": "metadata",
+                "showType": "mmdata",
+                "config": {
+                    "url": "/dsfa/pd/views/metadataEdit.html",
+                    "width": "600px",
+                    "height": "600px",
+                    "buttonText": "选择元数据",
+                    "title": "元数据设置"
+                }
+            },
+            {
+                "text": "必填标识",
+                "bindControlAttr": "$required",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "校验规则",
+                "bindControlAttr": "metadata.validate",
+                "showType": "validateEditor",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/validateCode.html",
+                    "width": "800px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            }
+        ]
+    }
+]

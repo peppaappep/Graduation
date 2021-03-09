@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>套打demo</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/bhc.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/jquery-ui/jquery-ui.min.css" />
+</head>
+
+<body>
+    <div id="view">
+        <div style="position: relative; overflow:hidden;width:0px;height:0px;">
+            <div id="printing"></div>
+        </div>
+    </div>
+    <div>
+        <img id="exportImg">
+    </div>
+    <a id="downloadLink" class="ds_button" disabled href="" download="毕业证书.png">下载</a>
+</body>
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../res/libs/lodash/lodash.min.js"></script>
+<script src="../../../app.js"></script>
+<script src="../../../res/dsf_res/dsf_config.js"></script>
+<script src="../../../res/dsf_res/dsf_common.js"></script>
+<script src="../../../res/dsf_res/dsf_seat_layout.js"></script>
+<script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+<script src="../../../res/libs/zTree/js/jquery.ztree.exhide.min.js"></script>
+
+<script src="../../../dsfa/bhc/hc/bhc.js"></script>
+<script src="../../../dsfa/pd/hc/pd.js"></script>
+<script>
+    var print;
+    $(document).ready(function() {
+        var tid = dsf.url.queryString("id");
+        print = new dsf.PD.printingDesign('printing');
+        print.isDesign = false;
+        print._templateId = tid;
+        //绑定套打组件加载后事件
+        print.event.on("loaded", loaded);
+        //读取学员信息
+        var q = dsf.queue(true);
+        q.step(function(def, v) {
+            //查询学员数据
+            dsf.http.request("/dsfa/meta/data", {
+                    'id': '77357d7752074a099498784733599c90',
+                    'data': JSON.stringify({"_id": "77357d7752074a099498784733599c90"}),
+                    'pageName': 'edit',
+                    'namespace': 'teas.jwgl.bjxygl'
+                }, 'GET')
+                .done(function(res) {
+                    def.resolve(res.data);
+                }).exec();
+        })
+        q.step(function(def, v) {
+            //将数据传给套打组件
+            print.setData(v);
+            print.render(document.getElementById('printing'));
+            def.resolve();
+        });
+        window.setTimeout(q.exec, 10);
+    });
+
+    function loaded(args) {
+        print.exportImage(function(url) {
+            $("#exportImg").attr("src", url);
+            $("#downloadLink").removeAttr("disabled").attr("href", url);
+        })
+    }
+</script>
+
+</html>

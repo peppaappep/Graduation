@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <title>异常操作</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            background-color: #f1f1f1;
+        }
+        .content_wrap {
+            text-align: center;
+            margin-top: 15%;
+        }
+        .redict_icon {
+            display: inline-block;
+        }
+        .redict_icon img {
+            width: 150px;
+        }
+        .redict_content {
+            display: inline-block;
+            text-align: left;
+        }
+        .update_btn {
+            position: relative;
+            background-color: #7ec1ee;
+            padding: 4px 20px 4px 30px;
+            border-radius: 2px;
+            left: 1em;
+            color: #fff;
+            cursor: pointer;
+        }
+        .update_btn img {
+            position: absolute;
+            width: 18px;
+            top: 6px;
+            left: 13px;
+        }
+        .sub-title{
+            padding-left: 1em;
+        }
+        /**
+         * hmm
+         * 2019-08-09
+         */
+        .errors{
+        	background: #fff;
+        	color: #999;
+        }
+        .errors img{
+        	vertical-align: middle;
+        }
+        .errors .redict_icon{
+        	display: block;
+        	text-align: center;
+        }
+        .errors .redict_icon img,
+        .errors .redict_content{
+        	width: 70%;
+        	max-width: 600px;
+        	text-align: center;
+        }
+        .errors .sub-title{
+        	font-size: 1.3em;
+        }
+        .errors .btns{
+        	overflow: hidden;
+        	font-size: 1em;
+        	width: 80%;
+        	margin: 0 auto;
+        } 
+        .errors .btns img{
+        	width: 1em;
+        	margin-right: 0.5em;
+        }
+        .errors .btns>div{
+        	cursor: pointer;
+        }
+        .errors .btns>div:first-child{
+        	float: left;
+        }
+        .errors .btns>div:last-child{
+        	float: right;
+        }
+    </style>
+</head>
+
+<body class="errors">
+<section class="content_wrap">
+    <div class="redict_icon">
+        <img src="#(_contextPath)/static/images/#((status==404 || status==403 || status==500)?status:404).png" alt="">
+    </div>
+    <div class="redict_content">
+        <p class="sub-title">#(status==404?'您访问的页面不存在...':status==403?'您没有获取访问权限...':status==500?'您访问的页面正在维护中...':'未知异常')</p>
+        <div class="btns">
+        	<div class="refresh_btn">
+        		<img src="#(_contextPath)/static/images/refresh.png"/>
+        		<span>刷新页面</span>
+        	</div>
+        	<div class="back_btn">
+        		<img src="#(_contextPath)/static/images/back.png"/>
+        		<span>返回首页</span>
+        	</div>
+        </div>
+    </div>
+</section>
+</body>
+<script type="text/javascript">
+    var refresh_btn = document.querySelector('.refresh_btn');
+    refresh_btn.onclick = function(){
+        window.location.reload();
+    }
+    var back_btn = document.querySelector('.back_btn');
+    back_btn.onclick = function(){
+       window.location.href = '#';
+    }
+</script>
+</html>

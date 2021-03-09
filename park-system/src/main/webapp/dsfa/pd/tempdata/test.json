@@ -1,0 +1,543 @@
+{
+	"wj_sz_a1.ds_update_time": "2019-11-11 20:02:05",
+	"wj_sz_a1.year": "2019",
+	"wj_sz_a1.task": "4",
+	"wj_sz_a1.save_status": 0,
+	"wj_sz_a1.familyid": "110101001001001H01001",
+	"wj_sz_a1.bfz_name": "多少",
+	"wj_sz_a1.bfz_lxdh": 13112341234,
+	"wj_sz_a1.dcy_name": "我的给",
+	"wj_sz_a1.dcy_bh": 10,
+	"wj_sz_a1.dcy_lxdh": 13112341234,
+	"wj_sz_a1.wjys_name": "",
+	"wj_sz_a1.wjfh_name": "",
+	"wj_sz_a1.coun": "110101",
+	"wj_sz_a1.dcxqbh": "110101001001001",
+	"wj_sz_a1.dcxqname": "多福巷社区居委会",
+	"wj_sz_a1.mastername": "",
+	"wj_sz_a1.address": "多福巷胡同1号院1号凌杰",
+	"wj_sz_a1.ds_status": 2,
+	"wj_sz_a1.scode": "",
+	"wj_sz_a1.app_logo": 1,
+	"wj_sz_a1.auditinfo": {
+		"num1": 0,
+		"num0": 0,
+		"state": 1,
+		"detail": "[]"
+	},
+	"wj_sz_a1_sub": [{
+		"wj_sz_a1_sub.app_logo": 1,
+		"wj_sz_a1_sub.year": "2019",
+		"wj_sz_a1_sub.a123": 65,
+		"wj_sz_a1_sub.a122": 200,
+		"wj_sz_a1_sub.project_id": "",
+		"wj_sz_a1_sub.a121": "11010119830210351X",
+		"wj_sz_a1_sub.wj_sz_a1_id": "970D4B855F5B99BAE0538086060AAA08",
+		"wj_sz_a1_sub.familyid": "110101001001001H01001",
+		"wj_sz_a1_sub.a107_1": "",
+		"wj_sz_a1_sub.a105_2": 2,
+		"wj_sz_a1_sub.a105_1": 1983,
+		"wj_sz_a1_sub.wj_sz_a1_sub_id": "970D4B857C5899BAE0538086060AAA08",
+		"wj_sz_a1_sub.a120": {
+			"text": "②否",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a113": {
+			"text": "⑤大学专科",
+			"value": "5"
+		},
+		"wj_sz_a1_sub.a112": {
+			"text": "③非在校学生",
+			"value": "3"
+		},
+		"wj_sz_a1_sub.a111": [{
+			"text": "②城镇职工基本医疗保险",
+			"value": "2"
+		}],
+		"wj_sz_a1_sub.a110": {
+			"text": "①健康",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a117": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.auditinfo": {
+			"state": 1,
+			"num0": 0,
+			"num1": 0,
+			"detail": "[]"
+		},
+		"wj_sz_a1_sub.a116": {
+			"text": "②否",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a115": 3,
+		"wj_sz_a1_sub.a114": {
+			"text": "①未婚",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.ds_order": 1,
+		"wj_sz_a1_sub.a119": {
+			"text": "①是",
+			"value": "1"
+		},
+		"_id": "970D4B857C5899BAE0538086060AAA08",
+		"wj_sz_a1_sub.a118": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.coun": "110101",
+		"wj_sz_a1_sub.scode": "1.010.01h",
+		"wj_sz_a1_sub.zzbm": "",
+		"wj_sz_a1_sub.task": "4",
+		"wj_sz_a1_sub.a210remark": "",
+		"wj_sz_a1_sub.a102": {
+			"text": "①不变",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a101": "凌杰",
+		"wj_sz_a1_sub.a100": 1,
+		"wj_sz_a1_sub.a106": 36,
+		"wj_sz_a1_sub.hhstatus": "1",
+		"wj_sz_a1_sub.a105": 198302,
+		"wj_sz_a1_sub.a104": {
+			"text": "①男",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a103": {
+			"text": "①户主",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a109": {
+			"text": "②非农业户口",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a108": {
+			"text": "",
+			"value": ""
+		},
+		"wj_sz_a1_sub.a107": {
+			"text": "①汉族",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a209remark": "",
+		"wj_sz_a1_sub.a108_1": {
+			"text": "④县外市内",
+			"value": "4"
+		},
+		"wj_sz_a1_sub.a108remark": "",
+		"wj_sz_a1_sub.save_status": ""
+	}, {
+		"wj_sz_a1_sub.app_logo": 1,
+		"wj_sz_a1_sub.year": "2019",
+		"wj_sz_a1_sub.a123": 50,
+		"wj_sz_a1_sub.a122": 186,
+		"wj_sz_a1_sub.project_id": "",
+		"wj_sz_a1_sub.a121": "11010119830210351X",
+		"wj_sz_a1_sub.wj_sz_a1_id": "970D4B855F5B99BAE0538086060AAA08",
+		"wj_sz_a1_sub.familyid": "110101001001001H01001",
+		"wj_sz_a1_sub.a107_1": "",
+		"wj_sz_a1_sub.a105_2": 2,
+		"wj_sz_a1_sub.a105_1": 1983,
+		"wj_sz_a1_sub.wj_sz_a1_sub_id": "970D4B8575B199BAE0538086060AAA08",
+		"wj_sz_a1_sub.a120": {
+			"text": "②否",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a113": {
+			"text": "①未上过学",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a112": {
+			"text": "③非在校学生",
+			"value": "3"
+		},
+		"wj_sz_a1_sub.a111": [{
+			"text": "②城镇职工基本医疗保险",
+			"value": "2"
+		}],
+		"wj_sz_a1_sub.a110": {
+			"text": "①健康",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a117": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.auditinfo": {
+			"state": 1,
+			"num0": 0,
+			"num1": 0,
+			"detail": "[]"
+		},
+		"wj_sz_a1_sub.a116": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a115": 1,
+		"wj_sz_a1_sub.a114": {
+			"text": "②有配偶",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.ds_order": 2,
+		"wj_sz_a1_sub.a119": {
+			"text": "①是",
+			"value": "1"
+		},
+		"_id": "970D4B8575B199BAE0538086060AAA08",
+		"wj_sz_a1_sub.a118": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.coun": "110101",
+		"wj_sz_a1_sub.scode": "1.010.01h",
+		"wj_sz_a1_sub.zzbm": "",
+		"wj_sz_a1_sub.task": "4",
+		"wj_sz_a1_sub.a210remark": "",
+		"wj_sz_a1_sub.a102": {
+			"text": "③减少",
+			"value": "3"
+		},
+		"wj_sz_a1_sub.a101": "张四",
+		"wj_sz_a1_sub.a100": 2,
+		"wj_sz_a1_sub.a106": 36,
+		"wj_sz_a1_sub.hhstatus": "1",
+		"wj_sz_a1_sub.a105": 198302,
+		"wj_sz_a1_sub.a104": {
+			"text": "②女",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a103": {
+			"text": "②配偶",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a109": {
+			"text": "①农业户口",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a108": {
+			"text": "",
+			"value": ""
+		},
+		"wj_sz_a1_sub.a107": {
+			"text": "①汉族",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a209remark": "",
+		"wj_sz_a1_sub.a108_1": {
+			"text": "②村外乡(镇、街道)内",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a108remark": "",
+		"wj_sz_a1_sub.save_status": ""
+	}, {
+		"wj_sz_a1_sub.app_logo": 1,
+		"wj_sz_a1_sub.year": "2019",
+		"wj_sz_a1_sub.a123": 53,
+		"wj_sz_a1_sub.a122": 186,
+		"wj_sz_a1_sub.project_id": "",
+		"wj_sz_a1_sub.a121": "11010119830210351X",
+		"wj_sz_a1_sub.wj_sz_a1_id": "970D4B855F5B99BAE0538086060AAA08",
+		"wj_sz_a1_sub.familyid": "110101001001001H01001",
+		"wj_sz_a1_sub.a107_1": "",
+		"wj_sz_a1_sub.a105_2": 1,
+		"wj_sz_a1_sub.a105_1": 1997,
+		"wj_sz_a1_sub.wj_sz_a1_sub_id": "94cc398b5b084aadabaf160d3e335df4",
+		"wj_sz_a1_sub.a120": {
+			"text": "②否",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a113": {
+			"text": "⑤大学专科",
+			"value": "5"
+		},
+		"wj_sz_a1_sub.a112": {
+			"text": "③非在校学生",
+			"value": "3"
+		},
+		"wj_sz_a1_sub.a111": [{
+			"text": "①新型农村合作医疗",
+			"value": "1"
+		}],
+		"wj_sz_a1_sub.a110": {
+			"text": "①健康",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a117": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.auditinfo": {
+			"state": 1,
+			"num0": 0,
+			"num1": 0,
+			"detail": "[]"
+		},
+		"wj_sz_a1_sub.a116": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a115": 3,
+		"wj_sz_a1_sub.a114": {
+			"text": "①未婚",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.ds_order": 3,
+		"wj_sz_a1_sub.a119": {
+			"text": "①是",
+			"value": "1"
+		},
+		"_id": "94cc398b5b084aadabaf160d3e335df4",
+		"wj_sz_a1_sub.a118": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.coun": "110101",
+		"wj_sz_a1_sub.scode": "",
+		"wj_sz_a1_sub.zzbm": "",
+		"wj_sz_a1_sub.task": "4",
+		"wj_sz_a1_sub.a210remark": "",
+		"wj_sz_a1_sub.a102": {
+			"text": "①不变",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a101": "李白",
+		"wj_sz_a1_sub.a100": 3,
+		"wj_sz_a1_sub.a106": 22,
+		"wj_sz_a1_sub.hhstatus": "0",
+		"wj_sz_a1_sub.a105": 199701,
+		"wj_sz_a1_sub.a104": {
+			"text": "①男",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a103": {
+			"text": "③子女",
+			"value": "3"
+		},
+		"wj_sz_a1_sub.a109": {
+			"text": "①农业户口",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a108": {
+			"text": "",
+			"value": ""
+		},
+		"wj_sz_a1_sub.a107": {
+			"text": "①汉族",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a209remark": "",
+		"wj_sz_a1_sub.a108_1": {
+			"text": "②村外乡(镇、街道)内",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a108remark": "",
+		"wj_sz_a1_sub.save_status": ""
+	}, {
+		"wj_sz_a1_sub.a100": "",
+		"wj_sz_a1_sub.a101": "张三",
+		"wj_sz_a1_sub.a102": {
+			"text": "①不变",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a103": {
+			"text": "③子女",
+			"value": "3"
+		},
+		"wj_sz_a1_sub.a104": {
+			"text": "①男",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a105": "199701",
+		"wj_sz_a1_sub.a107": {
+			"text": "①汉族",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a108_1": {
+			"text": "①本村(居委会)",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a108": {
+			"text": "",
+			"value": ""
+		},
+		"wj_sz_a1_sub.a109": {
+			"text": "①农业户口",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a110": {
+			"text": "①健康",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a111": [{
+			"text": "①新型农村合作医疗",
+			"value": "1"
+		}],
+		"wj_sz_a1_sub.a112": {
+			"text": "①由本住户供养的在校学生",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a113": {
+			"text": "①未上过学",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a114": {
+			"text": "①未婚",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a120": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a115": "1",
+		"wj_sz_a1_sub.a116": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a117": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a118": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a119": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a122": "1",
+		"wj_sz_a1_sub.coun": "",
+		"wj_sz_a1_sub.familyid": "",
+		"wj_sz_a1_sub.scode": "",
+		"wj_sz_a1_sub.year": "",
+		"wj_sz_a1_sub.a105_1": "",
+		"wj_sz_a1_sub.a105_2": "",
+		"wj_sz_a1_sub.save_status": "",
+		"wj_sz_a1_sub.a106": "",
+		"wj_sz_a1_sub.a107_1": "",
+		"wj_sz_a1_sub.a108remark": "",
+		"wj_sz_a1_sub.project_id": "",
+		"wj_sz_a1_sub.zzbm": "",
+		"wj_sz_a1_sub.a209remark": "",
+		"wj_sz_a1_sub.a210remark": "",
+		"wj_sz_a1_sub.hhstatus": "0",
+		"wj_sz_a1_sub.task": "",
+		"wj_sz_a1_sub.app_logo": "",
+		"wj_sz_a1_sub.ds_order": 4,
+		"wj_sz_a1_sub.a123": "1",
+		"wj_sz_a1_sub.a121": "",
+		"wj_sz_a1_sub.auditinfo": {
+			"state": 1,
+			"num0": 0,
+			"num1": 0,
+			"detail": "[]"
+		}
+	}, {
+		"wj_sz_a1_sub.app_logo": "",
+		"wj_sz_a1_sub.year": "2019",
+		"wj_sz_a1_sub.a123": 1,
+		"wj_sz_a1_sub.a122": 1,
+		"wj_sz_a1_sub.project_id": "",
+		"wj_sz_a1_sub.a121": "11010119830210351X",
+		"wj_sz_a1_sub.wj_sz_a1_id": "970D4B855F5B99BAE0538086060AAA08",
+		"wj_sz_a1_sub.familyid": "110101001001001H01001",
+		"wj_sz_a1_sub.a107_1": "",
+		"wj_sz_a1_sub.a105_2": 1,
+		"wj_sz_a1_sub.a105_1": 1997,
+		"wj_sz_a1_sub.wj_sz_a1_sub_id": "8b811371260f4029b5436eb7e4344414",
+		"wj_sz_a1_sub.a120": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a113": {
+			"text": "①未上过学",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a112": {
+			"text": "①由本住户供养的在校学生",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a111": [{
+			"text": "①新型农村合作医疗",
+			"value": "1"
+		}],
+		"wj_sz_a1_sub.a110": {
+			"text": "①健康",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a117": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.auditinfo": {
+			"num1": "0",
+			"num0": "0",
+			"state": "1",
+			"detail": "[]"
+		},
+		"wj_sz_a1_sub.a116": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a115": 1,
+		"wj_sz_a1_sub.a114": {
+			"text": "①未婚",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.ds_order": 4,
+		"wj_sz_a1_sub.a119": {
+			"text": "①是",
+			"value": "1"
+		},
+		"_id": "8b811371260f4029b5436eb7e4344414",
+		"wj_sz_a1_sub.a118": {
+			"text": "①是",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.coun": "110101",
+		"wj_sz_a1_sub.scode": "",
+		"wj_sz_a1_sub.zzbm": "",
+		"wj_sz_a1_sub.task": "4",
+		"wj_sz_a1_sub.a210remark": "",
+		"wj_sz_a1_sub.a102": {
+			"text": "①不变",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a101": "张三",
+		"wj_sz_a1_sub.a100": "",
+		"wj_sz_a1_sub.a106": 22,
+		"wj_sz_a1_sub.hhstatus": "0",
+		"wj_sz_a1_sub.a105": 199701,
+		"wj_sz_a1_sub.a104": {
+			"text": "①男",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a103": {
+			"text": "②配偶",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a109": {
+			"text": "①农业户口",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a108": {
+			"text": "",
+			"value": ""
+		},
+		"wj_sz_a1_sub.a107": {
+			"text": "①汉族",
+			"value": "1"
+		},
+		"wj_sz_a1_sub.a209remark": "",
+		"wj_sz_a1_sub.a108_1": {
+			"text": "②村外乡(镇、街道)内",
+			"value": "2"
+		},
+		"wj_sz_a1_sub.a108remark": "",
+		"wj_sz_a1_sub.save_status": "",
+		"wj_sz_a1_sub.ds_deleted": 1
+	}],
+	"_id": "970D4B855F5B99BAE0538086060AAA08"
+}

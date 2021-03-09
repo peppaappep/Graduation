@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>步骤导航内容设置</title>
+      <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+      <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+      <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+      <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+      <link rel="stylesheet" type="text/css" href="../res/components.css" />
+      <style>
+         .error {
+            border: 1px solid red;
+         }
+      </style>
+   </head>
+
+   <body ng-controller="dataGridColumnEdit">
+      <div class="container-fluid dialog_container"
+         style="width:100%;position:fixed;height:68px;top:0px;background-color:#fff;z-index:10">
+         <div class="row">
+            <div class="col-xs-12">
+               <!-- <a class="ds_button" style="float: right;margin-left: 10px;" ng-click="openIcon()">查看图标库</a> -->
+               <a class="ds_button" style="float: right" ng-click="addNew()">新增</a>
+            </div>
+         </div>
+
+      </div>
+
+      <div class="container-fluid dialog_container;" style="margin-top:68px;">
+         <div class="row">
+            <div class="col-xs-12">
+               <table id="table" class="table table-bordered table-hover">
+                  <thead>
+                     <tr>
+                        <th style="text-align: center">编号</th>
+                        <th style="text-align: center">菜单名称</th>
+                        <th style="text-align: center">别名</th>
+                        <th style="text-align: center">图片地址</th>
+                        <th style="text-align: center">链接</th>
+                        <th style="text-align: center">是否外链</th>
+                        <th style="text-align: center">打开方式</th>
+                        <th style="text-align: center">操作</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr ng-repeat="mItem in args.value track by $index">
+                        <td style="width:120px">
+                           <input name="stepNum_{{$index}}" class="form-control" type="text" ng-model="mItem.idx"
+                              ng-value="mItem.idx">
+                        </td>
+                        <td>
+                           <input name="stepName_{{$index}}" class="form-control" type="text" ng-model="mItem.name"
+                              ng-value="mItem.name">
+                        </td>
+                        <td>
+                            <input name="stepName_{{$index}}" class="form-control" type="text" ng-model="mItem.alias"
+                               ng-value="mItem.alias">
+                         </td>
+                        <td>
+                           <input name="icon_{{$index}}" class="form-control" type="text" ng-model="mItem.icon"
+                              ng-value="mItem.icon">
+                        </td>
+                        <td>
+                           <input name="openUrl{{$index}}" class="form-control" type="text" ng-model="mItem.openUrl"
+                              ng-value="mItem.openUrl">
+                        </td>
+                        <td>
+                           <select name="othSys" class="form-control" ng-model="mItem.othSys">
+                              <option value="1">是</option>
+                              <option value="0">否</option>
+                           </select>
+                        </td>
+                        <td>
+                           <select name="openType" class="form-control" ng-model="mItem.openType">
+                              <option value="0">新窗口</option>
+                              <option value="1">弹窗</option>
+                           </select>
+                        </td>
+                        <td style="width:120px;vertical-align: middle;text-align: center">
+                           <a ng-click="sort(mItem,'up')">上移</a>
+                           <a ng-click="sort(mItem,'down')">下移</a>
+                           <a ng-click="deleteItem(mItem)">删除</a>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+
+      </div>
+      <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+      <script src="../../../res/libs/layui/layui.all.js"></script>
+      <script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+      <script src="../../../app.js"></script>
+      <script src="../../../res/dsf_res/dsf_config.js"></script>
+      <script src="../../../res/dsf_res/dsf_common.js"></script>
+      <script src="../res/ds_prop.js"></script>
+      <script src="../res/libs/angular/angular.min.js"></script>
+      <script>
+         var app = angular.module('myApp', []);
+         var dialogArgs = {};
+         app.controller('dataGridColumnEdit', function ($scope) {
+            $scope.args = null;
+            $scope.last = null;
+            $scope.addNew = function () {
+               if ($scope.last.length == 6) return dsf.layer.message('最多只能配置6个菜单', false);
+               $scope.last.push({
+                  "id": dsf.uuid(),
+                  "idx": $scope.last.length + 1,
+                  "name": "菜单" + ($scope.last.length + 1),
+                  "icon": null, //图片地址
+                  'openUrl': null,
+                  "openType": null, //打开方式
+                  "othSys": 0,
+                  "sort": "0",
+                  "hide": "0",
+                  "alias":null
+               })
+            }
+
+            $scope.openIcon = function () {
+               window.open(dsf.url.getWebPath('res/dsf_styles/font/demo_index.html'));
+            }
+
+            $scope.deleteItem = function (item) {
+               var index = $scope.last.indexOf(item);
+               if (index >= 0) {
+                  $scope.last.splice(index, 1);
+               }
+            }
+
+            $scope.sort = function (item, type) {
+               var index = $scope.last.indexOf(item);
+               if (index >= 0) {
+                  if (type == "up") {
+                     if (index > 0) {
+                        let prev = $scope.last[index - 1];
+                        $scope.last[index - 1] = item;
+                        $scope.last[index] = prev;
+                        item.idx = index;
+                        prev.idx = index + 1;
+                     }
+                  } else {
+                     if (index < $scope.last.length - 1) {
+                        let next = $scope.last[index + 1];
+                        $scope.last[index + 1] = item;
+                        $scope.last[index] = next;
+                        item.idx = index + 1 + 1;
+                        next.idx = index + 1;
+                     }
+                  }
+               }
+            }
+
+            window.dialogInit = function (args) {
+               $scope.args = $.extend(true, {}, args);
+               $scope.last = $scope.args.value;
+               $scope.$apply();
+            }
+
+            window.getDialogResult = function () {
+               for (var i = 0; i < $scope.last.length; i++) {
+                  console.log($scope.last)
+                  var r = $scope.last[i];
+                  if (!vaildate(r, "idx", i, "required", "请填写编号")) {
+                     return false;
+                  }
+                  if (!vaildate(r, "name", i, "required", "请填写菜单名称")) {
+                     return false;
+                  }
+                  if (!vaildate(r, "icon", i, "required", "请填写图片地址")) {
+                     return false;
+                  }
+                  if (!vaildate(r, "openUrl", i, "required", "请填写链接地址")) {
+                     return false;
+                  }
+                  if (!vaildate(r, "openType", i, "required", "请选择打开方式")) {
+                     return false;
+                  }
+               }
+               return $scope.args.value;
+            }
+
+            function transColor(sColor) {
+               sColor = sColor.toLowerCase();
+               //十六进制颜色值的正则表达式
+               var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+               // 如果是16进制颜色
+               if (sColor && reg.test(sColor)) {
+                  if (sColor.length === 4) {
+                     var sColorNew = "#";
+                     for (var i = 1; i < 4; i += 1) {
+                        sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+                     }
+                     sColor = sColorNew;
+                  }
+                  //处理六位的颜色值
+                  var sColorChange = [];
+                  for (var i = 1; i < 7; i += 2) {
+                     let rNum = parseInt(Math.random() * 10);
+                     let cNum = parseInt("0x" + sColor.slice(i, i + 2));
+                     if (cNum < 255) {
+                        cNum += rNum;
+                     }
+                     console.log(cNum)
+                     sColorChange.push(cNum > 255 ? 255 : cNum);
+                  }
+                  return "RGB(" + sColorChange.join(",") + ")";
+               }
+               return sColor;
+            };
+
+            function vaildate(r, key, index, vaildateType, message) {
+               var result = true;
+               if (vaildateType == "required") {
+                  if (!$.trim(r[key])) {
+                     result = false;
+                  }
+               } else if (vaildateType == "metadatename") {
+                  if (!dsf.metadata.vaildateMetaName(r[key])) {
+                     result = false;
+                  }
+
+               }
+               if (!result) {
+                  let control = $("[name='" + key + "_" + index + "']");
+                  control.addClass("error");
+                  control.one("click", function (evt) {
+                     control.removeClass("error");
+                     return false;
+                  });
+                  // dsf.Dom.scrollToElement(control, -78);
+                  dsf.layer.message(message, false);
+                  return false;
+               }
+               return true;
+            }
+         });
+      </script>
+   </body>
+
+</html>

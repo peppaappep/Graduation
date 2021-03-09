@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>人员信息展示字段设置</title>
+  <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css"/>
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css"/>
+  <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css"/>
+  <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="../res/components.css"/>
+  <style>
+    .error {
+      border: 1px solid red;
+    }
+    .checkbox label{
+      width: 50px;
+    }
+    .checkbox input[type='radio']{
+      width: 15px;
+      height: 15px;
+      vertical-align: middle;
+      margin-top: -2px;
+    }
+  </style>
+</head>
+
+<body ng-controller="AnhuiPersonalInfo">
+<div class="container-fluid dialog_container;" style="margin-top:68px;">
+  <div class="row">
+    <div class="col-xs-12">
+      <form class="layui-form">
+        <div class="layui-form-item">
+          <label class="layui-form-label">{{queryType==='fields'? '请求url': '跳转url'}}</label>
+          <div class="layui-input-block">
+            <input type="text" ng-model="args.value.url" placeholder="请输入url" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+      </form>
+      
+      <table ng-if="queryType==='fields'" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th></th>
+          <th>展示字段</th>
+          <th>对应参数</th>
+          <th>是否显示</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="col in displayFields track by $index">
+          <td>
+            {{$index}}
+          </td>
+          <td>
+            <input name="showname_{{$index}}" class="form-control" type="text" ng-model="col.showname">
+          </td>
+          <td>
+            <input name="keyname_{{$index}}" class="form-control" type="text" ng-model="col.keyname">
+          </td>
+          <td style="width: 140px">
+            <div class="checkbox">
+              <label>
+                <input ng-model="col.show" type="radio" ng-value="1">是
+              </label>
+              <label>
+                <input ng-model="col.show" type="radio" ng-value="2">否
+              </label>
+            </div>
+          </td>
+          <td style="width: 150px">
+            <a ng-click="sort(col,'up')">上移</a>
+            <a ng-click="sort(col,'down')">下移</a>
+            <a ng-click="deleteItem(col)">删除</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      
+      <table ng-if="queryType==='jumpEdit'" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th></th>
+          <th>查询参数</th>
+          <th>值</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="col in queryParams track by $index">
+          <td>
+            {{$index}}
+          </td>
+          <td>
+            <input class="form-control" type="text" ng-model="col.key">
+          </td>
+          <td>
+            <select ng-model="col.value" class="form-control">
+              <option ng-repeat="option in selectOption" value="{{option.keyname}}"
+                      ng-selected="col.value===option.keyname">{{option.showname}}
+              </option>
+            </select>
+          </td>
+          <td>
+            <a ng-click="deleteItem(col)">删除</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div style="float: right">
+        <a class="ds_button" ng-click="addNew()">新增</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+<script src="../../../res/libs/layui/layui.all.js"></script>
+<script src="../../../res/libs/lodash/lodash.min.js"></script>
+
+<script src="../../../app.js"></script>
+<script src="../../../res/dsf_res/dsf_config.js"></script>
+<script src="../../../res/dsf_res/dsf_common.js"></script>
+<script src="../res/ds_prop.js"></script>
+<script src="../res/libs/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="../res/components.css"/>
+<script src="../res/libs/angular/angular.min.js"></script>
+<script>
+  var app = angular.module('myApp', []);
+  var dialogArgs = {}, tempMap = {};
+  var owner = null;
+  app.controller('AnhuiPersonalInfo', function ($scope) {
+    $scope.displayFields = [];
+    $scope.queryParams = [];
+    $scope.url = "";
+    $scope.queryType = ""; //判断页面 fields|jumpEdit
+    $scope.selectOption = [];  //跳转页面配置下拉项
+    
+    window.dialogInit = function (args) {
+      console.log(args);
+      owner = args.owner;
+      $scope.queryType = dsf.url.queryString("source");
+      $scope.args = $.extend(true, {}, args);
+      var _obj = $scope.args.value;
+      $scope.displayFields = _obj.displayFields ? _obj.displayFields : [];
+      $scope.queryParams = _obj.queryParams ? _obj.queryParams : [];
+      $scope.selectOption = _obj.selectOption ? _obj.selectOption : [];
+      $scope.$apply();
+    }
+    
+    $scope.addNew = function () {
+      $scope.queryType === 'fields' ?
+        $scope.displayFields.push({
+          "showname": "",
+          "keyname": "",
+          "show": 1
+        }) :
+        $scope.queryParams.push({"key": "", "value": ""})
+    }
+    
+    $scope.deleteItem = function (item) {
+      var _arr = $scope.queryType === 'fields' ? $scope.displayFields : $scope.queryParams;
+      var index = _arr.indexOf(item);
+      if (index >= 0) {
+        _arr.splice(index, 1);
+      }
+    }
+    
+    $scope.sort = function (item, type) {
+      var index = $scope.displayFields.indexOf(item);
+      if (index >= 0) {
+        if (type == "up") {
+          if (index > 0) {
+            var prev = $scope.displayFields[index - 1];
+            $scope.displayFields[index - 1] = item;
+            $scope.displayFields[index] = prev;
+          }
+        } else {
+          if (index < $scope.displayFields.length - 1) {
+            var next = $scope.displayFields[index + 1];
+            $scope.displayFields[index + 1] = item;
+            $scope.displayFields[index] = next;
+          }
+        }
+      }
+    }
+    
+    window.getDialogResult = function () {
+      if ($scope.queryType === 'fields') {
+        for (var i = 0; i < $scope.displayFields.length; i++) {
+          var r = $scope.displayFields[i];
+          if (!vaildate(r, "keyname", i, "required", "对应参数不能为空")) {
+            return false;
+          }
+        }
+      }
+      return $scope.args.value;
+    }
+    
+    function vaildate(r, key, index, vaildateType, message) {
+      var result = true;
+      if (vaildateType == "required") {
+        if (!$.trim(r[key])) {
+          result = false;
+        }
+      } else if (vaildateType == "metadatename") {
+        if (!dsf.metadata.vaildateMetaName(r[key])) {
+          result = false;
+        }
+      }
+      if (!result) {
+        var control = $("[name='" + key + "_" + index + "']");
+        control.addClass("error");
+        control.one("click", function (evt) {
+          control.removeClass("error");
+          return false;
+        });
+        dsf.Dom.scrollToElement(control, -78);
+        dsf.layer.message(message, false);
+        return false;
+      }
+      return true;
+    }
+  });
+</script>
+</body>
+
+</html>

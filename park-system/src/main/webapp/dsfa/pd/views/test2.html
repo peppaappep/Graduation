@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      border-top: 1px solid #cccccc;
+      border-left: 1px solid #cccccc;
+      border-right-style: none;
+      border-bottom-style: none;
+    }
+
+    td,
+    th {
+      border-top-style: none;
+      border-left-style: none;
+      border-bottom: 1px solid #cccccc;
+      border-right: 1px solid #cccccc;
+      width: 150px;
+      padding: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <table id="table">
+    <thead>
+      <tr>
+        <th>姓名</th>
+        <th>性别</th>
+        <th>所在单位</th>
+        <th>职务</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+  </table>
+  <script>
+    var data = [
+      { "xm": "领导", "xb": "男", "dw": "梦创双杨", "zw": "部门主管" },
+      { "xm": "员工1", "xb": "男", "dw": "梦创双杨", "zw": "员工" },
+      { "xm": "员工2", "xb": "男", "dw": "梦创双杨", "zw": "员工" },
+      { "xm": "员工3", "xb": "女", "dw": "梦创双杨", "zw": "员工" },
+      { "xm": "员工4", "xb": "男", "dw": "梦创双杨", "zw": "员工" },
+      { "xm": "员工5", "xb": "男", "dw": "梦创双杨", "zw": "员工" }
+    ];
+    for (var i = 0; i < data.length; i++) {
+      var tr = document.createElement("TR");
+      var arr = ["xm", "xb", "dw", "zw"]
+      for (var n = 0; n < arr.length; n++) {
+        var text = arr[n];
+        var td = document.createElement("TD");
+        td.innerText = data[i][text];
+        tr.appendChild(td);
+      }
+      var buttonTd = document.createElement("TD");
+      var button = document.createElement("button");
+      button.innerText = "删除"
+      buttonTd.appendChild(button);
+      tr.appendChild(buttonTd);
+      if (button.addEventListener) {
+        button.addEventListener('click', deleteRow);
+      } else {
+        button.attachEvent('onclick', deleteRow);
+      }
+      document.getElementById("tbody").appendChild(tr);
+    }
+
+    function deleteRow(evt) {
+      var button = evt.srcElement;
+      var row = button.parentNode.parentNode;
+      if (row) {
+        if (window.confirm("是否要删除该数据")) {
+          row.parentNode.removeChild(row)
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

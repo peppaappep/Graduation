@@ -1,0 +1,20 @@
+[{
+    "name": "基础属性",
+    "attributes": [{
+            "text": "题干",
+            "bindControlAttr": "$questionBody",
+            "showType": "text",
+            "changeExecFunction": "render"
+        },
+        {
+            "text": "是否只读",
+            "showType": "boolean",
+            "bindControlAttr": "readOnly"
+        },
+        {
+            "text": "是否可见",
+            "showType": "boolean",
+            "bindControlAttr": "visible"
+        }
+    ]
+}]

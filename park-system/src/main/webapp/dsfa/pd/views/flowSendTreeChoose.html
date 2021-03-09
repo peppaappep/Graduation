@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="flowinfo-dialog treeChoose" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<title>流程发送</title>
+		<link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<style type="text/css">
+			.fr-box{
+				display: none;
+			}
+			.fr-box.loaded{
+				display: block;
+			}
+		</style>
+	</head>
+
+	<body ng-controller='myCtrl'>
+		<div class="choose-content">
+			<div class="fl-box ds_tree_box">
+				<div class="ds_tree_search">
+					<input type="text" id='flowSend_search' class="layui-input ng-pristine ng-untouched ng-valid" placeholder="搜索">
+					<i class="search iconfont layui-icon icon-Magnifier"></i>
+				</div>
+				<div class="layui-collapse">
+					<div class="layui-colla-item" ng-repeat="link in config.multiLink track by $index">
+						<h2 class="layui-colla-title" ng-bind="link.Name"></h2>
+						<div class="layui-colla-content layui-show" ng-class="{'layui-show':$index==0}">
+							<ul class='ztree' id="tree{{$index}}"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="fr-box" ng-class='{"loaded":config.multiTree.length>0}'>
+				<div class="top">
+					<span ng-bind="'共'+(config.lth || 0)+'人'">共0人</span>
+					<span class="layui-btn layui-btn-sm fr" ng-click="deleteAll()">清空</span>
+				</div>
+				<div class="layui-collapse">
+					<div class="layui-colla-item" ng-repeat="(treeI,tree) in config.multiTree">
+						<h2 class="layui-colla-title">
+							{{tree.name}}({{config.multiTree[treeI]['choosedAy'].length}})
+							<span ng-click="deleteThisTree(tree,$event)">取消</span>
+						</h2>
+						<div class="layui-colla-content layui-show" ng-class="{'layui-show':treeI==0}">
+							<div class="hasData list">
+								<div class="item" ng-repeat="(cI,val) in tree.choosedAy track by val.ID">
+									<span ng-bind="val.FName"></span>
+									<span ng-bind="val.Name"></span>
+									<span>
+										<i ng-show="cI>0" class="iconfont layui-icon icon-shang" ng-click='up(tree,cI)'></i>
+										<i ng-show="cI<config.multiTree[treeI]['choosedAy'].length-1" class="iconfont layui-icon icon-xia" ng-click='down(tree,cI)'></i>
+										<i ng-show="val.Selected!=2" class="iconfont layui-icon icon-guanbi1" ng-click='delete(tree,cI,val.ID,treeI)'></i>
+									</span>
+								</div>
+							</div>
+							<div class="noData" ng-show='tree.choosedAy.length==0'>
+								暂无选择
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+		<script src="../../../res/libs/layui/layui.all.js"></script>
+		<script src="../../../res/libs/lodash/lodash.min.js"></script>
+		<script src="../../../app.js"></script>
+		<script src="../../../res/dsf_res/dsf_config.js"></script>
+		<script src="../../../res/dsf_res/dsf_common.js"></script>
+		<script src="../res/ds_prop.js"></script>
+		<script src="../../../dsfa/bhc/hc/bhc.js"></script>
+		<!-- <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script> -->
+		<script src="../../../res/libs/zTree/js/jquery.ztree.core.min.js"></script>
+		<script src="../../../res/libs/zTree/js/jquery.ztree.exhide.min.js"></script>
+		<script src="../../../res/libs/zTree/js/fuzzysearch.js"></script>
+		<script src="../res/libs/angular/angular.min.js"></script>
+		<script type="text/javascript">
+			var element = layui.element;
+			angular.module('myApp', []).controller('myCtrl', function($scope, $rootScope) {
+				$scope.config = {
+					multiLink: [],
+					multiTree: [],
+					lth: 0,
+					searchName: ''
+				}
+				
+				window.dialogInit = function(args) {
+					var loadIndex = dsf.layer.loadding();
+					init(args);
+					setTimeout(function(){
+						dsf.layer.close(loadIndex);
+					},300)
+				}
+
+				function init(data) {
+					if (data && data.SendParams && data.SendParams.Lines && data.SendParams.Lines.length) {
+						var lines = data.SendParams.Lines;
+						_.forEach(lines, function(line, index) {
+							if(line.Selected){
+								$scope.config.multiLink.push(line);
+								var dept = line.Receivers.Dept;
+								$scope.config.multiTree.push({
+									name: line.Name,
+									choosed: {},
+									choosedAy: []
+								})
+								getTreeData(dept, null, $scope.config.multiTree.length-1);
+							}else{
+								delete line;
+							}
+						});
+						$scope.$apply();
+						initTree();
+					}
+				}
+
+				function getTreeData(d, parent, index) {
+					if (d.Objs) {
+						d.ChildDepts = d.ChildDepts.concat(d.Objs);
+					}
+					if (d.Type != 0) {
+						if (d.Selected != 0) {
+							choosedAdd(index, d, parent);
+						}
+					}
+					_.forEach(d.ChildDepts, function(dept) {
+						getTreeData(dept, d, index);
+					})
+				}
+
+				function initTree() {
+					setTimeout(function() {
+						_.forEach($scope.config.multiLink, function(link, linkIndex) {
+							console.log(link.Receivers.Dept);
+							$scope.config.multiTree[linkIndex]["treeObj"] = $.fn.zTree.init($("#tree" + linkIndex), {
+								view: {
+									showLine: true,
+									showIcon: true
+								},
+								data: {
+									key: {
+										name: "Name",
+										url: "",
+										children: "ChildDepts"
+									}
+								},
+								callback: {
+									onClick: function(event, treeId, treeNode) {
+										if (treeNode.Type != 0) {
+											choosedAdd(treeId.slice(4), treeNode, $scope.config.multiTree[linkIndex].treeObj.getNodeByTId(
+												treeNode.parentTId));
+										}
+									}
+								}
+							}, link.Receivers.Dept);
+							$scope.config.multiTree[linkIndex]['treeObj'].expandAll(true);
+							fuzzySearch('tree' + linkIndex, '#flowSend_search', null, true);
+						})
+						element.render('collapse');
+						$scope.$apply();
+					}, 0)
+				}
+
+				function choosedAdd(index, node, pNode) {
+					var MultiplayerEnabled = $scope.config.multiLink[index].MultiplayerEnabled;
+					var choosed = {
+						ID: node.ID,
+						Name: node.oldname || node.Name,
+						FID: pNode.ID,
+						FName: pNode.Name,
+						Selected: node.Selected
+					}
+					if (!MultiplayerEnabled) {
+						_.forEachRight($scope.config.multiTree[index]['choosed'], function(d) {
+							if (d.Selected == 2 && choosed.Selected != 2) {
+								choosed = d;
+							}
+							$scope.config.lth --;
+						});
+						
+						$scope.config.multiTree[index]['choosed'] = {};
+						$scope.config.multiTree[index]['choosedAy'] = [];
+					}
+					if (!$scope.config.multiTree[index]['choosed'][choosed.ID]) {
+						$scope.config.multiTree[index]['choosed'][choosed.ID] = choosed;
+						$scope.config.multiTree[index]['choosedAy'].push(choosed);
+						$scope.config.lth ++;
+					}
+					$scope.$apply();
+				}
+
+				$scope.up = function(data, index) {
+					console.log(data, index);
+					var temp = $.extend({}, data.choosedAy[index]);
+					data.choosedAy[index] = data.choosedAy[--index];
+					data.choosedAy[index--] = temp;
+					console.log(data.choosedAy);
+				}
+				$scope.down = function(data, index) {
+					var temp = $.extend({}, data.choosedAy[index]);
+					data.choosedAy[index] = data.choosedAy[++index];
+					data.choosedAy[index++] = temp;
+					console.log(data.choosedAy);
+				}
+				$scope.delete = function(data, index, id) {
+					data.choosedAy.splice(index, 1);
+					delete data.choosed[id];
+					$scope.config.lth--;
+				}
+				$scope.deleteThisTree = function(data, evt) {
+					evt.stopPropagation();
+					evt.cancelBubble = true;
+					_.forEachRight(data.choosedAy,function(tree,treeI){
+						if(data.choosed[tree.ID].Selected!=2){
+							delete data.choosed[tree.ID]
+							data.choosedAy.splice(treeI, 1);
+							$scope.config.lth--;
+						}
+					})
+				}
+				$scope.deleteAll = function() {
+					_.forEach($scope.config.multiTree, function(tree) {
+						_.forEachRight(tree.choosedAy,function(_tree,treeI){
+							if(tree.choosed[_tree.ID].Selected!=2){
+								delete tree.choosed[_tree.ID]
+								tree.choosedAy.splice(treeI, 1);
+								$scope.config.lth--;
+							}
+						})
+					})
+					$scope.$apply();
+				}
+
+				window.getDialogResult = function() {
+					var param = [];
+					var ltn = 0;
+					_.forEach($scope.config.multiTree, function(tree, treeI) {
+						if (tree.choosedAy.length > 0) {
+							param[ltn] = $scope.config.multiLink[treeI].LineID + ":";
+							_.forEach(tree.choosedAy, function(c, cI) {
+								param[ltn] += (cI > 0 ? "," : "") + c.ID;
+							})
+							ltn++;
+						}
+					})
+					if (param.length == 0) {
+						dsf.layer.message("请选择", false);
+						return false
+					} else {
+						return param.join(";");
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

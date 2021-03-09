@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据表格列设置</title>
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/dsf_style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/dsf_styles/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../res/libs/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../res/components.css" /> -->
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+        
+        .form-control {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 30px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    </style>
+</head>
+
+<body ng-controller="dataGridColumnEdit">
+    <div style="padding:10px;">
+        <div>
+            <ul id="tree" class="ztree"></ul>
+        </div>
+    </div>
+    <script src="../../../res/libs/jquery-1.12.4.min.js"></script>
+    <script src="../../../res/libs/layui/layui.all.js"></script>
+    <script src="../../../res/libs/lodash/lodash.min.js"></script>
+   
+    <script src="../../../app.js"></script>
+    <script src="../../../res/dsf_res/dsf_config.js"></script>
+    <script src="../../../res/dsf_res/dsf_common.js"></script>
+    <script src="../res/ds_prop.js"></script>
+    <script src="../res/libs/angular/angular.min.js"></script>
+    <script src="../../../res/libs/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        var dialogArgs = {};
+        var tree = null;
+        app.controller('dataGridColumnEdit', function($scope) {
+            $scope.args = null;
+            window.dialogInit = function(args) {
+                $scope.args = $.extend(true, {}, args);
+                $scope.$apply();
+                tree = $.fn.zTree.init($("#tree"), {
+                    data: {
+                        key: {
+                            children: "children"
+                        }
+                    },
+                    view: {
+                        selectedMulti: false
+                    },
+                    check: {
+                        enable: true
+                    }
+                });
+                dsf.http.request("../res/buttons.json", null, "GET")
+                    .done(function(response) {
+                        function fn(data) {
+                            var obj = {
+                                "name": data.text,
+                                "attr": data,
+                                "nocheck": data.type == "0" ? true : false
+                            }
+                            if (data.children) {
+                                obj.children = [];
+                                for (var i = 0; i < data.children.length; i++) {
+                                    var n = data.children[i];
+                                    var node = fn(n);
+                                    obj.children.push(node);
+                                }
+                            }
+                            return obj;
+                        }
+                        var nodes = [];
+                        for (var i = 0; i < response.length; i++) {
+                            var n = fn(response[i]);
+                            nodes.push(n);
+                        }
+                        tree.addNodes(null, nodes);
+                        tree.expandAll(true)
+                    })
+                    .error(function(response) {
+
+                    })
+                    .exec();
+            }
+
+            window.getDialogResult = function() {
+                var nodes = tree.getCheckedNodes();
+                var result = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    var n=nodes[i];
+                    result.push(n.attr);
+                }
+                return result;
+            }
+        });
+    </script>
+</body>
+
+</html>

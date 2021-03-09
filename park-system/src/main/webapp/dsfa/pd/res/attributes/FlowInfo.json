@@ -1,0 +1,69 @@
+[
+	{
+		"name": "基础属性",
+		"attributes": [{
+				"text": "组件标识",
+				"bindControlAttr": "caption",
+				"showType": "text",
+				"config": {
+					"disabled": true
+				}
+			},
+			{
+				"text": "选择流程",
+				"showType": "dialog",
+				"bindControlAttr": "chooseFlow",
+				"changeExecFunction": "setChooseFlow",
+				"config": {
+					"title": "选择流程",
+					"url": "/dsfa/pd/views/chooseFlow.html",
+					"width": "400px",
+					"height": "600px",
+					"buttonText": "设置"
+				},
+				"showKeyClass":"LinkSet,ID",
+				"hiddenKeyClass":"chooseFlow,ID"
+			},
+			{
+				"text": "事项名称",
+				"bindControlAttr": "eventName",
+				"showType": "select",
+				"dictionaryControl": true
+			}
+		]
+	},
+	{
+		"name": "高级属性",
+		"attributes": [{
+			"text": "环节设置",
+			"showType": "dialog",
+			"class": "chooseFlow",
+			"hidden":"chooseFlow.ID!=null",
+			"bindControlAttr": "chooseFlow",
+			"changeExecFunction": "linkSetChooseFlow",
+			"config": {
+				"title": "选择流程",
+				"url": "/dsfa/pd/views/chooseFlow.html",
+				"width": "400px",
+				"height": "600px",
+				"buttonText": "设置",
+				"des": "点击环节设置时,如果还没进行流程选择,需先弹'选择流程'再弹'环节设置'"
+			},
+			"showKeyClass":"LinkSet,ID",
+			"hiddenKeyClass":"chooseFlow,ID"
+		},{
+			"text": "环节设置",
+			"class": "LinkSet",
+			"showType": "dialog",
+			"bindControlAttr": "linkData",
+			"hidden":"chooseFlow.ID==null",
+			"config": {
+			    "title": "环节设置",
+			    "url": "/dsfa/pd/views/flowSetLink.html",
+			    "width": "800px",
+			    "height": "600px",
+			    "buttonText": "设置"
+			}
+		}]
+	}
+]

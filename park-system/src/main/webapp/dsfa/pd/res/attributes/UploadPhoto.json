@@ -1,0 +1,160 @@
+[
+    {
+        "name": "基础属性",
+        "attributes": [
+            {
+                "text": "组件标识",
+                "bindControlAttr": "caption",
+                "showType": "text"
+            },
+            {
+                "text": "名称",
+                "bindControlAttr": "label",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否可见",
+                "showType": "boolean",
+                "bindControlAttr": "visible",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否只读",
+                "showType": "boolean",
+                "bindControlAttr": "readOnly",
+                "changeExecFunction": "renderContext"
+            }
+        ]
+    },
+    {
+        "name": "图片属性",
+        "attributes": [
+            {
+                "text": "是否显示图片上传限制提示",
+                "bindControlAttr": "$isShowTips",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否裁剪照片",
+                "showType": "boolean",
+                "bindControlAttr": "$isCutPic",
+                "hiddenKeyClass":"cutRatio",
+                "showKeyClass":"cutRatio",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "剪裁比例(如：16:9)",
+                "showType": "text",
+                "bindControlAttr": "$aspectRatio",
+                "changeExecFunction": "renderContext",
+                "class":"cutRatio",
+                "hidden":"$isCutPic==false"
+            }, 
+            {
+                "text": "照片宽度(px)",
+                "bindControlAttr": "$imgWidth",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "照片高度(px)",
+                "bindControlAttr": "$imgHeight",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "上传图片大小限制",
+                "bindControlAttr": "$maxFileSize",
+                "showType": "text",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "默认图片",
+                "bindControlAttr": "$defaultImg",
+                "showType": "select",
+                "dictionary": [
+                    {
+                        "value": "1",
+                        "text": "头像"
+                    },
+                    {
+                        "value": "2",
+                        "text": "封面"
+                    }
+                ],
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "是否去掉图片外边距",
+                "bindControlAttr": "$hasPadding",
+                "showType": "select",
+                "dictionary": [
+                    {
+                        "value": "0",
+                        "text": "是"
+                    },
+                    {
+                        "value": "1",
+                        "text": "否"
+                    }
+                ],
+                "changeExecFunction": "renderContext"
+            },
+            
+            {
+                "text": "是否去掉边框",
+                "bindControlAttr": "$hasBorder",
+                "showType": "select",
+                "dictionary": [
+                    {
+                        "value": "0",
+                        "text": "是"
+                    },
+                    {
+                        "value": "1",
+                        "text": "否"
+                    }
+                ],
+                "changeExecFunction": "renderContext"
+            }
+        ]
+    },
+    {
+        "name": "高级属性",
+        "attributes": [
+            {
+                "text": "元数据",
+                "bindControlAttr": "metadata",
+                "showType": "mmdata",
+                "config": {
+                    "url": "/dsfa/pd/views/metadataEdit.html",
+                    "width": "600px",
+                    "height": "600px",
+                    "buttonText": "选择元数据",
+                    "title": "元数据设置"
+                }
+            },
+            {
+                "text": "必填标识",
+                "bindControlAttr": "$required",
+                "showType": "boolean",
+                "changeExecFunction": "renderContext"
+            },
+            {
+                "text": "校验规则",
+                "bindControlAttr": "metadata.validate",
+                "showType": "validateEditor",
+                "changeExecFunction": "renderContext",
+                "config": {
+                    "url": "/dsfa/pd/views/validateCode.html",
+                    "width": "800px",
+                    "height": "600px",
+                    "buttonText": "设置",
+                    "title": "设置"
+                }
+            }
+        ]
+    }
+]

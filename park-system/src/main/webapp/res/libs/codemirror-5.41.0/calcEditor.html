@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+	  	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>计算公式</title>
+		<link type='text/css' rel='stylesheet' href='lib/codemirror.css' />
+		<!--themes-->
+		<link type='text/css' rel='stylesheet' href='addon/hint/show-hint.css' />
+		<link type='text/css' rel='stylesheet' href='addon/fold/foldgutter.css'>
+		<link type='text/css' rel='stylesheet' href='addon/display/fullscreen.css'>
+		<link type='text/css' rel="stylesheet" href="addon/search/matchesonscrollbar.css">
+		<link type='text/css' rel='stylesheet' href='lib/github-markdown.css' />
+		<link type="text/css" rel="stylesheet" href="theme/self.css" />
+
+		<script src='lib/codemirror.js'></script>
+		<script src='lib/showdown.min.js'></script>
+		<!--代码提示-->
+		<script src='addon/hint/show-hint.js'></script>
+		<script src='addon/hint/javascript-hint.js'></script>
+		<script src='addon/hint/sql-hint.js'></script>
+		<script src='addon/hint/html-hint.js'></script>
+		<script src='addon/hint/css-hint.js'></script>
+		<!--自动加载代码类型-->
+		<script src='addon/mode/simple.js'></script>
+		<script src='addon/mode/loadmode.js'></script>
+		<script src='mode/meta.js'></script>
+		<!--自定添加关闭标签-->
+		<script src='addon/edit/closetag.js'></script>
+
+		<!--收缩块-->
+		<script src='addon/fold/foldcode.js'></script>
+		<script src='addon/fold/foldgutter.js'></script>
+		<script src='addon/fold/indent-fold.js'></script>
+		<!--F11 全屏-->
+		<script src='addon/display/fullscreen.js'></script>
+
+		<script src='addon/scroll/annotatescrollbar.js'></script>
+		<script src='addon/dialog/dialog.js'></script>
+		<script src='addon/search/searchcursor.js'></script>
+		<script src='addon/search/search.js'></script>
+		<script src='addon/search/matchesonscrollbar.js'></script>
+		<script src='addon/search/jump-to-line.js'></script>
+		<script src='addon/search/match-highlighter.js'></script>
+		<script src='addon/edit/trailingspace.js'></script>
+		<script src='addon/edit/matchbrackets.js'></script>
+		<script src='editorInit.js'></script>
+		<style>
+			body {
+				display: table;
+			}
+			.main {
+				height: 100%;
+				display: table-row;
+			}
+			.main > div {
+				height: 100%;
+			}
+			.main .main_code {
+				width: 80%;
+				display: table-cell;
+			}
+			.main .main_objects {
+				width: 20%;
+				border: 1px solid green;
+				display: table-cell;
+			}
+			.main .main_object {
+				max-width: 300px;
+			}
+		</style>
+		<script type="text/javascript">
+		</script>
+	</head>
+		
+	<body>
+	</body>
+	<script>
+		var variable = window.frameElement ? window.frameElement.dialogArgs.variable || {} : {};
+		var value = `'''
+ F1：函数说明(API)
+ F11：全屏
+ Ctrl-S：保存
+ Ctrl-A：全选
+ Ctrl-D：删除行
+ Ctrl-Y：恢复上一步
+ Ctrl-Z：撤销上一步
+ Ctrl-F： 查找
+ Ctrl-H：替换
+ Ctrl-Home：跳转到首行
+ Ctrl-End：跳转到尾行
+ Ctrl-+：字体放大
+ Ctrl--：字体缩小
+ Ctrl-鼠标左键：跨行多选词
+ Alt-鼠标左键：跨行扩选
+ Alt-/：打开提示
+ 已注入对象：${Object.keys(variable).join(', ') || '空'}
+'''
+`;
+
+        //注入对象
+        var variable = {
+        	'A卷': {
+        		name: 'A',
+        		values: ['A100','A101','A102','A103','A104','A105','A105_1','A105_2','A106','A107','A108','A109','A110','A112','A113','A114','A115','A116','A117','A118','A119','A200','A201','A203','A204','A205','A206','A207','A208','A209','A210','A107_1','A120','A211','A212','A213','A214','ZZBM','HHSTATUS']
+        	},
+        	'B卷': {
+        		name: 'B',
+        		values: []
+        	},
+        	'C卷': {
+        		name: 'C',
+        		values: []
+        	},
+        	'E卷': {
+        		name: 'E',
+        		values: []
+        	},
+        	'G卷': {
+        		name: 'G',
+        		values: []
+        	},
+        	'账页': {
+        		name: 'ZY',
+        		values: []
+        	}
+        }
+        let variables = {};
+        Object.keys(variable).forEach(function(n, i) {
+        	variables[variable[n].name] = variable[n].values;
+        });
+        var editor = editorInit({
+			language: 'python',
+			include: [],
+			value: (window.frameElement ? window.frameElement.dialogArgs.value : value) || localStorage.code || value,
+			readOnly: window.frameElement ? window.frameElement.dialogArgs.readOnly : false,
+			api: 'calc.API.md',
+			variable: variables,
+			keywords: 'if while for break return True False is not is in not and or int str bool float list dict null None',
+			saveFn: function(cm) {
+				localStorage.code = cm.getValue();
+				localStorage.cursor = JSON.stringify(cm.getCursor());
+				localStorage.scrollTop = editor.getDoc().scrollTop;
+				console.log('保存成功！');
+			},
+			otherWords: {
+				python: {
+					report: 'report(mode:数据源标识, _PARAMS:系统变量[,layz:是否懒加载])：引用数据源 \n 返回值：DataSet(数据集)',
+					left: 'left(data, keys:相同关联字段)：左连接 \n 返回值：DataSet(数据集)',
+					right: 'right(data, keys:相同关联字段)：右连接 \n 返回值：DataSet(数据集)',
+					inner: 'inner(data, keys:相同关联字段)：内连接 \n 返回值：DataSet(数据集)',
+					print: 'print(string)：打印消息',
+					null: '关键字，代表空对象',
+					row: 'row()：数据行集合\n 返回：数组',
+					append: 'append(row, data:详细)：追加数据',
+					get_zy: 'get_zy(wz:位置 [, int:pcode人码])： 获取当前位置的账页或人的账页 \n 返回值：DataSet(数据集)',
+					zy: 'zy(int: 账页编码, int: （1：数量；2：价格；3：数量1）)： 获取此类账页编码的和 \n 返回值：number',
+					len: 'len(object)：对象的长度\n 返回值：int',
+					int: 'int(string)：将字符串转换为整数\n 返回值：int',
+					str: 'str(object)：将对象转换为字符串\n 返回值：string',
+					float: 'float(string)：将字符串转换为浮点数\n 返回值：float',
+					range: 'range(int)：返回可迭代的数组\n 返回值：用于for循环',
+					list: 'list(str)：将字符串分割成字符数组\n 返回值：array',
+					type: 'type(object：对象)：获取对象类型 \n 返回值：Type',
+					mult: 'mult(string)：为多选指标 \n 返回值：array',
+					sum: 'sum(array)： 加和函数\n 返回值：int',
+					min: 'min(array:数组集合)：求集合的最小值\n 返回值：int',
+					max: 'max(array:数组集合)：求集合的最大值\n 返回值：int',
+					mode: 'mode(array:数组集合)：求集合的众数\n 返回值：int',
+					median: 'median(array:数组集合)：求集合的中值\n 返回值：int',
+					avg: 'avg(array:数组集合)：求集合的平均值\n 返回值：int',
+					freq: 'freq(array:数组集合, c:字符)：求c字符在集合的频数 \n 返回值：int',
+					iif: 'iif(boolean:真假, true_val:真值, false_val:假值)\n 返回值：真假值',
+					_PARAMS: '系统参数，用与获取数据源的条件',
+					_TIME: '当前时间',
+					_COUN:   '县',
+					_PROV:   '省码',
+					_PROVONE:'市码',
+					_YEAR:   '当前年',
+					_MONTH:  '当前月份',
+				},
+				theme: ['default', '3024-day', '3024-night', 'abcdef', 'ambiance',
+				'base16-dark', 'base16-light', 'bespin', 'blackboard', 'cobalt',
+				'colorforth', 'darcula', 'dracula', 'duotone-dark', 'duotone-light',
+				'eclipse', 'elegant', 'erlang-dark', 'gruvbox-dark', 'hopscotch',
+				'icecoder', 'idea', 'isotope', 'lesser-dark', 'liquibyte', 'lucario',
+				'material', 'mbo', 'mdn-like', 'midnight', 'monokai', 'neat', 'neo',
+				'night', 'oceanic-next', 'panda-syntax', 'paraiso-dark', 'paraiso-light',
+				'pastel-on-dark', 'railscasts', 'rubyblue', 'seti', 'shadowfox',
+				'solarized dark', 'solarized light', 'the-matrix', 'tomorrow-night-bright',
+				'tomorrow-night-eighties', 'ttcn', 'twilight', 'vibrant-ink', 'xq-dark', 'xq-light', 'yeti', 'zenburn'],
+			},
+//			theme: ['default', '3024-day', '3024-night', 'abcdef', 'ambiance',
+//				'base16-dark', 'base16-light', 'bespin', 'blackboard', 'cobalt',
+//				'colorforth', 'darcula', 'dracula', 'duotone-dark', 'duotone-light',
+//				'eclipse', 'elegant', 'erlang-dark', 'gruvbox-dark', 'hopscotch',
+//				'icecoder', 'idea', 'isotope', 'lesser-dark', 'liquibyte', 'lucario',
+//				'material', 'mbo', 'mdn-like', 'midnight', 'monokai', 'neat', 'neo',
+//				'night', 'oceanic-next', 'panda-syntax', 'paraiso-dark', 'paraiso-light',
+//				'pastel-on-dark', 'railscasts', 'rubyblue', 'seti', 'shadowfox',
+//				'solarized dark', 'solarized light', 'the-matrix', 'tomorrow-night-bright',
+//				'tomorrow-night-eighties', 'ttcn', 'twilight', 'vibrant-ink', 'xq-dark', 'xq-light', 'yeti', 'zenburn'],
+		});
+		if (localStorage.cursor)
+			editor.setCursor(JSON.parse(localStorage.cursor));
+		if (localStorage.scrollTop)
+			editor.display.scroller.scrollTop = localStorage.scrollTop;
+	</script>
+</html>
